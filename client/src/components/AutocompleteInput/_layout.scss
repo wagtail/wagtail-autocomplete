@@ -1,0 +1,11 @@
+$space-between: 2%;
+
+.c-wagtailautocomplete__layout {
+    display: flex;
+    justify-content: space-between;
+
+    &__item {
+        // Cheap but robust padding when combined with space-between
+        width: 50% - $space-between / 2;
+    }
+}

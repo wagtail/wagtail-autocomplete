@@ -1,0 +1,12 @@
+<span
+    data-autocomplete-input-name="{{ widget.name }}"
+    data-autocomplete-input-value="{{ widget.value }}"
+    data-autocomplete-input-type="{{ widget.page_type }}"
+    {% if widget.can_create %}
+        data-autocomplete-input-can-create
+    {% endif %}
+    {% if widget.is_single %}
+        data-autocomplete-input-is-single
+    {% endif %}
+    data-autocomplete-input
+></span>

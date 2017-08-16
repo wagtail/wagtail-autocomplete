@@ -1,0 +1,67 @@
+.c-wagtailautocomplete__suggestions {
+    display: flex;
+    flex-direction: column;
+    border-bottom-left-radius: $wagtail-border-radius;
+    border-bottom-right-radius: $wagtail-border-radius;
+    overflow-y: scroll;
+    max-height: 30vh;
+
+    &::-webkit-scrollbar,
+    &::-webkit-scrollbar-track {
+        border-bottom-right-radius: $wagtail-border-radius;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: $white;
+    }
+
+    &--populated {
+        border: 1px solid $input-border-color;
+        border-top-width: 0;
+    }
+
+    &__item {
+        cursor: pointer;
+        border: 1px solid $input-border-color;
+        border-top-width: 0;
+        border-left-width: 0;
+        border-right-width: 0;
+        font-size: 1.2em;
+        padding: 0.9em 0.6em;
+        background-color: $suggestions-bg;
+
+        // Minimum factor of 10 that is above Wagtail admin components.
+        z-index: 1000;
+
+        // We don't want the flex parent to crush our content to get us to
+        // fit into the max-height, bro.
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        &:last-child {
+            border-bottom-width: 0;
+        }
+
+        svg {
+            width: 1.2em;
+            height: 1.2em;
+            flex-shrink: 0;
+        }
+
+        path {
+            fill: $suggestions-bg;
+        }
+    }
+
+    &__item--active {
+        background-color: $suggestions-bg-active;
+        color: $suggestions-fg-active;
+
+        path {
+            fill: $white;
+        }
+    }
+}

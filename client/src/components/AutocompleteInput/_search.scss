@@ -1,0 +1,22 @@
+.c-wagtailautocomplete__search {
+    padding-left: $search-icon-width + 2 * $search-icon-padding;
+
+    &--has-input {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+}
+
+.c-wagtailautocomplete__search-input-container {
+    position: relative;
+}
+
+.c-wagtailautocomplete__search-icon {
+    position: absolute;
+    z-index: 2;
+    left: $search-icon-padding;
+    top: 7px;
+    height: $search-icon-width;
+    width: $search-icon-width;
+    color: $search-icon-color;
+}
