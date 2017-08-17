@@ -3,6 +3,9 @@ import nclassNames from 'classnames';
 
 import { nc } from '.';
 
+import './Suggestions.scss';
+import './Search.scss';
+
 
 const classNames = (...args) => nc(nclassNames(...args));
 

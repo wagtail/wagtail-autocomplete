@@ -1,23 +1,4 @@
-$white: #fff;
-$gray: #e6e6e6;
-$light-coral: #f37e77;
-$deep-sky-blue: #9d9fa0;
-
-$input-border-color: $gray;
-$selection-bg: $light-coral;
-$selection-fg: $white;
-$suggestions-bg: $white;
-$suggestions-bg-active: $light-coral;
-$suggestions-fg-active: $white;
-$search-icon-color: $deep-sky-blue;
-
-$wagtail-border-radius: 6px;
-
-$search-icon-width: 36px;
-$search-icon-padding: 4px;
-
+@import 'variables';
 @import 'accessibility';
 @import 'layout';
 @import 'selection';
-@import 'suggestions';
-@import 'search';

@@ -9,10 +9,12 @@
     "build": "webpack -p",
     "start": "webpack -w -d --display-error-details",
     "lint:js": "eslint ./client",
-    "lint:css": "scss-lint"
+    "lint:css": "scss-lint",
+    "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "author": "Emily Horsman <me@emilyhorsman.com>",
   "devDependencies": {
+    "@storybook/react": "^3.2.4",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.17.0",
     "babel-eslint": "^7.0.0",
