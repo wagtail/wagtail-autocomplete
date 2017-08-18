@@ -159,6 +159,8 @@ class Suggestions extends PureComponent {
 
     const display = this.state.visible ? 'block' : 'none';
 
+    const displayCreateItem = canCreate && input.value.trim() !== '';
+
     return (
       <span
         ref={ref => { this.containerElm = ref; }}
@@ -208,7 +210,7 @@ class Suggestions extends PureComponent {
             </li>
           )}
 
-          {canCreate && (
+          {displayCreateItem && (
             <li
               key="create"
               onClick={onCreate}

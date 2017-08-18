@@ -20,6 +20,7 @@ ShallowWrapper {
             onFocus={[Function]}
             onKeyDown={[Function]}
             type="text"
+            value=""
         />
         <SearchIcon
             className="c-wagtailautocomplete__search-icon"
@@ -53,14 +54,6 @@ ShallowWrapper {
             </span>
             <RightArrowIcon />
         </li>
-        <li
-            className="c-wagtailautocomplete__suggestions__item c-wagtailautocomplete__suggestions__item--create"
-            onClick={[Function]}
-            onMouseEnter={[Function]}
-        >
-            Create new “
-            ”
-        </li>
     </ul>
 </span>,
   "nodes": Array [
@@ -76,6 +69,7 @@ ShallowWrapper {
                   onFocus={[Function]}
                   onKeyDown={[Function]}
                   type="text"
+                  value=""
             />
             <SearchIcon
                   className="c-wagtailautocomplete__search-icon"
@@ -109,14 +103,6 @@ ShallowWrapper {
                   </span>
                   <RightArrowIcon />
             </li>
-            <li
-                  className="c-wagtailautocomplete__suggestions__item c-wagtailautocomplete__suggestions__item--create"
-                  onClick={[Function]}
-                  onMouseEnter={[Function]}
-            >
-                  Create new “
-                  ”
-            </li>
       </ul>
 </span>,
   ],
@@ -128,7 +114,11 @@ ShallowWrapper {
       "_context": Object {},
       "_currentElement": <Suggestions
         canCreate={true}
-        input=""
+        input={
+                Object {
+                        "value": "",
+                      }
+        }
         onChange={[Function]}
         onClick={[Function]}
         onCreate={[Function]}
@@ -156,7 +146,9 @@ ShallowWrapper {
         "handleKeyPress": [Function],
         "props": Object {
           "canCreate": true,
-          "input": "",
+          "input": Object {
+            "value": "",
+          },
           "onChange": [Function],
           "onClick": [Function],
           "onCreate": [Function],
@@ -207,6 +199,7 @@ ShallowWrapper {
                               onFocus={[Function]}
                               onKeyDown={[Function]}
                               type="text"
+                              value=""
                     />
                     <SearchIcon
                               className="c-wagtailautocomplete__search-icon"
@@ -239,14 +232,6 @@ ShallowWrapper {
                                         Tekisha
                               </span>
                               <RightArrowIcon />
-                    </li>
-                    <li
-                              className="c-wagtailautocomplete__suggestions__item c-wagtailautocomplete__suggestions__item--create"
-                              onClick={[Function]}
-                              onMouseEnter={[Function]}
-                    >
-                              Create new “
-                              ”
                     </li>
           </ul>
 </span>,
@@ -263,6 +248,7 @@ ShallowWrapper {
                               onFocus={[Function]}
                               onKeyDown={[Function]}
                               type="text"
+                              value=""
                     />
                     <SearchIcon
                               className="c-wagtailautocomplete__search-icon"
@@ -296,14 +282,6 @@ ShallowWrapper {
                               </span>
                               <RightArrowIcon />
                     </li>
-                    <li
-                              className="c-wagtailautocomplete__suggestions__item c-wagtailautocomplete__suggestions__item--create"
-                              onClick={[Function]}
-                              onMouseEnter={[Function]}
-                    >
-                              Create new “
-                              ”
-                    </li>
           </ul>
 </span>,
       },
@@ -319,7 +297,11 @@ ShallowWrapper {
   "root": [Circular],
   "unrendered": <Suggestions
     canCreate={true}
-    input=""
+    input={
+        Object {
+            "value": "",
+          }
+    }
     onChange={[Function]}
     onClick={[Function]}
     onCreate={[Function]}
