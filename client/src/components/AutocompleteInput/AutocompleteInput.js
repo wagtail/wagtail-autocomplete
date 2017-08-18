@@ -160,7 +160,7 @@ class AutocompleteInput extends PureComponent {
   }
 
   render() {
-    const { name, isSingle, onChange } = this.props;
+    const { name, isSingle, onChange, labelId } = this.props;
     const { input, suggestions } = this.state;
 
     const canCreate = this.props.canCreate && input.value.trim() !== '';
@@ -181,6 +181,7 @@ class AutocompleteInput extends PureComponent {
             input={input}
             suggestions={suggestions}
             selected={this.value}
+            labelId={labelId}
 
             canCreate={canCreate}
 
@@ -195,6 +196,7 @@ class AutocompleteInput extends PureComponent {
             input={input}
             suggestions={suggestions}
             selections={this.value || Multi.defaultProps.selections}
+            labelId={labelId}
 
             canCreate={canCreate}
 

@@ -8,6 +8,7 @@ import Suggestions from './Suggestions';
 class Single extends PureComponent {
   render() {
     const {
+      labelId,
       selected,
       onChange,
       onClick,
@@ -43,6 +44,7 @@ class Single extends PureComponent {
 
     return (
       <Suggestions
+        labelId={labelId}
         suggestions={suggestions}
         onClick={onClick}
         onCreate={onCreate}

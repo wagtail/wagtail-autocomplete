@@ -29,6 +29,7 @@ class Multi extends PureComponent {
       onCreate,
       canCreate,
       input,
+      labelId,
     } = this.props;
 
     const suggestions = this.props.suggestions.filter(suggestion => {
@@ -42,6 +43,7 @@ class Multi extends PureComponent {
       <span className={nc('layout')}>
         <span className={nc('layout__item')}>
           <Suggestions
+            labelId={labelId}
             suggestions={suggestions}
             onClick={this.handleClick}
             onChange={onChange}

@@ -16,6 +16,7 @@ ShallowWrapper {
           }
     }
     isSingle={true}
+    labelId={undefined}
     onChange={[Function]}
     onClick={[Function]}
     onCreate={[Function]}
@@ -41,6 +42,7 @@ ShallowWrapper {
                 }
       }
       isSingle={true}
+      labelId={undefined}
       onChange={[Function]}
       onClick={[Function]}
       onCreate={[Function]}
@@ -142,6 +144,7 @@ ShallowWrapper {
                             }
           }
           isSingle={true}
+          labelId={undefined}
           onChange={[Function]}
           onClick={[Function]}
           onCreate={[Function]}
@@ -167,6 +170,7 @@ ShallowWrapper {
                             }
           }
           isSingle={true}
+          labelId={undefined}
           onChange={[Function]}
           onClick={[Function]}
           onCreate={[Function]}

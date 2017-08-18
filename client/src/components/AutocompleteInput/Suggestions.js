@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import nclassNames from 'classnames';
 
+import getUniqueId from '../../utils/getUniqueId';
 import { nc } from '.';
 import { SearchIcon, RightArrowIcon } from './Icons';
 
@@ -25,6 +26,10 @@ class Suggestions extends PureComponent {
       index: 0,
       visible: false,
     };
+  }
+
+  componentWillMount() {
+    this.suggestionsControlsId = getUniqueId();
   }
 
   componentDidMount() {
@@ -153,6 +158,7 @@ class Suggestions extends PureComponent {
       onChange,
       input,
       isSingle,
+      labelId,
     } = this.props;
 
     const { visible } = this.state;
@@ -160,6 +166,9 @@ class Suggestions extends PureComponent {
     const display = this.state.visible ? 'block' : 'none';
 
     const displayCreateItem = canCreate && input.value.trim() !== '';
+
+    const isExpanded = visible && suggestions.length > 0;
+    const activeDescendantId = isExpanded ? `${this.suggestionsControlsId}-${this.state.index}` : '';
 
     return (
       <span
@@ -174,24 +183,45 @@ class Suggestions extends PureComponent {
             type="text"
             className={classNames(
               'search',
-              { 'search--has-input': visible && suggestions.length > 0 }
+              { 'search--has-input': isExpanded }
             )}
             onFocus={this.handleFocus}
             onChange={onChange}
             onKeyDown={this.handleKeyPress}
             {...input}
+
+            id={labelId}
+            role="combobox"
+            aria-expanded={isExpanded}
+            aria-owns={this.suggestionsControlsId}
+            aria-haspopup="true"
+            aria-autocomplete="list"
+            aria-activedescendant={activeDescendantId}
           />
 
           <SearchIcon className={nc('search-icon')} />
+
+          {isExpanded && (
+            <div
+              className={nc('sr-only')}
+              aria-live="assertive"
+            >
+              {suggestions.length}{suggestions.length === 1 ? 'suggestion' : 'suggestions'} found,
+              use up and down arrows to review.
+            </div>
+          )}
         </div>
 
         <ul
           className={classNames(
             'suggestions',
-            { 'suggestions--populated': visible && suggestions.length > 0 }
+            { 'suggestions--populated': isExpanded }
           )}
           style={{ display }}
           ref={ref => { this.suggestionsElm = ref; }}
+
+          id={this.suggestionsControlsId}
+          role="listbox"
         >
           {suggestions.map((suggestion, index) =>
             <li
@@ -203,6 +233,9 @@ class Suggestions extends PureComponent {
                 { 'suggestions__item--active': index === this.state.index }
               )}
               ref={ref => { this.suggestionItemsElm[index] = ref; }}
+
+              id={`${this.suggestionsControlsId}-${index}`}
+              role="option"
             >
               <span>{suggestion.title}</span>
 
@@ -221,6 +254,8 @@ class Suggestions extends PureComponent {
                 'suggestions__item--create',
                 { 'suggestions__item--active': suggestions.length === this.state.index }
               )}
+
+              id={`${this.suggestionsControlsId}-${suggestions.length}`}
             >
               Create new “{input.value}”
             </li>

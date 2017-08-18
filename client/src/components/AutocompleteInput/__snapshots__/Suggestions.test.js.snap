@@ -15,10 +15,17 @@ ShallowWrapper {
         className="c-wagtailautocomplete__search-input-container"
     >
         <input
+            aria-activedescendant=""
+            aria-autocomplete="list"
+            aria-expanded={false}
+            aria-haspopup="true"
+            aria-owns="wagtailautocomplete-0"
             className="c-wagtailautocomplete__search"
+            id={undefined}
             onChange={[Function]}
             onFocus={[Function]}
             onKeyDown={[Function]}
+            role="combobox"
             type="text"
             value=""
         />
@@ -28,6 +35,8 @@ ShallowWrapper {
     </div>
     <ul
         className="c-wagtailautocomplete__suggestions"
+        id="wagtailautocomplete-0"
+        role="listbox"
         style={
             Object {
                 "display": "none",
@@ -36,8 +45,10 @@ ShallowWrapper {
     >
         <li
             className="c-wagtailautocomplete__suggestions__item c-wagtailautocomplete__suggestions__item--active"
+            id="wagtailautocomplete-0-0"
             onClick={[Function]}
             onMouseEnter={[Function]}
+            role="option"
         >
             <span>
                 Alice
@@ -46,8 +57,10 @@ ShallowWrapper {
         </li>
         <li
             className="c-wagtailautocomplete__suggestions__item"
+            id="wagtailautocomplete-0-1"
             onClick={[Function]}
             onMouseEnter={[Function]}
+            role="option"
         >
             <span>
                 Tekisha
@@ -64,10 +77,17 @@ ShallowWrapper {
             className="c-wagtailautocomplete__search-input-container"
       >
             <input
+                  aria-activedescendant=""
+                  aria-autocomplete="list"
+                  aria-expanded={false}
+                  aria-haspopup="true"
+                  aria-owns="wagtailautocomplete-0"
                   className="c-wagtailautocomplete__search"
+                  id={undefined}
                   onChange={[Function]}
                   onFocus={[Function]}
                   onKeyDown={[Function]}
+                  role="combobox"
                   type="text"
                   value=""
             />
@@ -77,6 +97,8 @@ ShallowWrapper {
       </div>
       <ul
             className="c-wagtailautocomplete__suggestions"
+            id="wagtailautocomplete-0"
+            role="listbox"
             style={
                   Object {
                         "display": "none",
@@ -85,8 +107,10 @@ ShallowWrapper {
       >
             <li
                   className="c-wagtailautocomplete__suggestions__item c-wagtailautocomplete__suggestions__item--active"
+                  id="wagtailautocomplete-0-0"
                   onClick={[Function]}
                   onMouseEnter={[Function]}
+                  role="option"
             >
                   <span>
                         Alice
@@ -95,8 +119,10 @@ ShallowWrapper {
             </li>
             <li
                   className="c-wagtailautocomplete__suggestions__item"
+                  id="wagtailautocomplete-0-1"
                   onClick={[Function]}
                   onMouseEnter={[Function]}
+                  role="option"
             >
                   <span>
                         Tekisha
@@ -169,6 +195,7 @@ ShallowWrapper {
           "visible": false,
         },
         "suggestionItemsElm": Object {},
+        "suggestionsControlsId": "wagtailautocomplete-0",
         "updater": Object {
           "enqueueCallback": [Function],
           "enqueueCallbackInternal": [Function],
@@ -194,10 +221,17 @@ ShallowWrapper {
                     className="c-wagtailautocomplete__search-input-container"
           >
                     <input
+                              aria-activedescendant=""
+                              aria-autocomplete="list"
+                              aria-expanded={false}
+                              aria-haspopup="true"
+                              aria-owns="wagtailautocomplete-0"
                               className="c-wagtailautocomplete__search"
+                              id={undefined}
                               onChange={[Function]}
                               onFocus={[Function]}
                               onKeyDown={[Function]}
+                              role="combobox"
                               type="text"
                               value=""
                     />
@@ -207,6 +241,8 @@ ShallowWrapper {
           </div>
           <ul
                     className="c-wagtailautocomplete__suggestions"
+                    id="wagtailautocomplete-0"
+                    role="listbox"
                     style={
                               Object {
                                         "display": "none",
@@ -215,8 +251,10 @@ ShallowWrapper {
           >
                     <li
                               className="c-wagtailautocomplete__suggestions__item c-wagtailautocomplete__suggestions__item--active"
+                              id="wagtailautocomplete-0-0"
                               onClick={[Function]}
                               onMouseEnter={[Function]}
+                              role="option"
                     >
                               <span>
                                         Alice
@@ -225,8 +263,10 @@ ShallowWrapper {
                     </li>
                     <li
                               className="c-wagtailautocomplete__suggestions__item"
+                              id="wagtailautocomplete-0-1"
                               onClick={[Function]}
                               onMouseEnter={[Function]}
+                              role="option"
                     >
                               <span>
                                         Tekisha
@@ -243,10 +283,17 @@ ShallowWrapper {
                     className="c-wagtailautocomplete__search-input-container"
           >
                     <input
+                              aria-activedescendant=""
+                              aria-autocomplete="list"
+                              aria-expanded={false}
+                              aria-haspopup="true"
+                              aria-owns="wagtailautocomplete-0"
                               className="c-wagtailautocomplete__search"
+                              id={undefined}
                               onChange={[Function]}
                               onFocus={[Function]}
                               onKeyDown={[Function]}
+                              role="combobox"
                               type="text"
                               value=""
                     />
@@ -256,6 +303,8 @@ ShallowWrapper {
           </div>
           <ul
                     className="c-wagtailautocomplete__suggestions"
+                    id="wagtailautocomplete-0"
+                    role="listbox"
                     style={
                               Object {
                                         "display": "none",
@@ -264,8 +313,10 @@ ShallowWrapper {
           >
                     <li
                               className="c-wagtailautocomplete__suggestions__item c-wagtailautocomplete__suggestions__item--active"
+                              id="wagtailautocomplete-0-0"
                               onClick={[Function]}
                               onMouseEnter={[Function]}
+                              role="option"
                     >
                               <span>
                                         Alice
@@ -274,8 +325,10 @@ ShallowWrapper {
                     </li>
                     <li
                               className="c-wagtailautocomplete__suggestions__item"
+                              id="wagtailautocomplete-0-1"
                               onClick={[Function]}
                               onMouseEnter={[Function]}
+                              role="option"
                     >
                               <span>
                                         Tekisha
