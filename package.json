@@ -5,17 +5,30 @@
   "repository": "https://littleweaver/wagtail-autocomplete",
   "license": "BSD-3-Clause",
   "main": "client/src/index.js",
+  "babel": {
+    "presets": [
+      "es2015",
+      "react"
+    ]
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.scss$": "<rootDir>/client/src/__mocks__/styleMock.js"
+    }
+  },
   "scripts": {
     "build": "webpack -p",
     "start": "webpack -w -d --display-error-details",
     "lint:js": "eslint ./client",
-    "lint:css": "scss-lint"
+    "lint:css": "scss-lint",
+    "test": "jest"
   },
   "author": "Emily Horsman <me@emilyhorsman.com>",
   "devDependencies": {
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.17.0",
     "babel-eslint": "^7.0.0",
+    "babel-jest": "^20.0.3",
     "babel-loader": "^7.1.1",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-polyfill": "^6.16.0",
@@ -25,6 +38,7 @@
     "babel-preset-stage-1": "^6.16.0",
     "babel-preset-stage-2": "^6.17.0",
     "css-loader": "^0.28.0",
+    "enzyme": "^2.9.1",
     "eslint": "^2.9.0",
     "eslint-config-wagtail": "0.1.1",
     "eslint-import-resolver-webpack": "^0.8.1",
@@ -32,8 +46,10 @@
     "eslint-plugin-jsx-a11y": "^1.5.3",
     "eslint-plugin-react": "^5.2.2",
     "extract-text-webpack-plugin": "^3.0.0",
+    "jest": "^20.0.4",
     "node-sass": "^4.5.2",
     "postcss-loader": "^2.0.6",
+    "react-test-renderer": "^15.6.1",
     "sass-lint": "^1.10.2",
     "sass-loader": "^6.0.3",
     "style-loader": "^0.18.2",
