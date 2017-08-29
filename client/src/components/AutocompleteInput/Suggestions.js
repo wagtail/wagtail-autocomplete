@@ -192,7 +192,6 @@ class Suggestions extends PureComponent {
 
             id={labelId}
             role="combobox"
-            aria-expanded={isExpanded}
             aria-owns={this.suggestionsControlsId}
             aria-haspopup="true"
             aria-autocomplete="list"
@@ -207,7 +206,7 @@ class Suggestions extends PureComponent {
               aria-live="assertive"
             >
               {suggestions.length}{suggestions.length === 1 ? 'suggestion' : 'suggestions'} found,
-              use up and down arrows to review.
+              use Up Arrow Key and Down Arrow Key to review.
             </div>
           )}
         </div>
@@ -222,6 +221,8 @@ class Suggestions extends PureComponent {
 
           id={this.suggestionsControlsId}
           role="listbox"
+          aria-expanded={isExpanded}
+          tabindex="-1"
         >
           {suggestions.map((suggestion, index) =>
             <li
@@ -236,6 +237,7 @@ class Suggestions extends PureComponent {
 
               id={`${this.suggestionsControlsId}-${index}`}
               role="option"
+              aria-selected={index === this.state.index}
             >
               <span>{suggestion.title}</span>
 
@@ -256,6 +258,8 @@ class Suggestions extends PureComponent {
               )}
 
               id={`${this.suggestionsControlsId}-${suggestions.length}`}
+              role="option"
+              aria-selected={suggestions.length === this.state.index}
             >
               Create new “{input.value}”
             </li>
