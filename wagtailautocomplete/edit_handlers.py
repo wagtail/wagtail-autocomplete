@@ -1,11 +1,6 @@
 from django.apps import apps
 
-try:
-    # Wagtail 2.x
-    from wagtail.admin.edit_handlers import FieldPanel
-except ImportError:
-    # Wagtail 1.x
-    from wagtail.wagtailadmin.edit_handlers import BaseFieldPanel
+from wagtail import VERSION
 
 from .widgets import Autocomplete
 
@@ -21,8 +16,10 @@ def _can_create(page_type):
     ))
 
 
-if 'BaseFieldPanel' in locals():
+if VERSION < (2, 0):
     # Wagtail 1.x
+    from wagtail.wagtailadmin.edit_handlers import BaseFieldPanel
+
     class AutocompletePanel:
         def __init__(self, field_name, page_type='wagtailcore.Page', is_single=True):
             # is_single defaults to True in order to have easy drop-in
@@ -45,6 +42,8 @@ if 'BaseFieldPanel' in locals():
             return type('_AutocompleteFieldPanel', (BaseFieldPanel,), base)
 else:
     # Wagtail 2.x
+    from wagtail.admin.edit_handlers import FieldPanel
+
     class AutocompletePanel(FieldPanel):
         def __init__(self, field_name, page_type='wagtailcore.Page', is_single=True, **kwargs):
             super().__init__(field_name, **kwargs)
