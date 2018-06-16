@@ -52,6 +52,13 @@ else:
             self.page_type = page_type
             self.is_single = is_single
 
+        def clone(self):
+            return self.__class__(
+                field_name=self.field_name,
+                page_type=self.page_type,
+                is_single=self.is_single
+            )
+
         def on_model_bound(self):
             can_create = _can_create(self.page_type)
             self.widget = type(
