@@ -26,9 +26,9 @@ Install with ``pip``:
 Setup
 =====
 
-Add ``'wagtailautocomplete'`` to your project's ``INSTALLED_APPS``. This enables Wagtail to auto-discover the Wagtail Autocomplete's admin hooks.
+Add ``'wagtailautocomplete'`` to your project's ``INSTALLED_APPS``.
 
-Add Wagtail Autocomplete's url patterns to your project's url config, usually in ``urls.py``. This should still come before your ``wagtail_urls``:
+Add Wagtail Autocomplete's url patterns to your project's url config, usually in ``urls.py``. This should come before your ``wagtail_urls`` and if you are using the suggested pattern ``r'^admin/autocomplete/'`` it must also come before your admin urls:
 
 .. code-block:: python
 
@@ -41,6 +41,8 @@ Add Wagtail Autocomplete's url patterns to your project's url config, usually in
     urlpatterns = [
         # ...
         url(r'^admin/autocomplete/', include(autocomplete_admin_urls)),
+        url(r'^admin/', include(wagtailadmin_urls)),
+        # ...
         url(r'', include(wagtail_urls)),
     ]
 
