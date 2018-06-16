@@ -63,6 +63,3 @@ usage with
     ``AutocompletePanel`` does not support the ``snippet_type`` kwarg that
     :class:`~wagtail:wagtail.wagtailsnippets.edit_handlers.SnippetChooserPanel`
     does. Instead, ``page_type`` should be used.
-
-
-TODO: ClusterableModel
