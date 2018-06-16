@@ -12,3 +12,4 @@ Welcome to wagtail-autocomplete's documentation!
 
     basic_usage
     using_other_models
+    customization
