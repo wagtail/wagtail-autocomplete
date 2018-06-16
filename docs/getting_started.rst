@@ -36,7 +36,7 @@ Add Wagtail Autocomplete's url patterns to your project's url config, usually in
 
     from wagtail.wagtailcore import urls as wagtail_urls
 
-    from autocomplete.urls.admin import urlpatterns as autocomplete_admin_urls
+    from wagtailautocomplete.urls.admin import urlpatterns as autocomplete_admin_urls
 
     urlpatterns = [
         # ...
