@@ -29,6 +29,10 @@ setup(
         'wagtail>=1.11',
     ],
 
+    extras_require = {
+        'docs': ['Sphinx>=1.7'],
+    },
+
     classifiers = [
         'Programming Language :: Python :: 3.5',
     ],

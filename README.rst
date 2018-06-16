@@ -49,6 +49,24 @@ Clone ``wagtail/wagtail`` in a separate folder and run linters with their config
     flake8 --config /path/to/wagtail/tox.ini wagtailautocomplete
     isort --check-only --diff --recursive wagtailautocomplete
 
+Compiling the documentation
+---------------------------
+
+The Wagtail Autocomplete documentation is built with Sphinx. To install Sphinx and compile the documentation, run:
+
+.. code-block:: sh
+
+    cd /path/to/wagtail-autocomplete
+    pip install -e .[docs]
+    cd docs
+    make html
+
+    .. code-block:: console
+
+        $ cd docs/_build/html/
+        $ python -m http.server 8080
+
+    Now you can open <http://localhost:8080/> in your web browser to see the compiled documentation.
 
 Contributors
 ~~~~~~~~~~~~
