@@ -61,12 +61,15 @@ The Wagtail Autocomplete documentation is built with Sphinx. To install Sphinx a
     cd docs
     make html
 
-    .. code-block:: console
+The compiled documentation will now be in ``docs/_build/html``. Open this directory in a web browser to see it. Python comes with a module that makes it very easy to preview static files in a web browser. To start this simple server, run the following commands:
 
-        $ cd docs/_build/html/
-        $ python -m http.server 8080
+.. code-block:: sh
 
-    Now you can open <http://localhost:8080/> in your web browser to see the compiled documentation.
+    # from insde of /path/to/wagtail-autocomplete/docs
+    cd _build/html/
+    python -m http.server 8080
+
+Now you can open <http://localhost:8080/> in your web browser to see the compiled documentation.
 
 Contributors
 ~~~~~~~~~~~~
