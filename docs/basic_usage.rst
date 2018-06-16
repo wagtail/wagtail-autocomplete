@@ -2,11 +2,8 @@
 Basic Usage
 ===========
 
-:doc:`wagtail-autocomplete <index>` provides an edit handler that allows an editor to
-select related objects via a quick autocompleted searching interface.
-
-Example
-=======
+A Quick Example
+===============
 
 We have a ``BlogPage`` that lets the editor select an ``AuthorPage`` page.
 

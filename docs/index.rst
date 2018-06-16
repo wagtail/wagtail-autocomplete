@@ -10,6 +10,7 @@ Welcome to wagtail-autocomplete's documentation!
     :maxdepth: 2
     :caption: Contents:
 
+    getting_started
     basic_usage
     using_other_models
     customization
