@@ -71,6 +71,19 @@ The compiled documentation will now be in ``docs/_build/html``. Open this direct
 
 Now you can open <http://localhost:8080/> in your web browser to see the compiled documentation.
 
+Running the test suite
+----------------------
+
+This project uses ``pytest`` to run its test suite. To install ``pytest`` and run the test suite, run:
+
+.. code-block:: sh
+
+    cd /path/to/wagtail-autocomplete
+    pip install -e .[tests]
+    pytest
+
+If you make changes to test models, you must regenerate the migrations in ``wagtailautocomplete/tests/testapp/migrations/``. This can be a sort of tricky process and is left as an excercise to the reader until I'm able to standardize a mechanism for doing so. Since test models are ephemeral it is OK, and even preferable, to regenerate migrations from scratch for each change.
+
 Contributors
 ~~~~~~~~~~~~
 
