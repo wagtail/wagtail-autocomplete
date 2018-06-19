@@ -11,7 +11,7 @@ indent_style = space
 [*.{js,py}]
 charset = utf-8
 
-[*.{css,py,scss}]
+[*.{css,py,scss,rst}]
 indent_size = 4
 
 [*.{js,json,yml}]
