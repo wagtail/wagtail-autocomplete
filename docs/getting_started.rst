@@ -28,7 +28,7 @@ Setup
 
 Add ``'wagtailautocomplete'`` to your project's ``INSTALLED_APPS``.
 
-Add Wagtail Autocomplete's url patterns to your project's url config, usually in ``urls.py``. This should come before your ``wagtail_urls`` and if you are using the suggested pattern ``r'^admin/autocomplete/'`` it must also come before your admin urls:
+Add Wagtail Autocomplete's URL patterns to your project's URL config, usually in ``urls.py``. This should come before your ``wagtail_urls`` and if you are using the suggested pattern ``r'^admin/autocomplete/'`` it must also come before your admin urls:
 
 .. code-block:: python
 

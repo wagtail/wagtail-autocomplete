@@ -53,7 +53,7 @@ By default, the autocomplete widget will match input against the ``title`` field
 Custom Label Display
 ====================
 
-By default, the autocomplete widget will display the ``title`` field from a model. You can change this display by defining an ``autocomplete_label`` method on your model:
+By default, the autocomplete widget will display the ``title`` field from a model. You can change this behavior by defining an ``autocomplete_label`` method on your model:
 
 .. code-block:: python
 

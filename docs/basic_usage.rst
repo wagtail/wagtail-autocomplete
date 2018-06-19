@@ -57,13 +57,10 @@ AutocompletePanel
     replacement.
 
     .. note::
-        ``AutocompletePanel`` does not currently support receiving ``page_type``
-        as a list.
-        :class:`~wagtail:wagtail.wagtailadmin.edit_handlers.PageChooserPanel`
-        does take multiple page types like this.
+        Unlike :class:`~wagtail:wagtail.wagtailadmin.edit_handlers.PageChooserPanel`,
+        ``AutocompletePanel`` does not support receiving ``page_type`` as a list.
 
     .. note::
-        ``AutocompletePanel`` does not currently support receiving the
-        ``can_choose_root`` argument that
-        :class:`~wagtail:wagtail.wagtailadmin.edit_handlers.PageChooserPanel`
+        ``AutocompletePanel`` does not support receiving the ``can_choose_root``
+        argument that :class:`~wagtail:wagtail.wagtailadmin.edit_handlers.PageChooserPanel`
         does.

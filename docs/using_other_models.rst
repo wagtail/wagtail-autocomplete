@@ -9,7 +9,7 @@ Using Other Models
 Selecting Snippets
 ==================
 
-We have a Django model ``Link`` that we have registered as a snippet.
+For example, we have a Django model ``Link`` that we have registered as a snippet.
 We also have a ``BlogPage`` model that would traditionally use a
 :class:`~wagtail:wagtail.wagtailsnippets.edit_handlers.SnippetChooserPanel`
 
