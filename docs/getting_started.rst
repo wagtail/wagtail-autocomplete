@@ -7,10 +7,6 @@ Requirements
 
 Wagtail Autocomplete requires Wagtail version 1.11 or newer.
 
-.. warning::
-
-    We do not currently support Wagtail 2.x, but we're working on it!
-
 Installation
 ============
 
