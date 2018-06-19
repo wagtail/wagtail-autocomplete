@@ -64,3 +64,34 @@ AutocompletePanel
         ``AutocompletePanel`` does not support receiving the ``can_choose_root``
         argument that :class:`~wagtail:wagtail.wagtailadmin.edit_handlers.PageChooserPanel`
         does.
+
+Multiple Selection With Clusterable Models
+==========================================
+
+``AutocompletePanel`` can also be used with a ``ParentalManyToManyField`` to
+provide a multiple selection widget. You must pass ``is_single=False``
+explicitly to enable this behavior. For example:
+
+.. code-block:: python
+
+    from django.db import models
+    from wagtail.core.models import Page
+    from modelcluster.models import ClusterableModel
+    from modelcluster.fields import ParentalManyToManyField
+
+    from wagtailautocomplete.edit_handlers import AutocompletePanel
+
+    class Book(ClusterableModel):
+        title = models.CharField(max_length=255)
+
+
+    class AuthorPage(Page):
+        books = ParentalManyToManyField(
+            Book,
+            null=True,
+            related_name='authors'
+        )
+
+        content_panels = Page.content_panels + [
+            AutocompletePanel('books', page_type='home.Book', is_single=False)
+        ]
