@@ -31,6 +31,12 @@ setup(
 
     extras_require = {
         'docs': ['Sphinx>=1.7'],
+        'tests': [
+            'pytest>=3.5',
+            'pytest-django>=3.2',
+            'beautifulsoup4>=4.6.0',
+            'html5lib>=0.999999999',
+        ],
     },
 
     classifiers = [
