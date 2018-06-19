@@ -2,9 +2,6 @@
 Getting Started
 ===============
 
-:doc:`Wagtail Autocomplete <index>` provides an edit handler that allows an editor to
-select related objects via a quick autocompleted searching interface.
-
 Requirements
 ============
 

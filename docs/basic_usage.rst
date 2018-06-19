@@ -38,6 +38,9 @@ Instead we can use :py:class:`AutocompletePanel`.
         AutocompletePanel('author', page_type='app_label.AuthorPage'),
     ]
 
+.. image:: /_static/autocomplete-fk-demo.gif
+    :alt: Animation of autocomplete selection in action
+
 AutocompletePanel
 =================
 
@@ -95,3 +98,11 @@ explicitly to enable this behavior. For example:
         content_panels = Page.content_panels + [
             AutocompletePanel('books', page_type='home.Book', is_single=False)
         ]
+
+.. image:: /_static/autocomplete-m2m-demo.gif
+    :alt: Animation of autocomplete multiple selection in action
+
+.. note::
+    This above screen capture also shows the availability of Wagtail
+    Autocomplete's "Create New" behavior. To learn more, see
+    :doc:`Customization <customization>`.
