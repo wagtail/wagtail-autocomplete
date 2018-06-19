@@ -14,7 +14,7 @@ We have a ``BlogPage`` that lets the editor select an ``AuthorPage`` page.
 
     class BlogPage(Page):
         author = models.ForeignKey(
-            'app_label.Author',
+            'app_label.AuthorPage',
             null=True,
             blank=True,
             on_delete=models.SET_NULL,
@@ -26,7 +26,7 @@ like the following.
 
 .. code-block:: python
 
-    panels = [
+    content_panels = Page.content_panels + [
         PageChooserPanel('author', page_type='app_label.AuthorPage'),
     ]
 
@@ -34,7 +34,7 @@ Instead we can use :py:class:`AutocompletePanel`.
 
 .. code-block:: python
 
-    panels = [
+    content_panels = Page.content_panels + [
         AutocompletePanel('author', page_type='app_label.AuthorPage'),
     ]
 
