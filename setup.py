@@ -8,26 +8,27 @@ with open(path.join(here, 'README.rst')) as f:
 
 
 setup(
-    name    = 'wagtail-autocomplete',
-    version = '0.1.0',
+    name='wagtail-autocomplete',
+    version='0.1.0',
 
-    packages = find_packages(),
+    packages=find_packages(),
+    include_package_data=True,
 
-    description = 'An Autocomplete edit handler for Pages, Snippets, and more.',
-    long_description = long_description,
+    description='An Autocomplete edit handler for Pages, Snippets, and more.',
+    long_description=long_description,
 
-    url = 'https://github.com/littleweaver/wagtail-autocomplete',
+    url='https://github.com/wagtail/wagtail-autocomplete',
 
-    author       = 'Emily Horsman',
-    author_email = 'me@emilyhorsman.com',
+    author='Emily Horsman',
+    author_email='me@emilyhorsman.com',
 
-    license = 'BSD-3-Clause',
+    license='BSD-3-Clause',
 
-    install_requires = [
+    install_requires=[
         'wagtail>=1.11',
     ],
 
-    extras_require = {
+    extras_require={
         'docs': ['Sphinx>=1.7'],
         'test': [
             'tox',
@@ -39,7 +40,22 @@ setup(
         ],
     },
 
-    classifiers = [
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Environment :: Web Environment',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: BSD License',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Framework :: Django',
+        'Framework :: Wagtail',
+        'Framework :: Wagtail :: 1',
+        'Framework :: Wagtail :: 2',
+        'Topic :: Internet :: WWW/HTTP',
+        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
 )
