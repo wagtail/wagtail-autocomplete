@@ -1,0 +1,9 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/wagtail-autocomplete-repo
+    docker:
+      - image: randomknowledge/docker-pyenv-tox
+    steps:
+      - checkout
+      - run: tox

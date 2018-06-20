@@ -15,3 +15,4 @@ select related objects via a quick autocompleted searching interface.
     basic_usage
     using_other_models
     customization
+    contributing

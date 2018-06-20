@@ -14,7 +14,7 @@ Install with ``pip``:
 
 .. code-block:: sh
 
-    pip install https://github.com/emilyhorsman/wagtail-autocomplete/tarball/master/
+    pip install wagtail-autocomplete
 
 Setup
 =====

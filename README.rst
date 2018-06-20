@@ -1,6 +1,9 @@
 Wagtail Autocomplete
 ====================
 
+.. image:: https://circleci.com/gh/wagtail/wagtail-autocomplete.svg?style=svg
+    :target: https://circleci.com/gh/wagtail/wagtail-autocomplete
+
 An edit handler for the Wagtail content editor allowing single or multi autocompleted selection of Pages, Snippets, or other models.
 The widget is written in React and can be used outside the Wagtail admin, if desired.
 
@@ -20,7 +23,7 @@ Who’s using it?
 * The `U.S. Press Freedom Tracker <https://pressfreedomtracker.us/>`_ makes extensive use of this edit handler with its public-facing filters and content editor to rapidly select and create new related metadata objects.
 
 Merge into wagtail/wagtail
---------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Eventually we would like this to be merged into `wagtail/wagtail <https://github.com/wagtail/wagtail/>`_.
 This will require some work on the Wagtail API.
@@ -30,46 +33,10 @@ This will require some work on the Wagtail API.
 * Create objects from the API
 * Permission system for non-administrator access to the API
 
+Documentation
+~~~~~~~~~~~~~
 
-Development
-~~~~~~~~~~~
-
-Code Style
-----------
-
-This repo follows `Wagtail’s guidelines <http://docs.wagtail.io/en/v1.11.1/contributing/index.html>`_.
-Clone ``wagtail/wagtail`` in a separate folder and run linters with their configuration.
-
-.. code-block:: sh
-
-    gem install scss_lint
-    npm run lint:css -- --config /path/to/wagtail/.scss-lint.yml
-    npm run lint:js -- --config /path/to/wagtail/.eslintrc
-
-    flake8 --config /path/to/wagtail/tox.ini wagtailautocomplete
-    isort --check-only --diff --recursive wagtailautocomplete
-
-Compiling the documentation
----------------------------
-
-The Wagtail Autocomplete documentation is built with Sphinx. To install Sphinx and compile the documentation, run:
-
-.. code-block:: sh
-
-    cd /path/to/wagtail-autocomplete
-    pip install -e .[docs]
-    cd docs
-    make html
-
-The compiled documentation will now be in ``docs/_build/html``. Open this directory in a web browser to see it. Python comes with a module that makes it very easy to preview static files in a web browser. To start this simple server, run the following commands:
-
-.. code-block:: sh
-
-    # from insde of /path/to/wagtail-autocomplete/docs
-    cd _build/html/
-    python -m http.server 8080
-
-Now you can open <http://localhost:8080/> in your web browser to see the compiled documentation.
+Our documentation is on `Read the Docs <https://wagtail-autocomplete.readthedocs.io/>`_ and includes `basic usage instructions <https://wagtail-autocomplete.readthedocs.io/en/latest/basic_usage.html>`_ as well as `contribution guidelines <https://wagtail-autocomplete.readthedocs.io/en/latest/contributing.html>`_.
 
 Contributors
 ~~~~~~~~~~~~
