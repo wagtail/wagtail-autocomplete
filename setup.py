@@ -19,7 +19,7 @@ setup(
 
     url='https://github.com/wagtail/wagtail-autocomplete',
 
-    author='Emily Horsman',
+    author='Emily Horsman and Harris Lapiroff',
     author_email='me@emilyhorsman.com',
 
     license='BSD-3-Clause',
@@ -29,7 +29,10 @@ setup(
     ],
 
     extras_require={
-        'docs': ['Sphinx>=1.7'],
+        'docs': [
+            'Sphinx>=1.7',
+            'sphinx_rtd_theme>=0.4.0',
+        ],
         'test': [
             'tox',
             'pytest>=3.5',
