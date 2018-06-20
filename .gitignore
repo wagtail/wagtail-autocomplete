@@ -1,5 +1,7 @@
+*.pyc
 node_modules
 __pycache__
 wagtail_autocomplete.egg-info
 /docs/_build/
 /.pytest_cache/
+/.tox/

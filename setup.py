@@ -1,9 +1,9 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from os import path
 
 
 here = path.abspath(path.dirname(__file__))
-with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
+with open(path.join(here, 'README.rst')) as f:
     long_description = f.read()
 
 
@@ -11,9 +11,7 @@ setup(
     name    = 'wagtail-autocomplete',
     version = '0.1.0',
 
-    packages = [
-        'wagtailautocomplete',
-    ],
+    packages = find_packages(),
 
     description = 'An Autocomplete edit handler for Pages, Snippets, and more.',
     long_description = long_description,
@@ -31,11 +29,13 @@ setup(
 
     extras_require = {
         'docs': ['Sphinx>=1.7'],
-        'tests': [
+        'test': [
+            'tox',
             'pytest>=3.5',
             'pytest-django>=3.2',
             'beautifulsoup4>=4.6.0',
             'html5lib>=0.999999999',
+            'pytest-pythonpath>=0.7.2',
         ],
     },
 

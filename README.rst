@@ -74,13 +74,19 @@ Now you can open <http://localhost:8080/> in your web browser to see the compile
 Running the test suite
 ----------------------
 
-This project uses ``pytest`` to run its test suite. To install ``pytest`` and run the test suite, run:
+This project uses ``pytest`` and ``tox`` to run its test suite. To install ``pytest`` and run the test suite, run:
 
 .. code-block:: sh
 
     cd /path/to/wagtail-autocomplete
     pip install -e .[tests]
     pytest
+
+To run the test suite against all dependency permutations, ensure that you have all the necessary Python interpreters installed and run:
+
+.. code-block:: sh
+
+    tox
 
 If you make changes to test models, you must regenerate the migrations in ``wagtailautocomplete/tests/testapp/migrations/``. This can be a sort of tricky process and is left as an excercise to the reader until I'm able to standardize a mechanism for doing so. Since test models are ephemeral it is OK, and even preferable, to regenerate migrations from scratch for each change.
 
