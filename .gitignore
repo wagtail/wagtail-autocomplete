@@ -1,7 +1,18 @@
+# Python
 *.pyc
-node_modules
 __pycache__
-wagtail_autocomplete.egg-info
+
+# Node
+node_modules
+
+# Docs
 /docs/_build/
+
+# Testing
 /.pytest_cache/
 /.tox/
+
+# Python packaging
+/build/
+/dist/
+wagtail_autocomplete.egg-info
