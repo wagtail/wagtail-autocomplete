@@ -1,6 +1,9 @@
 Wagtail Autocomplete
 ====================
 
+.. image:: https://circleci.com/gh/wagtail/wagtail-autocomplete.svg?style=svg
+    :target: https://circleci.com/gh/wagtail/wagtail-autocomplete
+
 An edit handler for the Wagtail content editor allowing single or multi autocompleted selection of Pages, Snippets, or other models.
 The widget is written in React and can be used outside the Wagtail admin, if desired.
 

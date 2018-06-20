@@ -1,0 +1,11 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/wagtail-autocomplete-repo
+    docker:
+      - image: themattrix/tox
+    steps:
+      # The base image above is missing the latest tox as of this writing
+      - run: pip install tox==2.9.1
+      - checkout
+      - run: tox
