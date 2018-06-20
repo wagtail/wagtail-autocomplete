@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 from os import path
-
+from wagtailautocomplete import __version__
 
 here = path.abspath(path.dirname(__file__))
 with open(path.join(here, 'README.rst')) as f:
@@ -9,7 +9,7 @@ with open(path.join(here, 'README.rst')) as f:
 
 setup(
     name='wagtail-autocomplete',
-    version='0.1.0',
+    version=__version__,
 
     packages=find_packages(),
     include_package_data=True,
