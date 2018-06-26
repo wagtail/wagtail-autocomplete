@@ -4,7 +4,7 @@ Contributing
 
 Wagtail Autocomplete is an open-source project and we welcome contributions! The eventual goal is to merge Wagtail Autocomplete into Wagtail core, so contributions should be made with that in mind.
 
-We accept both issue reports and code contributions through our `GitHub repository <https://github.com/wagtail/wagtail/>`_.
+We accept both issue reports and code contributions through our `GitHub repository <https://github.com/wagtail/wagtail-autocomplete/>`_.
 
 Code Style
 ----------
