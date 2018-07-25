@@ -30,7 +30,11 @@ class Autocomplete(Widget):
             return json.dumps(render_page(model.objects.get(pk=value)))
 
     def value_from_datadict(self, data, files, name):
-        value = json.loads(data.get(name))
+        value_json = data.get(name)
+        if not value_json:
+            return None
+
+        value = json.loads(value_json)
         if not value:
             return None
 
