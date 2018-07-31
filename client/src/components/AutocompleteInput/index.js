@@ -9,6 +9,10 @@ const nc = namespaceClassName('c-wagtailautocomplete');
 
 
 const initAutocompleteInput = (autocompleteNode) => {
+  if (autocompleteNode.getAttribute("initialized") === "true") {
+    return;
+  }
+
   const name = autocompleteNode.dataset.autocompleteInputName;
   const value = JSON.parse(autocompleteNode.dataset.autocompleteInputValue);
   const type = autocompleteNode.dataset.autocompleteInputType;
@@ -36,6 +40,8 @@ const initAutocompleteInput = (autocompleteNode) => {
       apiBase="/admin/autocomplete/"
     />
   ), autocompleteNode);
+
+  autocompleteNode.setAttribute("initialized", "true");
 };
 
 
