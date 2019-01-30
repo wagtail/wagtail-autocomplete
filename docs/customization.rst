@@ -40,6 +40,9 @@ By default, the autocomplete widget will match input against the ``title`` field
 
         autocomplete_search_field = 'my_special_field'
 
+.. warning::
+    You will also need to define an ``autocomplete_label`` function, unless your model has a ``title`` attribute. See the section on Custom Label Display for more information.
+
 .. note::
 
     Internally Wagtail Autocomplete uses an ``icontains`` lookup to search for partial text matches. So, in the example above, if a user enters ``'part'`` into an autocomplete field, Wagtail Autocomplete will perform the following query to find matches:
