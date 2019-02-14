@@ -54,6 +54,11 @@ def search(request):
     except Exception:
         return HttpResponseBadRequest
 
+    try:
+        limit = int(request.GET.get('limit', 100))
+    except ValueError:
+        return HttpResponseBadRequest
+
     field_name = getattr(model, 'autocomplete_search_field', 'title')
     filter_kwargs = dict()
     filter_kwargs[field_name + '__icontains'] = search_query
@@ -70,7 +75,7 @@ def search(request):
     except Exception:
         pass
 
-    results = map(render_page, queryset[:20])
+    results = map(render_page, queryset[:limit])
     return JsonResponse(dict(items=list(results)))
 
 
