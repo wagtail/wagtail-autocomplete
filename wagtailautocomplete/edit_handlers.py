@@ -28,7 +28,7 @@ if VERSION < (2, 0):
             self.field_name = field_name
             self.target_model = target_model
             self.is_single = is_single
-
+            # For compatability with old 'page_type' argument
             if 'page_type' in kwargs:
                 warnings.warn(
                     'page_type argument has been replaced with target_model',
@@ -58,6 +58,7 @@ else:
             # compatibility with wagtailadmin.edit_handlers.PageChooserPanel.
             self.target_model = target_model
             self.is_single = is_single
+            # For compatability with old 'page_type' argument
             if 'page_type' in kwargs:
                 warnings.warn(
                     'page_type argument has been replaced with target_model',
