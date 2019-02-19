@@ -54,7 +54,7 @@ usage with
 .. code-block:: python
 
     panels = [
-        AutocompletePanel('external_link', page_type='app_label.Link'),
+        AutocompletePanel('external_link', target_model='app_label.Link'),
     ]
 
 .. note::
@@ -62,4 +62,4 @@ usage with
     handlers like Wagtail does for Page and Snippet. As such,
     ``AutocompletePanel`` does not support the ``snippet_type`` kwarg that
     :class:`~wagtail:wagtail.wagtailsnippets.edit_handlers.SnippetChooserPanel`
-    does. Instead, ``page_type`` should be used.
+    does. Instead, ``target_model`` should be used.

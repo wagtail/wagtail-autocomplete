@@ -1,5 +1,6 @@
 from django.db import models
 from modelcluster.fields import ParentalManyToManyField
+
 from wagtailautocomplete.edit_handlers import AutocompletePanel
 
 try:
@@ -20,7 +21,7 @@ class SingleAutocompletePage(Page):
     )
 
     content_panels = Page.content_panels + [
-        AutocompletePanel('target', page_type='testapp.TargetPage'),
+        AutocompletePanel('target', target_model='testapp.TargetPage'),
     ]
 
 
