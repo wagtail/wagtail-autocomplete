@@ -54,18 +54,18 @@ else:
 
     class AutocompletePanel(FieldPanel):
         def __init__(self, field_name, target_model='wagtailcore.Page', is_single=True, **kwargs):
-            super().__init__(field_name, **kwargs)
             # is_single defaults to True in order to have easy drop-in
             # compatibility with wagtailadmin.edit_handlers.PageChooserPanel.
             self.target_model = target_model
             self.is_single = is_single
-
             if 'page_type' in kwargs:
                 warnings.warn(
                     'page_type argument has been replaced with target_model',
                     DeprecationWarning
                 )
                 self.target_model = kwargs['page_type']
+                del kwargs['page_type']
+            super().__init__(field_name, **kwargs)
 
         def clone(self):
             return self.__class__(
