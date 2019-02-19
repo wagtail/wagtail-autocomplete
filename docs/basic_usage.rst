@@ -35,7 +35,7 @@ Instead we can use :py:class:`AutocompletePanel`.
 .. code-block:: python
 
     content_panels = Page.content_panels + [
-        AutocompletePanel('author', page_type='app_label.AuthorPage'),
+        AutocompletePanel('author', target_model='app_label.AuthorPage'),
     ]
 
 .. image:: /_static/autocomplete-fk-demo.gif
@@ -46,10 +46,10 @@ AutocompletePanel
 
 .. module:: wagtailautocomplete.edit_handlers
 
-.. class:: AutocompletePanel(field_name, page_type='wagtailcore.Page', is_single=True)
+.. class:: AutocompletePanel(field_name, target_model='wagtailcore.Page', is_single=True)
 
     ``AutocompletePanel`` takes one required argument, the field name.
-    Optionally, you can pass a single ``page_type`` which will limit the
+    Optionally, you can pass a single ``target_model`` which will limit the
     objects an editor can select to that model — this argument should be
     passed in ``app_label.ModelName`` syntax.
 
@@ -61,7 +61,7 @@ AutocompletePanel
 
     .. note::
         Unlike :class:`~wagtail:wagtail.wagtailadmin.edit_handlers.PageChooserPanel`,
-        ``AutocompletePanel`` does not support receiving ``page_type`` as a list.
+        ``AutocompletePanel`` does not support receiving ``target_model`` as a list.
 
     .. note::
         ``AutocompletePanel`` does not support receiving the ``can_choose_root``
@@ -96,7 +96,7 @@ explicitly to enable this behavior. For example:
         )
 
         content_panels = Page.content_panels + [
-            AutocompletePanel('books', page_type='home.Book', is_single=False)
+            AutocompletePanel('books', target_model='home.Book', is_single=False)
         ]
 
 .. image:: /_static/autocomplete-m2m-demo.gif

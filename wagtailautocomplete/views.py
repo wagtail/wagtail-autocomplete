@@ -21,9 +21,9 @@ def objects(request):
     ids_param = request.GET.get('ids')
     if not ids_param:
         return HttpResponseBadRequest
-    page_type = request.GET.get('type', 'wagtailcore.Page')
+    target_model = request.GET.get('type', 'wagtailcore.Page')
     try:
-        model = apps.get_model(page_type)
+        model = apps.get_model(target_model)
     except Exception:
         return HttpResponseBadRequest
 
@@ -48,9 +48,9 @@ def objects(request):
 @require_GET
 def search(request):
     search_query = request.GET.get('query', '')
-    page_type = request.GET.get('type', 'wagtailcore.Page')
+    target_model = request.GET.get('type', 'wagtailcore.Page')
     try:
-        model = apps.get_model(page_type)
+        model = apps.get_model(target_model)
     except Exception:
         return HttpResponseBadRequest
 
@@ -85,9 +85,9 @@ def create(request, *args, **kwargs):
     if not value:
         return HttpResponseBadRequest
 
-    page_type = request.POST.get('type', 'wagtailcore.Page')
+    target_model = request.POST.get('type', 'wagtailcore.Page')
     try:
-        model = apps.get_model(page_type)
+        model = apps.get_model(target_model)
     except Exception:
         return HttpResponseBadRequest
 
