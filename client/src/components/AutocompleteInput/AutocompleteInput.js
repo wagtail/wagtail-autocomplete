@@ -1,13 +1,12 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
+import React, { PureComponent } from "react";
+import PropTypes from "prop-types";
 
-import { nc } from '.';
-import { getSuggestions, getObjects, createObject } from '../../utils/client';
-import Single from './Single';
-import Multi from './Multi';
+import { nc } from ".";
+import { getSuggestions, getObjects, createObject } from "../../utils/client";
+import Single from "./Single";
+import Multi from "./Multi";
 
-import './AutocompleteInput.scss';
-
+import "./AutocompleteInput.scss";
 
 class AutocompleteInput extends PureComponent {
   constructor(props, ...args) {
@@ -20,9 +19,9 @@ class AutocompleteInput extends PureComponent {
     this.state = {
       value: props.value,
       input: {
-        value: '',
+        value: ""
       },
-      suggestions: [],
+      suggestions: []
     };
 
     if (props.fetchInitialValues) {
@@ -31,7 +30,7 @@ class AutocompleteInput extends PureComponent {
   }
 
   componentDidMount() {
-    this.checkNewSuggestions('', false);
+    this.checkNewSuggestions("", false);
   }
 
   get value() {
@@ -53,14 +52,14 @@ class AutocompleteInput extends PureComponent {
   getExclusions() {
     const { value } = this.state;
     if (!value) {
-      return '';
+      return "";
     }
 
     if (this.props.isSingle && value) {
-      return value.id;
+      return value.pk;
     }
 
-    return value.map(({ id }) => id).join(',');
+    return value.map(({ id }) => id).join(",");
   }
 
   checkNewSuggestions(value, checkDifferent = true) {
@@ -72,7 +71,7 @@ class AutocompleteInput extends PureComponent {
       apiBase: this.props.apiBase,
       query: value,
       type: this.props.type,
-      exclude: this.getExclusions(),
+      exclude: this.getExclusions()
     }).then(items => {
       this.setState({
         suggestions: items
@@ -90,72 +89,72 @@ class AutocompleteInput extends PureComponent {
       return;
     }
 
-    let ids = null;
+    let pks = null;
     if (isMulti) {
-      ids = value.map(({ id }) => id).join(',');
+      ids = value.map(({ pk }) => encodeURI(pk)).join(",");
     } else {
-      ids = value.id;
+      pks = value.pk;
     }
 
     getObjects({
       apiBase: this.props.apiBase,
-      ids,
-      type: this.props.type,
-    })
-      .then(items => {
-        let newValue = null;
-        if (isMulti) {
-          newValue = this.state.value.map(val => {
-            const page = items.find(obj => obj.id === val.id);
-            if (!page) {
-              return val;
-            }
+      pks,
+      type: this.props.type
+    }).then(items => {
+      let newValue = null;
+      if (isMulti) {
+        newValue = this.state.value.map(val => {
+          const page = items.find(obj => obj.pk === val.pk);
+          if (!page) {
+            return val;
+          }
 
-            return page;
-          });
-        } else {
-          newValue = items[0];
-        }
+          return page;
+        });
+      } else {
+        newValue = items[0];
+      }
 
-        this.setState({ value: newValue });
+      this.setState({ value: newValue });
 
-        if (typeof this.props.onChange === 'function') {
-          this.props.onChange({ target: { value: newValue } });
-        }
-      });
+      if (typeof this.props.onChange === "function") {
+        this.props.onChange({ target: { value: newValue } });
+      }
+    });
   }
 
   handleClick(value) {
     this.setState({ value });
 
-    if (typeof this.props.onChange === 'function') {
+    if (typeof this.props.onChange === "function") {
       this.props.onChange({ target: { value, _autocomplete: true } });
     }
   }
 
   handleCreate() {
     const { value } = this.state.input;
-    if (value.trim() === '') {
+    if (value.trim() === "") {
       return;
     }
 
     createObject({
       apiBase: this.props.apiBase,
       type: this.props.type,
-      value,
-    })
-      .then(data => {
-        const newValue = this.props.isSingle ? data : (this.state.value || []).concat(data);
+      value
+    }).then(data => {
+      const newValue = this.props.isSingle
+        ? data
+        : (this.state.value || []).concat(data);
 
-        this.setState({
-          isLoading: false,
-          value: newValue,
-        });
-
-        if (typeof this.props.onChange === 'function') {
-          this.props.onChange({ target: { value: newValue } });
-        }
+      this.setState({
+        isLoading: false,
+        value: newValue
       });
+
+      if (typeof this.props.onChange === "function") {
+        this.props.onChange({ target: { value: newValue } });
+      }
+    });
     this.setState({ isLoading: true });
   }
 
@@ -163,17 +162,13 @@ class AutocompleteInput extends PureComponent {
     const { name, isSingle, onChange, labelId } = this.props;
     const { input, suggestions } = this.state;
 
-    const canCreate = this.props.canCreate && input.value.trim() !== '';
-    const useHiddenInput = typeof onChange !== 'function';
+    const canCreate = this.props.canCreate && input.value.trim() !== "";
+    const useHiddenInput = typeof onChange !== "function";
 
     return (
       <span className={nc()}>
         {useHiddenInput && (
-          <input
-            type="hidden"
-            value={JSON.stringify(this.value)}
-            name={name}
-          />
+          <input type="hidden" value={JSON.stringify(this.value)} name={name} />
         )}
 
         {isSingle && (
@@ -182,9 +177,7 @@ class AutocompleteInput extends PureComponent {
             suggestions={suggestions}
             selected={this.value}
             labelId={labelId}
-
             canCreate={canCreate}
-
             onCreate={this.handleCreate}
             onChange={this.handleChange}
             onClick={this.handleClick}
@@ -197,9 +190,7 @@ class AutocompleteInput extends PureComponent {
             suggestions={suggestions}
             selections={this.value || Multi.defaultProps.selections}
             labelId={labelId}
-
             canCreate={canCreate}
-
             onCreate={this.handleCreate}
             onChange={this.handleChange}
             onClick={this.handleClick}
@@ -210,12 +201,10 @@ class AutocompleteInput extends PureComponent {
   }
 }
 
-
 AutocompleteInput.defaultProps = {
   fetchInitialValues: false,
-  controlled: false,
+  controlled: false
 };
-
 
 AutocompleteInput.propTypes = {
   name: PropTypes.string.isRequired,
@@ -225,8 +214,7 @@ AutocompleteInput.propTypes = {
   onChange: PropTypes.func,
   fetchInitialValues: PropTypes.bool,
   apiBase: PropTypes.string.isRequired,
-  controlled: PropTypes.bool.isRequired,
+  controlled: PropTypes.bool.isRequired
 };
-
 
 export default AutocompleteInput;

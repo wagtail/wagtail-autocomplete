@@ -30,7 +30,7 @@ class Autocomplete(Widget):
         if type(value) == list:
             return json.dumps([
                 render_page(page)
-                for page in model.objects.filter(id__in=value)
+                for page in model.objects.filter(pk__in=value)
             ])
         else:
             return json.dumps(render_page(model.objects.get(pk=value)))
@@ -41,9 +41,9 @@ class Autocomplete(Widget):
             return None
 
         if type(value) == list:
-            return [obj['id'] for obj in value]
+            return [obj['pk'] for obj in value]
 
-        return value['id']
+        return value['pk']
 
     def render(self, name, value, attrs=None, renderer=None):
         return widget_with_script(
