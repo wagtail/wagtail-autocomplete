@@ -2,6 +2,7 @@ import json
 
 from django.apps import apps
 from django.forms import Widget
+from wagtail.admin.edit_handlers import widget_with_script
 
 from .views import render_page
 
@@ -38,3 +39,9 @@ class Autocomplete(Widget):
             return [obj['id'] for obj in value]
 
         return value['id']
+
+    def render(self, name, value, attrs=None, renderer=None):
+        return widget_with_script(super().render(name, value, attrs, renderer), self.render_js_init())
+
+    def render_js_init(self):
+        return "window.initAutoComplete();"

@@ -1,6 +1,8 @@
 import warnings
 
 from django.apps import apps
+from django.template.loader import render_to_string
+from django.utils.safestring import mark_safe
 from wagtail import VERSION
 
 from .widgets import Autocomplete
@@ -50,9 +52,9 @@ if VERSION < (2, 0):
             return type('_AutocompleteFieldPanel', (BaseFieldPanel,), base)
 else:
     # Wagtail 2.x
-    from wagtail.admin.edit_handlers import FieldPanel
+    from wagtail.admin.edit_handlers import BaseChooserPanel
 
-    class AutocompletePanel(FieldPanel):
+    class AutocompletePanel(BaseChooserPanel):
         def __init__(self, field_name, target_model='wagtailcore.Page', is_single=True, **kwargs):
             # is_single defaults to True in order to have easy drop-in
             # compatibility with wagtailadmin.edit_handlers.PageChooserPanel.
@@ -82,3 +84,10 @@ else:
                 (Autocomplete,),
                 dict(target_model=self.target_model, can_create=can_create, is_single=self.is_single),
             )
+
+        def render_as_field(self):
+            instance_obj = self.get_chosen_item()
+            return mark_safe(render_to_string(self.field_template, {
+                'field': self.bound_field,
+                'instance': instance_obj,
+            }))
