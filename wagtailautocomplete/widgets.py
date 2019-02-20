@@ -41,7 +41,11 @@ class Autocomplete(Widget):
         return value['id']
 
     def render(self, name, value, attrs=None, renderer=None):
-        return widget_with_script(super().render(name, value, attrs, renderer), self.render_js_init())
+        print(name, value, attrs)
+        print(dir(self))
+        return widget_with_script(
+            super().render(name, value, attrs, renderer),
+            self.render_js_init(attrs['id']))
 
-    def render_js_init(self):
-        return "window.initAutoComplete();"
+    def render_js_init(self, id):
+        return "window.initAutoCompleteWidget('{0}');".format(id)

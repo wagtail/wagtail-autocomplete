@@ -5,9 +5,9 @@ import {
 
 export { AutocompleteInput, initAutocompleteInput };
 
-window.initAutoComplete = () => {
-  const autocompleteInputNodes = document.querySelectorAll(
-    "[data-autocomplete-input]"
+window.initAutoCompleteWidget = inputId => {
+  const autocompleteInputNode = document.querySelector(
+    `[data-autocomplete-input-id=${inputId}]`
   );
-  autocompleteInputNodes.forEach(initAutocompleteInput);
+  initAutocompleteInput(autocompleteInputNode);
 };
