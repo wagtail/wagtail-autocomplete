@@ -21,6 +21,29 @@ Clone ``wagtail/wagtail`` in a separate folder and run linters with their config
     flake8 --config /path/to/wagtail/tox.ini wagtailautocomplete
     isort --check-only --diff --recursive wagtailautocomplete
 
+Frontend Development
+--------------------
+
+Wagtail Autocomplete uses `Webpack <https://webpack.js.org/>` to compile our javascript. To have Webpack watch for changes as you develop, first ensure that you have the node requirements installed:
+
+.. code-block:: sh
+
+    npm install
+
+then run:
+
+.. code-block:: sh
+
+    npm run start
+
+You can end the watch process with ``ctrl-C``. *Do* commit compiled Javascript and CSS assets to the repo. Before committing, run:
+
+.. code-block:: sh
+
+    npm run build
+
+to create a production-ready build of assets.
+
 Compiling the documentation
 ---------------------------
 

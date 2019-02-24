@@ -54,7 +54,7 @@ author = u'Emily Horsman and Harris Lapiroff'
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 
-from wagtailautocomplete.version import __version__
+from wagtailautocomplete import __version__
 
 # The short X.Y version.
 version = __version__
