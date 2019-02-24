@@ -7,8 +7,8 @@
   "main": "client/src/index.js",
   "babel": {
     "presets": [
-      "es2015",
-      "react"
+      "react",
+      "env"
     ]
   },
   "jest": {
@@ -32,7 +32,6 @@
     "babel-loader": "^7.1.1",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-polyfill": "^6.16.0",
-    "babel-preset-es2015": "^6.16.0",
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-0": "^6.16.0",
     "babel-preset-stage-1": "^6.16.0",
@@ -59,6 +58,7 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
+    "babel-preset-env": "^1.7.0",
     "classlist-polyfill": "^1.2.0",
     "classnames": "^2.2.5",
     "element-dataset": "^2.2.6",
