@@ -1,8 +1,12 @@
-from urllib.parse import unquote
+try:
+    from urllib.parse import unquote
+except ImportError:
+    from urlparse import urlparse as unquote
 
 from django.apps import apps
 from django.contrib.contenttypes.models import ContentType
-from django.http import HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
+from django.http import (HttpResponseBadRequest, HttpResponseForbidden,
+                         JsonResponse)
 from django.views.decorators.http import require_GET, require_POST
 
 
