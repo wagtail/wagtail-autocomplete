@@ -2,9 +2,14 @@ import json
 
 from django.apps import apps
 from django.forms import Widget
-from wagtail.admin.edit_handlers import widget_with_script
+from wagtail import VERSION
 
 from .views import render_page
+
+if VERSION > (2, 0):
+    from wagtail.admin.edit_handlers import widget_with_script
+else:
+    from wagtail.wagtailadmin.edit_handlers import widget_with_script
 
 
 class Autocomplete(Widget):
