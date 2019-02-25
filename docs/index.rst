@@ -16,3 +16,4 @@ select related objects via a quick autocompleted searching interface.
     using_other_models
     customization
     contributing
+    changelog

@@ -47,8 +47,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Wagtail Autocomplete'
-copyright = u'2018 Emily Horsman and Harris Lapiroff'
-author = u'Emily Horsman and Harris Lapiroff'
+copyright = u'2019 Emily Horsman, Harris Lapiroff, and contributors'
+author = u'Emily Horsman, Harris Lapiroff, and contributors'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -131,7 +131,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'wagtail-autocomplete.tex', u'wagtail-autocomplete Documentation',
-     u'Emily Horsman', 'manual'),
+     u'Harris Lapiroff', 'manual'),
 ]
 
 
