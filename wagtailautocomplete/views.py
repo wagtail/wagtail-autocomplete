@@ -1,3 +1,8 @@
+try:
+    from urllib.parse import unquote
+except ImportError:
+    from urllib import unquote
+
 from django.apps import apps
 from django.contrib.contenttypes.models import ContentType
 from django.http import (HttpResponseBadRequest, HttpResponseForbidden,
@@ -13,13 +18,13 @@ def render_page(page):
         title = page.autocomplete_label()
     else:
         title = page.title
-    return dict(id=page.id, title=title)
+    return dict(pk=page.pk, title=title)
 
 
 @require_GET
 def objects(request):
-    ids_param = request.GET.get('ids')
-    if not ids_param:
+    pks_param = request.GET.get('pks')
+    if not pks_param:
         return HttpResponseBadRequest
     target_model = request.GET.get('type', 'wagtailcore.Page')
     try:
@@ -28,14 +33,14 @@ def objects(request):
         return HttpResponseBadRequest
 
     try:
-        ids = [
-            int(id)
-            for id in ids_param.split(',')
+        pks = [
+            unquote(pk)
+            for pk in pks_param.split(',')
         ]
     except Exception:
         return HttpResponseBadRequest
 
-    queryset = model.objects.filter(id__in=ids)
+    queryset = model.objects.filter(pk__in=pks)
     if getattr(queryset, 'live', None):
         # Non-Page models like Snippets won't have a live/published status
         # and thus should not be filtered with a call to `live`.
@@ -63,6 +68,7 @@ def search(request):
     filter_kwargs = dict()
     filter_kwargs[field_name + '__icontains'] = search_query
     queryset = model.objects.filter(**filter_kwargs)
+
     if getattr(queryset, 'live', None):
         # Non-Page models like Snippets won't have a live/published status
         # and thus should not be filtered with a call to `live`.
@@ -70,7 +76,7 @@ def search(request):
 
     exclude = request.GET.get('exclude', '')
     try:
-        exclusions = [int(item) for item in exclude.split(',')]
+        exclusions = [unquote(item) for item in exclude.split(',')]
         queryset = queryset.exclude(pk__in=exclusions)
     except Exception:
         pass
