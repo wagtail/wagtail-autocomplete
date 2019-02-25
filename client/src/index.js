@@ -1,16 +1,13 @@
 import {
   AutocompleteInput,
-  initAutocompleteInput,
-} from './components/AutocompleteInput';
+  initAutocompleteInput
+} from "./components/AutocompleteInput";
 
+export { AutocompleteInput, initAutocompleteInput };
 
-export {
-  AutocompleteInput,
-  initAutocompleteInput,
+window.initAutoCompleteWidget = inputId => {
+  const autocompleteInputNode = document.querySelector(
+    `[data-autocomplete-input-id=${inputId}]`
+  );
+  initAutocompleteInput(autocompleteInputNode);
 };
-
-
-document.addEventListener('DOMContentLoaded', () => {
-  const autocompleteInputNodes = document.querySelectorAll('[data-autocomplete-input]');
-  autocompleteInputNodes.forEach(initAutocompleteInput);
-});
