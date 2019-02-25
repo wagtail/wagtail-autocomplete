@@ -1,8 +1,8 @@
 from wagtail import VERSION
 
-SECRET_KEY='NOTSECRET'
+SECRET_KEY = 'NOTSECRET'
 
-DATABASES={
+DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
     }
@@ -23,7 +23,7 @@ MIDDLEWARE = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 )
 
-TEMPLATES=[
+TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
@@ -36,10 +36,10 @@ TEMPLATES=[
     },
 ]
 
-ROOT_URLCONF='wagtailautocomplete.tests.testapp.urls'
+ROOT_URLCONF = 'wagtailautocomplete.tests.testapp.urls'
 
-STATIC_URL='/static/'
-MEDIA_URL='/media/'
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
 # Wagtail version-specific settings added below
 
 if VERSION >= (2, 0):
