@@ -1,7 +1,7 @@
 try:
     from urllib.parse import unquote
 except ImportError:
-    from urlparse import urlparse as unquote
+    from urllib import unquote
 
 from django.apps import apps
 from django.contrib.contenttypes.models import ContentType
