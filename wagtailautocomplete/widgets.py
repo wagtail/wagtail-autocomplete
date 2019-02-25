@@ -11,7 +11,7 @@ class Autocomplete(Widget):
 
     def get_context(self, *args, **kwargs):
         context = super(Autocomplete, self).get_context(*args, **kwargs)
-        context['widget']['page_type'] = self.page_type
+        context['widget']['target_model'] = self.target_model
         context['widget']['can_create'] = self.can_create
         context['widget']['is_single'] = self.is_single
         return context
@@ -20,7 +20,7 @@ class Autocomplete(Widget):
         if not value:
             return 'null'
 
-        model = apps.get_model(self.page_type)
+        model = apps.get_model(self.target_model)
         if type(value) == list:
             return json.dumps([
                 render_page(page)
