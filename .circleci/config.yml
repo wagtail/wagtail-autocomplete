@@ -6,4 +6,9 @@ jobs:
       - image: randomknowledge/docker-pyenv-tox
     steps:
       - checkout
-      - run: tox
+      - run:
+          name: tests
+          command: tox
+      - run:
+          name: flake8
+          command: tox -e flake8
