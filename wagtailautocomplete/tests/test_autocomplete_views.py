@@ -2,13 +2,6 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 
-from wagtail import VERSION
-
-if VERSION > (2, 0):
-    from wagtail.core.models import Site
-else:
-    from wagtail.wagtailcore.models import Site
-
 
 User = get_user_model()
 
