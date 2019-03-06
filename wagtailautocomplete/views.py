@@ -25,22 +25,22 @@ def render_page(page):
 def objects(request):
     pks_param = request.GET.get('pks')
     if not pks_param:
-        return HttpResponseBadRequest
+        return HttpResponseBadRequest()
     target_model = request.GET.get('type', 'wagtailcore.Page')
     try:
         model = apps.get_model(target_model)
     except Exception:
-        return HttpResponseBadRequest
+        return HttpResponseBadRequest()
 
     try:
         pks = [
             unquote(pk)
             for pk in pks_param.split(',')
         ]
+        queryset = model.objects.filter(pk__in=pks)
     except Exception:
-        return HttpResponseBadRequest
+        return HttpResponseBadRequest()
 
-    queryset = model.objects.filter(pk__in=pks)
     if getattr(queryset, 'live', None):
         # Non-Page models like Snippets won't have a live/published status
         # and thus should not be filtered with a call to `live`.
@@ -57,12 +57,12 @@ def search(request):
     try:
         model = apps.get_model(target_model)
     except Exception:
-        return HttpResponseBadRequest
+        return HttpResponseBadRequest()
 
     try:
         limit = int(request.GET.get('limit', 100))
     except ValueError:
-        return HttpResponseBadRequest
+        return HttpResponseBadRequest()
 
     field_name = getattr(model, 'autocomplete_search_field', 'title')
     filter_kwargs = dict()
@@ -89,13 +89,13 @@ def search(request):
 def create(request, *args, **kwargs):
     value = request.POST.get('value', None)
     if not value:
-        return HttpResponseBadRequest
+        return HttpResponseBadRequest()
 
     target_model = request.POST.get('type', 'wagtailcore.Page')
     try:
         model = apps.get_model(target_model)
     except Exception:
-        return HttpResponseBadRequest
+        return HttpResponseBadRequest()
 
     content_type = ContentType.objects.get_for_model(model)
     permission_label = '{}.add_{}'.format(
@@ -103,11 +103,11 @@ def create(request, *args, **kwargs):
         content_type.model
     )
     if not request.user.has_perm(permission_label):
-        return HttpResponseForbidden
+        return HttpResponseForbidden()
 
     method = getattr(model, 'autocomplete_create', None)
     if not callable(method):
-        return HttpResponseBadRequest
+        return HttpResponseBadRequest()
 
     instance = method(value)
     return JsonResponse(render_page(instance))
