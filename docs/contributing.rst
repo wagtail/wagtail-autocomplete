@@ -74,7 +74,7 @@ This project uses ``pytest`` and ``tox`` to run its test suite. To install ``pyt
 .. code-block:: sh
 
     cd /path/to/wagtail-autocomplete
-    pip install -e .[tests]
+    pip install -e .[test]
     pytest
 
 To run the test suite against all dependency permutations, ensure that you have all the necessary Python interpreters installed and run:
