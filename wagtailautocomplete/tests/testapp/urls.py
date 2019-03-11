@@ -13,8 +13,8 @@ from wagtailautocomplete.urls.public import urlpatterns as autocomplete_public_u
 
 
 urlpatterns = [
-    url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^admin/autocomplete/', include(autocomplete_admin_urls)),
+    url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^autocomplete/', include(autocomplete_public_urls)),
     url(r'', include(wagtail_urls)),
 ]
