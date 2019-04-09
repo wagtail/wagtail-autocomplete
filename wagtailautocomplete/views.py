@@ -8,8 +8,14 @@ from django.contrib.contenttypes.models import ContentType
 from django.http import (HttpResponseBadRequest, HttpResponseForbidden,
                          JsonResponse)
 from django.views.decorators.http import require_GET, require_POST
-from wagtail.search.backends import get_search_backend
-from wagtail.search.index import Indexed
+from wagtail import VERSION
+
+if VERSION > (2, 0):
+    from wagtail.search.backends import get_search_backend
+    from wagtail.search.index import Indexed
+else:
+    from wagtail.wagtailsearch.backends import get_search_backend
+    from wagtail.wagtailsearch.index import Indexed
 
 
 def render_page(page):
