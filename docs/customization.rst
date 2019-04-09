@@ -27,7 +27,11 @@ You can enable this type of behavior by defining an ``autocomplete_create`` clas
 Custom Search Field
 ===================
 
-By default, the autocomplete widget will match input against the ``title`` field on your model. If you're using a model that doesn't have a ``title`` attribute, or you just want to search using a different field, you can customize which field it matches against by defining an ``autocomplete_search_field`` property on your model:
+If your model is indexed using the native Wagtail `indexing methods <https://docs.wagtail.io/en/latest/topics/search/indexing.html>`_, then the configured backend will be used to search accross all indexed fields.
+You can narrow the scope by setting the ``autocomplete_search_field`` on the model like in the example to only search one field.
+
+If your model is not indexed then the native Django ORM is used to match input against the ``title`` field on your model.
+If you're using a model that doesn't have a ``title`` attribute, or you just want to search using a different field, you can customize which field it matches against by defining an ``autocomplete_search_field`` property on your model:
 
 .. code-block:: python
 
