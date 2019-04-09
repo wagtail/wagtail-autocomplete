@@ -68,9 +68,10 @@ else:
                     'page_type argument has been replaced with target_model',
                     DeprecationWarning
                 )
-                target_model = kwargs['page_type']
-                del kwargs['page_type']
-            self.target_model = target_model
+                target_model = kwargs.pop('page_type', None)
+            self.target_model_kwarg = target_model
+
+            kwargs.pop('is_single', None)  # Deprecated kwarg
             super().__init__(field_name, **kwargs)
 
         def clone(self):
@@ -81,19 +82,20 @@ else:
 
         @property
         def is_single(self):
-            # Should cover all manny-to-many relationships
+            # Should cover all many-to-many relationships
             return not issubclass(self.model._meta.get_field(self.field_name).__class__,
                                   ManyToManyField)
 
-        def resolve_target_model(self):
-            if not self.target_model:
+        @property
+        def target_model(self):
+            if not self.target_model_kwarg:
                 return self.model._meta.get_field(self.field_name).remote_field.model
-            elif isinstance(self.target_model, str):
-                return apps.get_model(self.target_model)
-            return self.target_model
+            elif isinstance(self.target_model_kwarg, str):
+                return apps.get_model(self.target_model_kwarg)
+            return self.target_model_kwarg
 
         def on_model_bound(self):
-            target_model = self.resolve_target_model()
+            target_model = self.target_model
             can_create = _can_create(target_model)
             self.widget = type(
                 '_Autocomplete',
