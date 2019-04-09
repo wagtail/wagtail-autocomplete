@@ -1,17 +1,15 @@
-import warnings
-
-from django.apps import apps
+from django.db.models import ManyToManyField
 from wagtail import VERSION
 
 from .widgets import Autocomplete
 
 
-def _can_create(model_string):
+def _can_create(model):
     """Returns True if the given model has implemented the autocomplete_create
     method to allow new instances to be creates from a single string value.
     """
     return callable(getattr(
-        apps.get_model(model_string),
+        model,
         'autocomplete_create',
         None,
     ))
@@ -21,20 +19,19 @@ if VERSION < (2, 0):
     # Wagtail 1.x
     from wagtail.wagtailadmin.edit_handlers import BaseFieldPanel
 
-    class AutocompletePanel:
-        def __init__(self, field_name, target_model='wagtailcore.Page', is_single=True, **kwargs):
-            # is_single defaults to True in order to have easy drop-in
-            # compatibility with wagtailadmin.edit_handlers.PageChooserPanel.
+    class AutocompletePanel(BaseFieldPanel):
+        def __init__(self, field_name, **kwargs):
             self.field_name = field_name
-            self.target_model = target_model
-            self.is_single = is_single
-            # For compatability with old 'page_type' argument
-            if 'page_type' in kwargs:
-                warnings.warn(
-                    'page_type argument has been replaced with target_model',
-                    DeprecationWarning
-                )
-                self.target_model = kwargs['page_type']
+            print(self.bound_field)
+
+        @property
+        def is_single(self):
+            # Should cover all manny-to-many relationships
+            return not issubclass(self.bound_field, ManyToManyField)
+
+        @property
+        def target_model(self):
+            return self.bound_field.remote_field.model
 
         def bind_to_model(self, model):
             can_create = _can_create(self.target_model)
@@ -53,27 +50,18 @@ else:
     from wagtail.admin.edit_handlers import FieldPanel
 
     class AutocompletePanel(FieldPanel):
-        def __init__(self, field_name, target_model='wagtailcore.Page', is_single=True, **kwargs):
-            # is_single defaults to True in order to have easy drop-in
-            # compatibility with wagtailadmin.edit_handlers.PageChooserPanel.
-            self.target_model = target_model
-            self.is_single = is_single
-            # For compatability with old 'page_type' argument
-            if 'page_type' in kwargs:
-                warnings.warn(
-                    'page_type argument has been replaced with target_model',
-                    DeprecationWarning
-                )
-                self.target_model = kwargs['page_type']
-                del kwargs['page_type']
-            super().__init__(field_name, **kwargs)
+        def __init__(self, field_name, *args, **kwargs):
+            super().__init__(field_name)
 
-        def clone(self):
-            return self.__class__(
-                field_name=self.field_name,
-                target_model=self.target_model,
-                is_single=self.is_single
-            )
+        @property
+        def is_single(self):
+            # Should cover all manny-to-many relationships
+            return not issubclass(self.model._meta.get_field(self.field_name).__class__,
+                                  ManyToManyField)
+
+        @property
+        def target_model(self):
+            return self.model._meta.get_field(self.field_name).remote_field.model
 
         def on_model_bound(self):
             can_create = _can_create(self.target_model)

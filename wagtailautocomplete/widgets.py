@@ -1,6 +1,5 @@
 import json
 
-from django.apps import apps
 from django.forms import Widget
 from wagtail import VERSION
 
@@ -17,7 +16,7 @@ class Autocomplete(Widget):
 
     def get_context(self, *args, **kwargs):
         context = super(Autocomplete, self).get_context(*args, **kwargs)
-        context['widget']['target_model'] = self.target_model
+        context['widget']['target_model'] = self.target_model._meta.label
         context['widget']['can_create'] = self.can_create
         context['widget']['is_single'] = self.is_single
         return context
@@ -25,15 +24,13 @@ class Autocomplete(Widget):
     def format_value(self, value):
         if not value:
             return 'null'
-
-        model = apps.get_model(self.target_model)
         if type(value) == list:
             return json.dumps([
                 render_page(page)
-                for page in model.objects.filter(pk__in=value)
+                for page in self.target_model.objects.filter(pk__in=value)
             ])
         else:
-            return json.dumps(render_page(model.objects.get(pk=value)))
+            return json.dumps(render_page(self.target_model.objects.get(pk=value)))
 
     def value_from_datadict(self, data, files, name):
         value = json.loads(data.get(name))
