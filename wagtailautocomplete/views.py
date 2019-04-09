@@ -8,6 +8,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.http import (HttpResponseBadRequest, HttpResponseForbidden,
                          JsonResponse)
 from django.views.decorators.http import require_GET, require_POST
+from wagtail.search.backends import get_search_backend
+from wagtail.search.index import Indexed
 
 
 def render_page(page):
@@ -64,10 +66,18 @@ def search(request):
     except ValueError:
         return HttpResponseBadRequest()
 
-    field_name = getattr(model, 'autocomplete_search_field', 'title')
-    filter_kwargs = dict()
-    filter_kwargs[field_name + '__icontains'] = search_query
-    queryset = model.objects.filter(**filter_kwargs)
+    field_name = getattr(model, 'autocomplete_search_field', None)
+    if issubclass(model, Indexed):
+        search_backend = get_search_backend()
+        if field_name:
+            queryset = search_backend.search(search_query, model, fields=[field_name])
+        else:
+            queryset = search_backend.search(search_query, model)
+    else:
+        field_name = field_name if field_name else 'title'
+        filter_kwargs = dict()
+        filter_kwargs[field_name + '__icontains'] = search_query
+        queryset = model.objects.filter(**filter_kwargs)
 
     if getattr(queryset, 'live', None):
         # Non-Page models like Snippets won't have a live/published status
