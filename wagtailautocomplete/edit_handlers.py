@@ -77,7 +77,7 @@ else:
         def clone(self):
             return self.__class__(
                 field_name=self.field_name,
-                target_model=self.target_model,
+                target_model=self.target_model_kwarg,
             )
 
         @property
