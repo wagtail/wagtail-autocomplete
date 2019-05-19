@@ -33,6 +33,8 @@ if VERSION < (2, 0):
                     DeprecationWarning
                 )
                 self.target_model = kwargs['page_type']
+            if 'is_single' in kwargs:
+                warnings.warn('is_single argument is no longer used', DeprecationWarning)
 
         def bind_to_model(self, model):
             if not self.target_model:
@@ -69,6 +71,8 @@ else:
                     DeprecationWarning
                 )
                 target_model = kwargs.pop('page_type', None)
+            if 'is_single' in kwargs:
+                warnings.warn('is_single argument is no longer used', DeprecationWarning)
             self.target_model_kwarg = target_model
 
             kwargs.pop('is_single', None)  # Deprecated kwarg
