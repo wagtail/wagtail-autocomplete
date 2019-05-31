@@ -35,7 +35,7 @@ Instead we can use :py:class:`AutocompletePanel`.
 .. code-block:: python
 
     content_panels = Page.content_panels + [
-        AutocompletePanel('author', target_model='app_label.AuthorPage'),
+        AutocompletePanel('author'),
     ]
 
 .. image:: /_static/autocomplete-fk-demo.gif
@@ -46,18 +46,12 @@ AutocompletePanel
 
 .. module:: wagtailautocomplete.edit_handlers
 
-.. class:: AutocompletePanel(field_name, target_model='wagtailcore.Page', is_single=True)
+.. class:: AutocompletePanel(field_name, target_model='wagtailcore.Page')
 
     ``AutocompletePanel`` takes one required argument, the field name.
     Optionally, you can pass a single ``target_model`` which will limit the
-    objects an editor can select to that model — this argument should be
-    passed in ``app_label.ModelName`` syntax.
-
-    ``is_single`` determines whether the editor can select one object (with
-    the default value of ``True``) or multiple objects (with ``False``). The
-    default value is fine for drop-in
-    :class:`~wagtail:wagtail.wagtailadmin.edit_handlers.PageChooserPanel`
-    replacement.
+    objects an editor can select to that model — this argument can be a refrence
+    to a model class or a model string in ``app_label.ModelName`` syntax.
 
     .. note::
         Unlike :class:`~wagtail:wagtail.wagtailadmin.edit_handlers.PageChooserPanel`,
@@ -72,8 +66,7 @@ Multiple Selection With Clusterable Models
 ==========================================
 
 ``AutocompletePanel`` can also be used with a ``ParentalManyToManyField`` to
-provide a multiple selection widget. You must pass ``is_single=False``
-explicitly to enable this behavior. For example:
+provide a multiple selection widget. For example:
 
 .. code-block:: python
 
@@ -96,7 +89,7 @@ explicitly to enable this behavior. For example:
         )
 
         content_panels = Page.content_panels + [
-            AutocompletePanel('books', target_model='home.Book', is_single=False)
+            AutocompletePanel('books', target_model=Book)
         ]
 
 .. image:: /_static/autocomplete-m2m-demo.gif

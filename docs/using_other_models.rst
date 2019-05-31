@@ -54,5 +54,5 @@ usage with
 .. code-block:: python
 
     panels = [
-        AutocompletePanel('external_link', target_model='app_label.Link'),
+        AutocompletePanel('external_link'),
     ]
