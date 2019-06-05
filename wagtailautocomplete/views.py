@@ -9,6 +9,7 @@ from django.http import (HttpResponseBadRequest, HttpResponseForbidden,
                          JsonResponse)
 from django.views.decorators.http import require_GET, require_POST
 
+from wagtailautocomplete.manager import get_manager_for_model
 
 def render_page(page):
     if getattr(page, 'specific', None):
@@ -37,14 +38,10 @@ def objects(request):
             unquote(pk)
             for pk in pks_param.split(',')
         ]
-        queryset = model.objects.filter(pk__in=pks)
+        manager = get_manager_for_model(model)
+        queryset = manager.queryset(model).filter(pk__in=pks)
     except Exception:
         return HttpResponseBadRequest()
-
-    if getattr(queryset, 'live', None):
-        # Non-Page models like Snippets won't have a live/published status
-        # and thus should not be filtered with a call to `live`.
-        queryset = queryset.live()
 
     results = map(render_page, queryset)
     return JsonResponse(dict(items=list(results)))
@@ -54,6 +51,7 @@ def objects(request):
 def search(request):
     search_query = request.GET.get('query', '')
     target_model = request.GET.get('type', 'wagtailcore.Page')
+
     try:
         model = apps.get_model(target_model)
     except Exception:
@@ -64,16 +62,10 @@ def search(request):
     except ValueError:
         return HttpResponseBadRequest()
 
-    field_name = getattr(model, 'autocomplete_search_field', 'title')
-    filter_kwargs = dict()
-    filter_kwargs[field_name + '__icontains'] = search_query
-    queryset = model.objects.filter(**filter_kwargs)
+    manager = get_manager_for_model(model)
+    queryset = manager.search(target_model, search_query)
 
-    if getattr(queryset, 'live', None):
-        # Non-Page models like Snippets won't have a live/published status
-        # and thus should not be filtered with a call to `live`.
-        queryset = queryset.live()
-
+    # Exclude any specified items
     exclude = request.GET.get('exclude', '')
     try:
         exclusions = [unquote(item) for item in exclude.split(',')]
