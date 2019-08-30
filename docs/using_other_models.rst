@@ -56,3 +56,9 @@ usage with
     panels = [
         AutocompletePanel('external_link'),
     ]
+
+.. note::
+    Wagtail Autocomplete assumes by default that models have a ``title`` field.
+    To you autocomplete with target models that don't have a ``title`` field,
+    see :doc:`Customization <customization>` for instructions on setting a
+    custom label and search field.

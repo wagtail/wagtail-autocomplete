@@ -7,6 +7,8 @@ Wagtail Autocomplete
 An edit handler for the Wagtail content editor allowing single or multi autocompleted selection of Pages, Snippets, or other models.
 The widget is written in React and can be used outside the Wagtail admin, if desired.
 
+.. image:: https://raw.githubusercontent.com/wagtail/wagtail-autocomplete/master/docs/_static/autocomplete-m2m-demo.gif
+
 Features
 ~~~~~~~~
 
@@ -14,7 +16,7 @@ Features
 * A drop-in alternative to ``PageChooserPanel`` or ``SnippetChooserPanel``
 * Create new objects from the autocomplete input if your search turns up blank
 * React component can be used outside of the Wagtail admin for public-facing forms
-* Default theme shares the colour scheme and styles of the Wagtail admin
+* Default theme shares the color scheme and styles of the Wagtail admin
 * Easy to re-theme with `BEM <http://getbem.com/>`_ methodology
 
 Who’s using it?

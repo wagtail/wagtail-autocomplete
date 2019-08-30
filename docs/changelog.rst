@@ -2,6 +2,18 @@
 Changelog
 =========
 
+0.4 Release
+-----------
+
+* Deprecate ``is_single`` option, make ``target_model`` optional. ``AutocompletePanel`` will now automatically derive these attributes from the field. (`#48 <https://github.com/wagtail/wagtail-autocomplete/pull/48>`_)
+* Remove compatibility for all Python 2.x and Wagtail 1.x versions (`#53 <https://github.com/wagtail/wagtail-autocomplete/pull/53>`_)
+
+0.3.1 Release
+-------------
+
+* Correct documentation for installing tests (`#44 <https://github.com/wagtail/wagtail-autocomplete/pull/44>`_)
+* Correct errors raised by endpoints (`#45 <https://github.com/wagtail/wagtail-autocomplete/pull/45>`_)
+
 0.3 Release
 -----------
 
