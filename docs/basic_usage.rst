@@ -68,6 +68,11 @@ Multiple Selection With Clusterable Models
 ``AutocompletePanel`` can also be used with a ``ParentalManyToManyField`` to
 provide a multiple selection widget. For example:
 
+.. note::
+   Use ``content_panels`` when the model is inherited from ``Page``. If it is
+   inherited from ``models.Model`` or ``ClusterableModel``, then we need to
+   use ``panels`` instead of ``content_panels``.
+
 .. code-block:: python
 
     from django.db import models
