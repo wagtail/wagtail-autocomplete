@@ -68,4 +68,4 @@ By default, the autocomplete widget will display the ``title`` field from a mode
         my_special_field = models.CharField(max_length=255)
 
         def autocomplete_label(self):
-            return my_special_field
+            return self.my_special_field
