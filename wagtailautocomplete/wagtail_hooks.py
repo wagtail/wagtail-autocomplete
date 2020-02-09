@@ -2,7 +2,7 @@ try:
     from django.contrib.staticfiles.templatetags.staticfiles import static
 except ModuleNotFoundError:
     from django.templatetags.static import static
-    
+
 from django.utils.html import format_html
 
 from wagtail.core import hooks
