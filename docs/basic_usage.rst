@@ -50,7 +50,7 @@ AutocompletePanel
 
     ``AutocompletePanel`` takes one required argument, the field name.
     Optionally, you can pass a single ``target_model`` which will limit the
-    objects an editor can select to that model — this argument can be a refrence
+    objects an editor can select to that model — this argument can be a reference
     to a model class or a model string in ``app_label.ModelName`` syntax.
 
     .. note::
