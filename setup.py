@@ -25,7 +25,7 @@ setup(
     license='BSD-3-Clause',
 
     install_requires=[
-        'wagtail>=1.11',
+        'wagtail>=2.3',
     ],
 
     extras_require={

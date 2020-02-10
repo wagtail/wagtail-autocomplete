@@ -9,7 +9,7 @@ We accept both issue reports and code contributions through our `GitHub reposito
 Code Style
 ----------
 
-This repo follows `Wagtail's guidelines <http://docs.wagtail.io/en/v1.11.1/contributing/index.html>`_.
+This repo follows `Wagtail's guidelines <https://docs.wagtail.io/en/stable/contributing/index.html>`_.
 Clone ``wagtail/wagtail`` in a separate folder and run linters with their configuration.
 
 .. code-block:: sh
