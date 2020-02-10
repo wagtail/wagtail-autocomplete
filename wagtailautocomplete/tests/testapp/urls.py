@@ -1,12 +1,7 @@
 from django.conf.urls import include, url
-from wagtail import VERSION
 
-if VERSION > (2, 0):
-    from wagtail.admin import urls as wagtailadmin_urls
-    from wagtail.core import urls as wagtail_urls
-else:
-    from wagtail.wagtailadmin import urls as wagtailadmin_urls
-    from wagtail.wagtailcore import urls as wagtail_urls
+from wagtail.admin import urls as wagtailadmin_urls
+from wagtail.core import urls as wagtail_urls
 
 from wagtailautocomplete.urls.admin import urlpatterns as autocomplete_admin_urls
 from wagtailautocomplete.urls.public import urlpatterns as autocomplete_public_urls
