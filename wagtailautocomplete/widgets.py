@@ -1,7 +1,9 @@
 import json
 
+from django import forms
 from django.forms import Widget
 from wagtail.admin.edit_handlers import widget_with_script
+from wagtail.admin.staticfiles import versioned_static
 
 from .views import render_page
 
@@ -44,3 +46,12 @@ class Autocomplete(Widget):
 
     def render_js_init(self, id):
         return "window.initAutoCompleteWidget('{0}');".format(id)
+
+    @property
+    def media(self):
+        return forms.Media(
+            css={
+                'all': [versioned_static('wagtailautocomplete/dist.css')],
+            },
+            js=[versioned_static('wagtailautocomplete/dist.js')],
+        )
