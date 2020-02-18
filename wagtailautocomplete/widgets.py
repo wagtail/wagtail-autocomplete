@@ -1,14 +1,14 @@
 import json
 
 from django import forms
-from django.forms import Widget
-from wagtail.admin.edit_handlers import widget_with_script
+
 from wagtail.admin.staticfiles import versioned_static
+from wagtail.utils.widgets import WidgetWithScript
 
 from .views import render_page
 
 
-class Autocomplete(Widget):
+class Autocomplete(WidgetWithScript):
     template_name = 'wagtailautocomplete/autocomplete.html'
 
     def get_context(self, *args, **kwargs):
@@ -39,13 +39,10 @@ class Autocomplete(Widget):
 
         return value['pk']
 
-    def render(self, name, value, attrs=None, renderer=None):
-        return widget_with_script(
-            super(Autocomplete, self).render(name, value, attrs, renderer),
-            self.render_js_init(attrs['id']))
-
-    def render_js_init(self, id):
-        return "window.initAutoCompleteWidget('{0}');".format(id)
+    def render_js_init(self, id_, name, value):
+        return "initAutoCompleteWidget({id});".format(
+            id=json.dumps(id_),
+        )
 
     @property
     def media(self):
