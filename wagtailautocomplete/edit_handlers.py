@@ -11,14 +11,19 @@ from .widgets import Autocomplete
 
 
 def _can_create(model):
-    """Returns True if the given model has implemented the autocomplete_create
+    """
+    Returns True if the given model has implemented the autocomplete_create
     method to allow new instances to be creates from a single string value.
     """
-    return callable(getattr(
-        model,
-        'autocomplete_create',
-        None,
-    ))
+    return callable(getattr(model, 'autocomplete_create', None))
+
+
+def _is_single_value(db_field):
+    """
+    Returns True if the given model field accepts a single value only.
+    """
+    # should cover all many-to-many relationships
+    return not isinstance(db_field, ManyToManyField)
 
 
 class AutocompletePanel(FieldPanel):
@@ -48,14 +53,9 @@ class AutocompletePanel(FieldPanel):
             self.field_name: Autocomplete(
                 target_model=self.target_model,
                 can_create=_can_create(self.target_model),
-                is_single=self.is_single,
+                is_single=_is_single_value(self.db_field),
             )
         }
-
-    @cached_property
-    def is_single(self):
-        # Should cover all many-to-many relationships
-        return not issubclass(self.db_field.__class__, ManyToManyField)
 
     @cached_property
     def target_model(self):
