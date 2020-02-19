@@ -1,7 +1,11 @@
-from django.contrib.staticfiles.templatetags.staticfiles import static
+import django
 from django.utils.html import format_html
-
 from wagtail.core import hooks
+
+if django.VERSION >= (3, 0):
+    from django.templatetags.static import static
+else:
+    from django.contrib.staticfiles.templatetags.staticfiles import static
 
 
 @hooks.register('insert_editor_js')

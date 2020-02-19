@@ -1,8 +1,11 @@
+import wagtail
 from django.conf.urls import url
-from wagtail.admin.decorators import require_admin_access
-
 from wagtailautocomplete.views import create, objects, search
 
+if wagtail.VERSION >= (2, 8):
+    from wagtail.admin.auth import require_admin_access
+else:
+    from wagtail.admin.decorators import require_admin_access
 
 urlpatterns = [
     url(r'^create/', require_admin_access(create)),
