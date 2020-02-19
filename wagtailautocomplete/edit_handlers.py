@@ -1,5 +1,3 @@
-import warnings
-
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models import ManyToManyField
 from django.utils.functional import cached_property
@@ -28,19 +26,7 @@ def _is_single_value(db_field):
 
 class AutocompletePanel(FieldPanel):
     def __init__(self, field_name, target_model=None, **kwargs):
-        # For compatability with old 'page_type' argument
-        if 'page_type' in kwargs:
-            warnings.warn(
-                'page_type argument has been replaced with target_model',
-                DeprecationWarning
-            )
-            target_model = kwargs.pop('page_type', None)
-        if 'is_single' in kwargs:
-            warnings.warn('is_single argument is no longer used', DeprecationWarning)
-            del kwargs['is_single']
-
         super().__init__(field_name, **kwargs)
-
         self._target_model = target_model
 
     def clone_kwargs(self):
