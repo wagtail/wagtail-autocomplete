@@ -3,14 +3,9 @@ from bs4 import BeautifulSoup
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
+from wagtail.core.models import Site
+
 from .testapp.models.page_to_page import SingleAutocompletePage
-
-from wagtail import VERSION
-
-if VERSION > (2, 0):
-    from wagtail.core.models import Site
-else:
-    from wagtail.wagtailcore.models import Site
 
 
 User = get_user_model()

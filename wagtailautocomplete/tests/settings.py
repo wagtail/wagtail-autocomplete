@@ -1,5 +1,3 @@
-from wagtail import VERSION
-
 SECRET_KEY = 'NOTSECRET'
 
 DATABASES = {
@@ -13,6 +11,12 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.staticfiles',
+    'wagtail.core',
+    'wagtail.documents',
+    'wagtail.images',
+    'wagtail.admin',
+    'wagtail.sites',
+    'wagtail.users',
     'taggit',
     'wagtailautocomplete',
     'wagtailautocomplete.tests.testapp',
@@ -21,6 +25,7 @@ INSTALLED_APPS = (
 MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'wagtail.core.middleware.SiteMiddleware',
 )
 
 TEMPLATES = [
@@ -40,29 +45,3 @@ ROOT_URLCONF = 'wagtailautocomplete.tests.testapp.urls'
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-# Wagtail version-specific settings added below
-
-if VERSION >= (2, 0):
-    INSTALLED_APPS += (
-        'wagtail.core',
-        'wagtail.documents',
-        'wagtail.images',
-        'wagtail.admin',
-        'wagtail.sites',
-        'wagtail.users',
-    )
-    MIDDLEWARE += (
-        'wagtail.core.middleware.SiteMiddleware',
-    )
-else:
-    INSTALLED_APPS += (
-        'wagtail.wagtailcore',
-        'wagtail.wagtaildocs',
-        'wagtail.wagtailimages',
-        'wagtail.wagtailadmin',
-        'wagtail.wagtailsites',
-        'wagtail.wagtailusers',
-    )
-    MIDDLEWARE += (
-        'wagtail.wagtailcore.middleware.SiteMiddleware',
-    )

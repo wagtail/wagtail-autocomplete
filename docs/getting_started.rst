@@ -5,7 +5,7 @@ Getting Started
 Requirements
 ============
 
-Wagtail Autocomplete requires Wagtail version 1.11 or newer.
+Wagtail Autocomplete requires Wagtail version 2.3 or newer.
 
 Installation
 ============

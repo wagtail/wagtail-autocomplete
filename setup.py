@@ -25,7 +25,7 @@ setup(
     license='BSD-3-Clause',
 
     install_requires=[
-        'wagtail>=1.11',
+        'wagtail>=2.3',
     ],
 
     extras_require={
@@ -37,7 +37,9 @@ setup(
             'tox',
             'pytest>=3.5',
             'pytest-django>=3.2',
-            'beautifulsoup4>=4.6.0',
+            # FIXME: the maximum version is needed until
+            # https://github.com/wagtail/wagtail/pull/5817
+            'beautifulsoup4>=4.6.0,<4.6.1',
             'html5lib>=0.999999999',
             'pytest-pythonpath>=0.7.2',
         ],
