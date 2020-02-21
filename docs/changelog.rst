@@ -2,6 +2,13 @@
 Changelog
 =========
 
+0.5 Release
+-----------
+
+* Add Django 3.0 support
+* Remove Wagtail 1.x support (Wagtail 2.3 or later now required)
+* Documentation fixes
+
 0.4 Release
 -----------
 
