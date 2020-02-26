@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from wagtail.admin.decorators import require_admin_access
+from wagtail.admin.auth import require_admin_access
 
 from wagtailautocomplete.views import create, objects, search
 
