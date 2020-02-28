@@ -1,8 +1,10 @@
 from django.conf.urls import url
-from wagtail.admin.decorators import require_admin_access
+try:
+    from wagtail.admin.decorators import require_admin_access
+except ImportError:
+    from wagtail.admin.auth import require_admin_access
 
 from wagtailautocomplete.views import create, objects, search
-
 
 urlpatterns = [
     url(r'^create/', require_admin_access(create)),
