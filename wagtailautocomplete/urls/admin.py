@@ -1,5 +1,8 @@
 from django.conf.urls import url
-from wagtail.admin.auth import require_admin_access
+try:
+    from wagtail.admin.auth import require_admin_access
+except ModuleNotFoundError:
+    from wagtail.admin.decorators import require_admin_access
 
 from wagtailautocomplete.views import create, objects, search
 
