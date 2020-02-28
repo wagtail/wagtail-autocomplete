@@ -6,7 +6,6 @@ except ModuleNotFoundError:
 
 from wagtailautocomplete.views import create, objects, search
 
-
 urlpatterns = [
     url(r'^create/', require_admin_access(create)),
     url(r'^objects/', require_admin_access(objects)),
