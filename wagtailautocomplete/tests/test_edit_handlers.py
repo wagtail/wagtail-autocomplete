@@ -147,6 +147,9 @@ class TestAutocompletePanel(TestCase):
         self.assertIn('data-autocomplete-input-is-single', element.attrs)
 
     def test_render_error(self):
+        form = self.form_class({'owner': ''}, instance=self.test_house)
+        self.assertFalse(form.is_valid())
+
         form = self.form_class({'owner': 'null'}, instance=self.test_house)
         self.assertFalse(form.is_valid())
 

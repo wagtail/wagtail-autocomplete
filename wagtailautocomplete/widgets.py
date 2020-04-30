@@ -37,14 +37,18 @@ class Autocomplete(WidgetWithScript):
             return json.dumps(render_page(self.target_model.objects.get(pk=value)))
 
     def value_from_datadict(self, data, files, name):
-        value = json.loads(data.get(name))
-        if not value:
+        # treat empty value as None to prevent deserialization error
+        original_value = super().value_from_datadict(data, files, name)
+        if not original_value:
             return None
 
-        if type(value) == list:
-            return [obj['pk'] for obj in value]
+        value = json.loads(original_value)
 
-        return value['pk']
+        if isinstance(value, list):
+            return [obj['pk'] for obj in value if 'pk' in obj]
+        if isinstance(value, dict):
+            return value.get('pk', None)
+        return None
 
     def render_js_init(self, id_, name, value):
         return "initAutoCompleteWidget({id});".format(
