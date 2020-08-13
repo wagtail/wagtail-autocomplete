@@ -39,7 +39,7 @@ class Single extends PureComponent {
       if (!selected) {
         return true;
       }
-      return suggestion.id !== selected.id;
+      return suggestion.pk !== selected.pk;
     });
 
     return (
