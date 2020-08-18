@@ -58,7 +58,6 @@ class SearchViewTestCase(TestCase):
         self.root_page.add_child(instance=self.multi_page)
         self.multi_page.targets.add(self.target_page1, self.target_page2)
 
-
     def test_target_model_not_found(self):
         """The search view should return a Bad Request response if not
         given a valid model type.
