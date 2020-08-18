@@ -1,6 +1,10 @@
-from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
+from django.test import TestCase
+from wagtail.core.models import Site
+
+from wagtailautocomplete.tests.testapp.models.page_to_page import (
+    MultipleAutocompletePage, SingleAutocompletePage, TargetPage)
 
 
 User = get_user_model()
@@ -36,6 +40,25 @@ class ObjectsViewTestCase(TestCase):
 
 
 class SearchViewTestCase(TestCase):
+    def setUp(self):
+        self.site = Site.objects.get(is_default_site=True)
+        self.root_page = self.site.root_page
+        self.target_page1 = TargetPage(title="target1 cars")
+        self.target_page2 = TargetPage(title="target2 cars")
+        self.root_page.add_child(instance=self.target_page1)
+        self.root_page.add_child(instance=self.target_page2)
+        self.single_page = SingleAutocompletePage(
+            title="Autocomplete singly.",
+            target=self.target_page1,
+        )
+        self.multi_page = MultipleAutocompletePage(
+            title="Autocomplete multiply.",
+        )
+        self.root_page.add_child(instance=self.single_page)
+        self.root_page.add_child(instance=self.multi_page)
+        self.multi_page.targets.add(self.target_page1, self.target_page2)
+
+
     def test_target_model_not_found(self):
         """The search view should return a Bad Request response if not
         given a valid model type.
@@ -43,39 +66,49 @@ class SearchViewTestCase(TestCase):
         """
         response = self.client.get(
             "/autocomplete/search/", {"type": "<invalid type>"})
-        assert response.status_code == 400
+        self.assertEqual(response.status_code, 400)
 
-    def test_invalid_pks(self):
-        """The objects view should return a Bad Request response if not
-        given the valid primary keys.
+    def test_invalid_limit(self):
+        """The search view should return Bad Request if not given
+        a numeric query limit.
 
         """
-        invalid = "-- --"
+        invalid = "abcde"
         response = self.client.get("/autocomplete/search/", {"limit": invalid})
-        assert response.status_code == 400
+        self.assertEqual(response.status_code, 400)
 
     def test_search_blank_single_exception_ignored(self):
         """The search view should handle a blank exclude clause."""
         response = self.client.get(
             "/autocomplete/search/"
-            "?type=testapp.SingleAutocompletePage&exclude="
+            "?type=testapp.TargetPage"
+            "&query=cars"
+            "&exclude="
         )
-        assert response.status_code == 200
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()['items']), 2)
 
     def test_search_blank_multi_exceptions_ignored(self):
         """The search view should handle multiple blank exclude clauses."""
         response = self.client.get(
             "/autocomplete/search/"
-            "?type=testapp.MultipleAutocompletePage&exclude=,,"
+            "?type=testapp.TargetPage"
+            "&query=cars"
+            "&exclude=,,,"
         )
-        assert response.status_code == 200
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()['items']), 2)
 
-    def test_search_exceptions_honored(self):
+    def test_search_valid_exception(self):
         response = self.client.get(
             "/autocomplete/search/"
-            "?type=testapp.MultipleAutocompletePage&exclude=101,102,103"
+            "?type=testapp.TargetPage"
+            "&query=cars"
+            "&exclude={},102,103".format(self.target_page1.pk)
         )
-        assert response.status_code == 200
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()['items']), 1)
+        self.assertEqual(response.json()['items'][0]['title'], 'target2 cars')
 
 
 class CreateViewTestCase(TestCase):
