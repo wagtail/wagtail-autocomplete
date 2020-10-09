@@ -12,6 +12,7 @@ const initAutocompleteInput = autocompleteNode => {
   const type = autocompleteNode.dataset.autocompleteInputType;
   const labelId = autocompleteNode.dataset.autocompleteInputId;
   const canCreate = autocompleteNode.dataset.autocompleteInputCanCreate === "";
+  const canEdit = autocompleteNode.dataset.autocompleteCanEdit === "";
   const isSingle = autocompleteNode.dataset.autocompleteInputIsSingle === "";
 
   const hasValidData = name && type;
@@ -26,6 +27,7 @@ const initAutocompleteInput = autocompleteNode => {
       type={type}
       labelId={labelId}
       canCreate={canCreate}
+      canEdit={canEdit}
       isSingle={isSingle}
       apiBase="/admin/autocomplete/"
     />,
