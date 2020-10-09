@@ -134,8 +134,10 @@ class AutocompleteInput extends PureComponent {
     if (value && value['edit_link']) {
       //Should be a react component or part of this component
       let editEl = document.querySelector(`[data-autocomplete-edit-link-id="${this.props.labelId}"]`);
-      editEl.href = value['edit_link'];
-      editEl.innerText = `Edit ${value['title']}`;
+      if (editEl) {
+        editEl.href = value['edit_link'];
+        editEl.innerText = `Edit ${value['title']}`;
+      }
     }
   }
 
