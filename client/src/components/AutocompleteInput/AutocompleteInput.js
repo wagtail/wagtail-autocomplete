@@ -21,7 +21,7 @@ class AutocompleteInput extends PureComponent {
       input: {
         value: ""
       },
-      suggestions: []
+      suggestions: [],
     };
 
     if (props.fetchInitialValues) {
@@ -71,7 +71,8 @@ class AutocompleteInput extends PureComponent {
       apiBase: this.props.apiBase,
       query: value,
       type: this.props.type,
-      exclude: this.getExclusions()
+      exclude: this.getExclusions(),
+      can_edit: this.props.canEdit || false,
     }).then(items => {
       this.setState({
         suggestions: items
@@ -129,6 +130,13 @@ class AutocompleteInput extends PureComponent {
     if (typeof this.props.onChange === "function") {
       this.props.onChange({ target: { value, _autocomplete: true } });
     }
+
+    if (value && value['edit_link']) {
+      //Should be a react component or part of this component
+      let editEl = document.querySelector(`[data-autocomplete-edit-link-id="${this.props.labelId}"]`);
+      editEl.href = value['edit_link'];
+      editEl.innerText = `Edit ${value['title']}`;
+    }
   }
 
   handleCreate() {
@@ -159,7 +167,7 @@ class AutocompleteInput extends PureComponent {
   }
 
   render() {
-    const { name, isSingle, onChange, labelId } = this.props;
+    const { name, isSingle, onChange, labelId, canEdit } = this.props;
     const { input, suggestions } = this.state;
 
     const canCreate = this.props.canCreate && input.value.trim() !== "";

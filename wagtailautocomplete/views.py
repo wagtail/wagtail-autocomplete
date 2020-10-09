@@ -6,6 +6,7 @@ from django.http import (HttpResponseBadRequest, HttpResponseForbidden,
                          JsonResponse)
 from django.views.decorators.http import require_GET, require_POST
 from wagtail import VERSION
+from wagtail.contrib.modeladmin.helpers.url import AdminURLHelper
 
 if VERSION > (2, 0):
     from wagtail.search.backends import get_search_backend
@@ -16,14 +17,18 @@ else:
 
 
 def render_page(page):
+    # not actually a page
     if getattr(page, 'specific', None):
         # For support of non-Page models like Snippets.
         page = page.specific
     if callable(getattr(page, 'autocomplete_label', None)):
         title = page.autocomplete_label()
-    else:
+    elif hasattr(page, 'title'):
         title = page.title
+    else:
+        title = str(page)
     return dict(pk=page.pk, title=title)
+
 
 
 @require_GET
@@ -92,8 +97,13 @@ def search(request):
         exclusions = [unquote(item) for item in exclude.split(',') if item]
         queryset = queryset.exclude(pk__in=exclusions)
 
-    results = map(render_page, queryset[:limit])
-    return JsonResponse(dict(items=list(results)))
+    results = list(map(render_page, queryset[:limit]))
+
+    if request.GET.get('can_edit', False):
+        url_helper = AdminURLHelper(model)
+        for index, result in enumerate(results):
+            results[index]['edit_link'] = url_helper.get_action_url('edit', result['pk'])
+    return JsonResponse(dict(items=results))
 
 
 @require_POST

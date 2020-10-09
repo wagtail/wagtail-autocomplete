@@ -27,12 +27,15 @@ const post = (url, data) =>
     });
 
 
-export const getSuggestions = ({ apiBase, query, type, exclude }) => {
-  const params = {
+export const getSuggestions = ({ apiBase, query, type, exclude, can_edit }) => {
+  let params = {
     query,
     type,
     exclude,
   };
+  if (can_edit) {
+    params['can_edit'] = 1
+  }
   const url = apiBase + 'search/';
 
   return get(url, params)
