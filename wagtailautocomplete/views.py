@@ -72,11 +72,9 @@ def search(request):
         queryset = queryset.live()
 
     exclude = request.GET.get('exclude', '')
-    try:
-        exclusions = [unquote(item) for item in exclude.split(',')]
+    if exclude:
+        exclusions = [unquote(item) for item in exclude.split(',') if item]
         queryset = queryset.exclude(pk__in=exclusions)
-    except Exception:
-        pass
 
     results = map(render_page, queryset[:limit])
     return JsonResponse(dict(items=list(results)))

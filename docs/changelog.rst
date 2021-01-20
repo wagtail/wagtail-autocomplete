@@ -2,6 +2,11 @@
 Changelog
 =========
 
+0.6 Release
+-----------
+
+* Add Wagtail 2.8 support
+
 0.5 Release
 -----------
 
