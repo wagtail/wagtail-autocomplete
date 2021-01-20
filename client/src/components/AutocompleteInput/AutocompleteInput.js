@@ -55,11 +55,11 @@ class AutocompleteInput extends PureComponent {
       return "";
     }
 
-    if (this.props.isSingle && value) {
+    if (this.props.isSingle) {
       return value.pk;
     }
 
-    return value.map(({ id }) => id).join(",");
+    return value.map(({ pk }) => pk).join(",");
   }
 
   checkNewSuggestions(value, checkDifferent = true) {
@@ -91,7 +91,7 @@ class AutocompleteInput extends PureComponent {
 
     let pks = null;
     if (isMulti) {
-      ids = value.map(({ pk }) => encodeURI(pk)).join(",");
+      pks = value.map(({ pk }) => encodeURI(pk)).join(",");
     } else {
       pks = value.pk;
     }
