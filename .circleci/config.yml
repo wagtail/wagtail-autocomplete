@@ -12,3 +12,9 @@ jobs:
       - run:
           name: flake8
           command: tox -e flake8
+
+workflows:
+  version: 2
+  autocomplete_ci:
+    jobs:
+      - build
