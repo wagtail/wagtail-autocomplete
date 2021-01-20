@@ -1,6 +1,15 @@
 version: 2
 jobs:
-  build:
+  flake8:
+    working_directory: ~/wagtail-autocomplete-repo
+    docker:
+      - image: randomknowledge/docker-pyenv-tox
+    steps:
+      - checkout
+      - run:
+          name: flake8
+          command: tox -e flake8
+  tests:
     working_directory: ~/wagtail-autocomplete-repo
     docker:
       - image: randomknowledge/docker-pyenv-tox
@@ -9,12 +18,10 @@ jobs:
       - run:
           name: tests
           command: tox
-      - run:
-          name: flake8
-          command: tox -e flake8
 
 workflows:
   version: 2
   autocomplete_ci:
     jobs:
-      - build
+      - tests
+      - flake8
