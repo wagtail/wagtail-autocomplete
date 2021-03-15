@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/wagtail-autocomplete-repo
     docker:
-      - image: randomknowledge/docker-pyenv-tox
+      - image: randomknowledge/docker-pyenv-tox:maintenance_update-versions
     steps:
       - checkout
       - run:
