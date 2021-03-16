@@ -37,9 +37,7 @@ setup(
             'tox',
             'pytest>=3.5',
             'pytest-django>=3.2',
-            # FIXME: the maximum version is needed until
-            # https://github.com/wagtail/wagtail/pull/5817
-            'beautifulsoup4>=4.6.0,<4.6.1',
+            'beautifulsoup4>=4.8',
             'html5lib>=0.999999999',
             'pytest-pythonpath>=0.7.2',
         ],
