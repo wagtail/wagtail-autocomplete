@@ -7,11 +7,11 @@ input.c-wagtailautocomplete__search {
     }
 }
 
-input.c-wagtailautocomplete__search-input-container {
+div.c-wagtailautocomplete__search-input-container {
     position: relative;
 }
 
-input.c-wagtailautocomplete__search-icon {
+svg.c-wagtailautocomplete__search-icon {
     position: absolute;
     z-index: 2;
     left: $search-icon-padding;
