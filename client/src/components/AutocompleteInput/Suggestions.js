@@ -200,6 +200,7 @@ class Suggestions extends PureComponent {
             aria-haspopup="true"
             aria-autocomplete="list"
             aria-activedescendant={activeDescendantId}
+            autoComplete="off"
           />
 
           <SearchIcon className={nc("search-icon")} />
