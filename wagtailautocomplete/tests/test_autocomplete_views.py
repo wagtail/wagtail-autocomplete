@@ -3,8 +3,7 @@ from django.contrib.auth.models import Permission
 from django.test import TestCase
 from wagtail.core.models import Site
 
-from wagtailautocomplete.tests.testapp.models.page_to_page import (
-    MultipleAutocompletePage, SingleAutocompletePage, TargetPage)
+from wagtailautocomplete.tests.testapp.models import House, Person
 
 
 User = get_user_model()
@@ -43,20 +42,14 @@ class SearchViewTestCase(TestCase):
     def setUp(self):
         self.site = Site.objects.get(is_default_site=True)
         self.root_page = self.site.root_page
-        self.target_page1 = TargetPage(title="target1 cars")
-        self.target_page2 = TargetPage(title="target2 cars")
-        self.root_page.add_child(instance=self.target_page1)
-        self.root_page.add_child(instance=self.target_page2)
-        self.single_page = SingleAutocompletePage(
-            title="Autocomplete singly.",
-            target=self.target_page1,
-        )
-        self.multi_page = MultipleAutocompletePage(
-            title="Autocomplete multiply.",
+        self.target_page1 = Person.objects.create(name="Adam Note")
+        self.target_page2 = Person.objects.create(name="Belle Note")
+        self.single_page = House(
+            name="Autocomplete singly.",
+            owner=self.target_page1,
         )
         self.root_page.add_child(instance=self.single_page)
-        self.root_page.add_child(instance=self.multi_page)
-        self.multi_page.targets.add(self.target_page1, self.target_page2)
+        self.single_page.occupants.add(self.target_page1, self.target_page2)
 
     def test_target_model_not_found(self):
         """The search view should return a Bad Request response if not
@@ -80,8 +73,8 @@ class SearchViewTestCase(TestCase):
         """The search view should handle a blank exclude clause."""
         response = self.client.get(
             "/autocomplete/search/"
-            "?type=testapp.TargetPage"
-            "&query=cars"
+            "?type=testapp.Person"
+            "&query=note"
             "&exclude="
         )
         self.assertEqual(response.status_code, 200)
@@ -91,8 +84,8 @@ class SearchViewTestCase(TestCase):
         """The search view should handle multiple blank exclude clauses."""
         response = self.client.get(
             "/autocomplete/search/"
-            "?type=testapp.TargetPage"
-            "&query=cars"
+            "?type=testapp.Person"
+            "&query=note"
             "&exclude=,,,"
         )
         self.assertEqual(response.status_code, 200)
@@ -101,13 +94,13 @@ class SearchViewTestCase(TestCase):
     def test_search_valid_exception(self):
         response = self.client.get(
             "/autocomplete/search/"
-            "?type=testapp.TargetPage"
-            "&query=cars"
+            "?type=testapp.Person"
+            "&query=note"
             "&exclude={},102,103".format(self.target_page1.pk)
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()['items']), 1)
-        self.assertEqual(response.json()['items'][0]['title'], 'target2 cars')
+        self.assertEqual(response.json()['items'][0]['title'], 'Belle Note')
 
 
 class CreateViewTestCase(TestCase):
