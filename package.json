@@ -57,7 +57,7 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
-    "axios": "^0.16.2",
+    "axios": "^0.21.1",
     "babel-preset-env": "^1.7.0",
     "classlist-polyfill": "^1.2.0",
     "classnames": "^2.2.5",
