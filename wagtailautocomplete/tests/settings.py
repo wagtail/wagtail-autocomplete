@@ -3,6 +3,7 @@ SECRET_KEY = 'NOTSECRET'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'wagtailautocomplete',
     }
 }
 
