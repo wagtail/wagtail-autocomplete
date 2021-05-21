@@ -77,6 +77,7 @@ def search(request):
         return HttpResponseBadRequest()
 
     field_name = getattr(model, 'autocomplete_search_field', None)
+
     if issubclass(model, Indexed):
         search_backend = get_search_backend()
         if field_name:
@@ -95,10 +96,12 @@ def search(request):
         queryset = queryset.live()
 
     exclude = request.GET.get('exclude', '')
-    if exclude:
-        exclusions = [unquote(item) for item in exclude.split(',') if item]
-        queryset = queryset.exclude(pk__in=exclusions)
-
+    if exclude and queryset:
+        try:
+            exclusions = [unquote(item) for item in exclude.split(',') if item]
+            queryset = queryset.exclude(pk__in=exclusions)
+        except: 
+            pass
     results = list(map(render_page, queryset[:limit]))
 
     if request.GET.get('can_edit', False):
