@@ -2,11 +2,6 @@
 Getting Started
 ===============
 
-Requirements
-============
-
-Wagtail Autocomplete requires Wagtail version 2.3 or newer.
-
 Installation
 ============
 

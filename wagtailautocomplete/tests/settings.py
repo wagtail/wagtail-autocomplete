@@ -3,6 +3,7 @@ SECRET_KEY = 'NOTSECRET'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'wagtailautocomplete',
     }
 }
 
@@ -25,7 +26,6 @@ INSTALLED_APPS = (
 MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'wagtail.core.middleware.SiteMiddleware',
 )
 
 TEMPLATES = [

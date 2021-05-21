@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import re_path
 try:
     from wagtail.admin.decorators import require_admin_access
 except ImportError:
@@ -7,7 +7,7 @@ except ImportError:
 from wagtailautocomplete.views import create, objects, search
 
 urlpatterns = [
-    url(r'^create/', require_admin_access(create)),
-    url(r'^objects/', require_admin_access(objects)),
-    url(r'^search/', require_admin_access(search)),
+    re_path(r'^create/', require_admin_access(create)),
+    re_path(r'^objects/', require_admin_access(objects)),
+    re_path(r'^search/', require_admin_access(search)),
 ]
