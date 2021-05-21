@@ -4,9 +4,11 @@ from django.apps import apps
 from django.contrib.contenttypes.models import ContentType
 from django.http import (HttpResponseBadRequest, HttpResponseForbidden,
                          JsonResponse)
+from django.urls import reverse
 from django.views.decorators.http import require_GET, require_POST
 from wagtail import VERSION
 from wagtail.contrib.modeladmin.helpers.url import AdminURLHelper
+from wagtail.core.models import Page
 
 if VERSION > (2, 0):
     from wagtail.search.backends import get_search_backend
@@ -100,9 +102,13 @@ def search(request):
     results = list(map(render_page, queryset[:limit]))
 
     if request.GET.get('can_edit', False):
-        url_helper = AdminURLHelper(model)
-        for index, result in enumerate(results):
-            results[index]['edit_link'] = url_helper.get_action_url('edit', result['pk'])
+        if issubclass(model, Page):
+            for index, result in enumerate(results):
+                results[index]['edit_link'] = reverse('wagtailadmin_pages:edit', args=(result['pk'],))
+        else:
+            url_helper = AdminURLHelper(model)
+            for index, result in enumerate(results):
+                results[index]['edit_link'] = url_helper.get_action_url('edit', result['pk'])
     return JsonResponse(dict(items=results))
 
 
