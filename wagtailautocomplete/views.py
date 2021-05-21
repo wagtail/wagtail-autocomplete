@@ -10,6 +10,7 @@ from wagtail import VERSION
 from wagtail.contrib.modeladmin.helpers.url import AdminURLHelper
 from wagtail.core.models import Page
 
+
 if VERSION > (2, 0):
     from wagtail.search.backends import get_search_backend
     from wagtail.search.index import Indexed
@@ -112,6 +113,7 @@ def search(request):
             url_helper = AdminURLHelper(model)
             for index, result in enumerate(results):
                 results[index]['edit_link'] = url_helper.get_action_url('edit', result['pk'])
+
     return JsonResponse(dict(items=results))
 
 
