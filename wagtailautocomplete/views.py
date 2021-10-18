@@ -3,7 +3,7 @@ from urllib.parse import unquote
 from django.apps import apps
 from django.contrib.contenttypes.models import ContentType
 from django.http import (HttpResponseBadRequest, HttpResponseForbidden,
-                         JsonResponse)
+                         HttpResponseNotFound, JsonResponse)
 from django.views.decorators.http import require_GET, require_POST
 
 
@@ -43,6 +43,8 @@ def objects(request):
         # and thus should not be filtered with a call to `live`.
         queryset = queryset.live()
 
+    if not queryset.count():
+        return HttpResponseNotFound('Object not found.')
     results = map(render_page, queryset)
     return JsonResponse(dict(items=list(results)))
 

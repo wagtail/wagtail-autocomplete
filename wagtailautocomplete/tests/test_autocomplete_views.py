@@ -38,6 +38,13 @@ class ObjectsViewTestCase(TestCase):
         response = self.client.get("/autocomplete/objects/", {"pks": invalid})
         assert response.status_code == 400
 
+    def test_missing_objects(self):
+        """The objects view should return a Not Found response if the given pk
+            don't have any associated object
+        """
+        response = self.client.get("/autocomplete/objects/", {"pks": "99"})
+        assert response.status_code == 404
+
 
 class SearchViewTestCase(TestCase):
     def setUp(self):
