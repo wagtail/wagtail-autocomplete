@@ -43,8 +43,8 @@ def objects(request):
         # and thus should not be filtered with a call to `live`.
         queryset = queryset.live()
 
-    if not queryset.count():
-        return HttpResponseNotFound('Object not found.')
+    if queryset.count() != len(pks):
+        return HttpResponseNotFound('Some objects are either missing or deleted')
     results = map(render_page, queryset)
     return JsonResponse(dict(items=list(results)))
 
