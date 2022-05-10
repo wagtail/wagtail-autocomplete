@@ -17,8 +17,8 @@
     }
   },
   "scripts": {
-    "build": "webpack -p",
-    "start": "webpack -w -d --display-error-details",
+    "build": "webpack --mode production",
+    "start": "webpack watch --devtool eval-source-map --mode development",
     "lint:js": "eslint ./client",
     "lint:css": "scss-lint",
     "test": "jest"
@@ -44,16 +44,17 @@
     "eslint-plugin-import": "^1.8.1",
     "eslint-plugin-jsx-a11y": "^1.5.3",
     "eslint-plugin-react": "^5.2.2",
-    "extract-text-webpack-plugin": "^3.0.0",
     "jest": "^20.0.4",
-    "node-sass": "^4.14.1",
+    "mini-css-extract-plugin": "^1.6.2",
     "postcss-loader": "^2.0.6",
     "react-test-renderer": "^15.6.1",
+    "sass": "^1.51.0",
     "sass-lint": "^1.10.2",
-    "sass-loader": "^6.0.3",
+    "sass-loader": "^10.2.1",
     "style-loader": "^0.18.2",
-    "webpack": "^3.5.1",
+    "webpack": "^4.46.0",
     "webpack-bundle-tracker": "^0.2.0",
+    "webpack-cli": "^4.9.2",
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
@@ -63,7 +64,7 @@
     "classnames": "^2.2.5",
     "element-dataset": "^2.2.6",
     "prop-types": "^15.5.10",
-    "react": "15.6.1",
-    "react-dom": "15.6.1"
+    "react": "^15.7.0",
+    "react-dom": "^15.7.0"
   }
 }
