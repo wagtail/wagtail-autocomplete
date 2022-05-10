@@ -33,15 +33,7 @@ var common = {
 		rules: [
 			{
 				test: /\.js$/,
-				use: [
-					{
-						loader: 'babel-loader',
-						query: {
-							presets: ['react', 'env'],
-							plugins: ['add-module-exports']
-						},
-					}
-				],
+				loader: 'babel-loader',
 				include: [
 					path.join(__dirname, '/client/'),
 				],

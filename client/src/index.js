@@ -1,5 +1,4 @@
-import {
-  AutocompleteInput,
+import AutocompleteInput, {
   initAutocompleteInput
 } from "./components/AutocompleteInput";
 
