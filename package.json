@@ -10,7 +10,9 @@
     "moduleNameMapper": {
       "\\.scss$": "<rootDir>/client/src/__mocks__/styleMock.js"
     },
-	"setupFiles": ["<rootDir>/client/src/setupTests.js"]
+    "setupFiles": [
+      "<rootDir>/client/src/setupTests.js"
+    ]
   },
   "scripts": {
     "build": "webpack --mode production",
@@ -55,7 +57,7 @@
     "babel-plugin-add-module-exports": "^0.2.1",
     "css-loader": "^6.7.1",
     "enzyme": "^3.11.0",
-    "enzyme-adapter-react-15": "^1.4.3",
+    "enzyme-adapter-react-16": "^1.15.6",
     "eslint": "^8.15.0",
     "eslint-import-resolver-webpack": "^0.13.2",
     "eslint-plugin-import": "^2.26.0",
@@ -66,7 +68,7 @@
     "mini-css-extract-plugin": "^1.6.2",
     "postcss": "^8.4.13",
     "postcss-loader": "^6.2.1",
-    "react-test-renderer": "^15.6.1",
+    "react-test-renderer": "^16.14.0",
     "sass": "^1.51.0",
     "sass-loader": "^10.2.1",
     "style-loader": "^3.3.1",
@@ -82,7 +84,7 @@
     "classnames": "^2.2.5",
     "element-dataset": "^2.2.6",
     "prop-types": "^15.5.10",
-    "react": "^15.7.0",
-    "react-dom": "^15.7.0"
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0"
   }
 }
