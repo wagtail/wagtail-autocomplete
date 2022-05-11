@@ -6,16 +6,18 @@
   "license": "BSD-3-Clause",
   "main": "client/src/index.js",
   "jest": {
+    "testEnvironment": "jsdom",
     "moduleNameMapper": {
       "\\.scss$": "<rootDir>/client/src/__mocks__/styleMock.js"
-    }
+    },
+	"setupFiles": ["<rootDir>/client/src/setupTests.js"]
   },
   "scripts": {
     "build": "webpack --mode production",
     "start": "webpack watch --devtool eval-source-map --mode development",
     "lint:js": "eslint ./client",
     "lint:css": "stylelint **/*.scss",
-    "test": "jest"
+    "test": "jest client"
   },
   "stylelint": {
     "extends": "@wagtail/stylelint-config-wagtail"
@@ -48,17 +50,19 @@
     "autoprefixer": "^10.4.7",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^9.0.0",
-    "babel-jest": "^23.4.2",
+    "babel-jest": "^28.1.0",
     "babel-loader": "^8.0.0",
     "babel-plugin-add-module-exports": "^0.2.1",
     "css-loader": "^6.7.1",
-    "enzyme": "^2.9.1",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-15": "^1.4.3",
     "eslint": "^8.15.0",
     "eslint-import-resolver-webpack": "^0.13.2",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.29.4",
-    "jest": "^20.0.4",
+    "jest": "^28.1.0",
+    "jest-environment-jsdom": "^28.1.0",
     "mini-css-extract-plugin": "^1.6.2",
     "postcss": "^8.4.13",
     "postcss-loader": "^6.2.1",
