@@ -1,7 +1,7 @@
 var webpack       = require('webpack');
 var merge         = require('webpack-merge');
 var autoprefixer  = require('autoprefixer');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 var path = require('path');
 
 var TARGET = process.env.npm_lifecycle_event;
@@ -33,54 +33,39 @@ var common = {
 		rules: [
 			{
 				test: /\.js$/,
-				use: [
-					{
-						loader: 'babel-loader',
-						query: {
-							presets: ['react', 'env'],
-							plugins: ['add-module-exports']
-						},
-					}
-				],
+				loader: 'babel-loader',
 				include: [
 					path.join(__dirname, '/client/'),
 				],
 			},
 			{
 				test: /\.s[ca]ss$/,
-				use: ExtractTextPlugin.extract({
-					fallback: 'style-loader',
-					use: [
-						'css-loader',
-						'postcss-loader',
-						{
-							loader: 'sass-loader',
-							options: {
+				use: [
+					MiniCssExtractPlugin.loader,
+					'css-loader',
+					'postcss-loader',
+					{
+						loader: 'sass-loader',
+						options: {
+							sassOptions: {
 								includePaths: [path.resolve(__dirname, 'node_modules/')],
-								data: sassData
-							}
+							},
+							additionalData: sassData
 						}
-					]
-				}),
+					}
+				]
 			},
 			{
 				test: /\.css$/,
-				use: ExtractTextPlugin.extract({
-					fallback: 'style-loader',
-					use: [
-						'css-loader',
-						'postcss-loader'
-					]
-				})
+				use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader']
 			}
 		]
 	},
 
 	plugins: [
-		new ExtractTextPlugin({
-			filename: (getPath) => {
-				return getPath('[name].css');
-			}
+		new MiniCssExtractPlugin({
+			filename: '[name].css',
+			chunkFilename: TARGET === 'build' ? '[id]-[contenthash].css' : '[id].css'
 		}),
 	]
 };

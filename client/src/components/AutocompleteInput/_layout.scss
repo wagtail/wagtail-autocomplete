@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 $space-between: 2%;
 
 .c-wagtailautocomplete__layout {
@@ -6,6 +8,6 @@ $space-between: 2%;
 
     &__item {
         // Cheap but robust padding when combined with space-between
-        width: 50% - $space-between / 2;
+        width: 50% - math.div($space-between, 2);
     }
 }
