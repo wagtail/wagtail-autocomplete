@@ -43,6 +43,11 @@ class AutocompletePanel(FieldPanel):
             )
         }
 
+    def get_form_options(self):
+        opts = super().get_form_options()
+        opts['widgets'] = self.widget_overrides()
+        return opts
+
     @cached_property
     def target_model(self):
         if self._target_model:
