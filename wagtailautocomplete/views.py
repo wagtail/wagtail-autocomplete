@@ -66,6 +66,11 @@ def objects(request):
 @require_GET
 def search(request):
     search_query = request.GET.get('query', '')
+
+    if (len(search_query) == 0):
+        emptyDict = {}
+        return JsonResponse(emptyDict)
+
     target_model = request.GET.get('type', 'wagtailcore.Page')
     try:
         model = apps.get_model(target_model)
