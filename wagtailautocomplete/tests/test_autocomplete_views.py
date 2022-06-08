@@ -1,8 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.test import TestCase
-from wagtail.core.models import Site
-
+try:
+    from wagtail.models import Site
+except ImportError:
+    # Wagtail<3.0
+    from wagtail.core.models import Site
 from wagtailautocomplete.tests.testapp.models import House, Person
 
 

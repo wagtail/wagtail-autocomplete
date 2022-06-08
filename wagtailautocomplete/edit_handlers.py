@@ -1,9 +1,17 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models import ManyToManyField
 from django.utils.functional import cached_property
+try:
+    from wagtail.admin.panels import FieldPanel
+except ImportError:
+    # Wagtail<3.0
+    from wagtail.admin.edit_handlers import FieldPanel
 
-from wagtail.admin.edit_handlers import FieldPanel
-from wagtail.core.utils import resolve_model_string
+try:
+    from wagtail.coreutils import resolve_model_string
+except ImportError:
+    # Wagtail<3.0
+    from wagtail.core.utils import resolve_model_string
 
 from .widgets import Autocomplete
 

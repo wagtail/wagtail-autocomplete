@@ -1,8 +1,11 @@
 from django.urls import re_path, include
 
 from wagtail.admin import urls as wagtailadmin_urls
-from wagtail.core import urls as wagtail_urls
-
+try:
+    from wagtail import urls as wagtail_urls
+except ImportError:
+    # Wagtail<3.0
+    from wagtail.core import urls as wagtail_urls
 from wagtailautocomplete.urls.admin import urlpatterns as autocomplete_admin_urls
 from wagtailautocomplete.urls.public import urlpatterns as autocomplete_public_urls
 

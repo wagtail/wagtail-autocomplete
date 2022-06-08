@@ -1,9 +1,11 @@
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ImproperlyConfigured
 from django.test import RequestFactory, TestCase
-
-from wagtail.admin.edit_handlers import ObjectList
-
+try:
+    from wagtail.admin.panels import ObjectList
+except ImportError:
+    # Wagtail<3.0
+    from wagtail.admin.edit_handlers import ObjectList
 from bs4 import BeautifulSoup
 
 from wagtailautocomplete.edit_handlers import AutocompletePanel
