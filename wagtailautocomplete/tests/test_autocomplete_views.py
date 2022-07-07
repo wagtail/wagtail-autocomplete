@@ -62,6 +62,7 @@ class SearchViewTestCase(TestCase):
         )
         self.root_page.add_child(instance=self.single_page)
         self.single_page.occupants.add(self.target_page1, self.target_page2)
+        self.single_page.save()
 
     def test_target_model_not_found(self):
         """The search view should return a Bad Request response if not
@@ -81,38 +82,58 @@ class SearchViewTestCase(TestCase):
         response = self.client.get("/autocomplete/search/", {"limit": invalid})
         self.assertEqual(response.status_code, 400)
 
-    def test_search_blank_single_exception_ignored(self):
-        """The search view should handle a blank exclude clause."""
+    def test_existing_excluded(self):
+        """The results should not include existing values"""
         response = self.client.get(
             "/autocomplete/search/"
             "?type=testapp.Person"
+            "&db_field=testapp.Person.name"
             "&query=note"
-            "&exclude="
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.json()['items']), 2)
-
-    def test_search_blank_multi_exceptions_ignored(self):
-        """The search view should handle multiple blank exclude clauses."""
-        response = self.client.get(
-            "/autocomplete/search/"
-            "?type=testapp.Person"
-            "&query=note"
-            "&exclude=,,,"
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.json()['items']), 2)
-
-    def test_search_valid_exception(self):
-        response = self.client.get(
-            "/autocomplete/search/"
-            "?type=testapp.Person"
-            "&query=note"
-            "&exclude={},102,103".format(self.target_page1.pk)
+            "&instance=%s" % self.target_page1.pk
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()['items']), 1)
-        self.assertEqual(response.json()['items'][0]['title'], 'Belle Note')
+
+    def test_existing_many_to_many_excluded(self):
+        """ Existing many to many relations should be excluded. """
+        response = self.client.get(
+            "/autocomplete/search/"
+            "?type=testapp.Person"
+            "&db_field=testapp.House.occupants"
+            "&query=note"
+            "&instance=%s" % self.single_page.pk
+        )
+        self.assertEqual(len(self.single_page.occupants.all()), 2)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()['items']), 0)
+
+        # Now remove one occupant
+        self.single_page.occupants.remove(self.target_page1)
+        self.single_page.save()
+        response = self.client.get(
+            "/autocomplete/search/"
+            "?type=testapp.Person"
+            "&db_field=testapp.House.occupants"
+            "&query=note"
+            "&instance=%s" % self.single_page.pk
+        )
+        self.assertEqual(len(self.single_page.occupants.all()), 1)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()['items']), 1)
+
+    def test_existing_foreignkey_excluded(self):
+        """ Existing foreignkey should be excluded. """
+        response = self.client.get(
+            "/autocomplete/search/"
+            "?type=testapp.Person"
+            "&db_field=testapp.House.owner"
+            "&query=note"
+            "&instance=%s" % self.single_page.pk
+        )
+        self.assertEqual(self.single_page.owner, self.target_page1)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()['items']), 1)
+        self.assertEqual(response.json()['items'][0]["pk"], self.target_page2.pk)
 
 
 class CreateViewTestCase(TestCase):

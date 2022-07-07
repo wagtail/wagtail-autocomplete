@@ -54,7 +54,7 @@ def search(request):
     search_query = request.GET.get('query', '')
     target_model = request.GET.get('type', 'wagtailcore.Page')
     try:
-        model = apps.get_model(target_model)
+        target_model = apps.get_model(target_model)
     except Exception:
         return HttpResponseBadRequest()
 
@@ -63,20 +63,44 @@ def search(request):
     except ValueError:
         return HttpResponseBadRequest()
 
-    field_name = getattr(model, 'autocomplete_search_field', 'title')
+    field_name = getattr(target_model, 'autocomplete_search_field', 'title')
     filter_kwargs = dict()
     filter_kwargs[field_name + '__icontains'] = search_query
-    queryset = model.objects.filter(**filter_kwargs)
+    queryset = target_model.objects.filter(**filter_kwargs)
 
     if getattr(queryset, 'live', None):
         # Non-Page models like Snippets won't have a live/published status
         # and thus should not be filtered with a call to `live`.
         queryset = queryset.live()
 
-    exclude = request.GET.get('exclude', '')
-    if exclude:
-        exclusions = [unquote(item) for item in exclude.split(',') if item]
-        queryset = queryset.exclude(pk__in=exclusions)
+    # Get exclusions based on the existing instance.
+    instance = request.GET.get('instance', '')
+    db_field = request.GET.get('db_field', '')
+    if instance and db_field:
+        model_str, field_str = db_field.rsplit(".", 1)
+
+        try:
+            model = apps.get_model(model_str)
+        except Exception:
+            return HttpResponseBadRequest("The model '%s' could not be found." % model_str)
+
+        model_field = model._meta.get_field(field_str)
+        model_instance = model.objects.get(pk=instance)
+        instance_field = getattr(model_instance, field_str)
+
+        if model_field.many_to_many:
+            # Get all existing pks as exclusions
+            exclusions = instance_field.all().values_list("pk", flat=True)
+            exclusions_kwargs = {"pk__in": exclusions}
+        elif model_field.many_to_one or model_field.one_to_one:
+            # Get instance itself as exclusion
+            exclusions = instance_field.pk
+            exclusions_kwargs = {"pk": exclusions}
+        else:
+            # Get instance field value as exclusion
+            exclusions_kwargs = {field_str: instance_field}
+
+        queryset = queryset.exclude(**exclusions_kwargs)
 
     results = map(render_page, queryset[:limit])
     return JsonResponse(dict(items=list(results)))

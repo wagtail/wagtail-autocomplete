@@ -11,9 +11,11 @@ const initAutocompleteInput = autocompleteNode => {
   const name = autocompleteNode.dataset.autocompleteInputName;
   const value = JSON.parse(autocompleteNode.dataset.autocompleteInputValue);
   const type = autocompleteNode.dataset.autocompleteInputType;
+  const db_field = autocompleteNode.dataset.autocompleteInputDbField;
   const labelId = autocompleteNode.dataset.autocompleteInputId;
   const canCreate = autocompleteNode.dataset.autocompleteInputCanCreate === "";
   const isSingle = autocompleteNode.dataset.autocompleteInputIsSingle === "";
+  const instance = autocompleteNode.dataset.autocompleteInputInstance;
 
   const hasValidData = name && type;
   if (!hasValidData) {
@@ -24,10 +26,12 @@ const initAutocompleteInput = autocompleteNode => {
     <AutocompleteInput
       name={name}
       value={value}
+      db_field={db_field}
       type={type}
       labelId={labelId}
       canCreate={canCreate}
       isSingle={isSingle}
+      instance={instance}
       apiBase={wagtailadminHome + "autocomplete/"}
     />,
     autocompleteNode
