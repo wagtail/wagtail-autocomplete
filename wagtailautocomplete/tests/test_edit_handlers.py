@@ -1,12 +1,13 @@
-from wagtail import VERSION as WAGTAIL_VERSION
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ImproperlyConfigured
 from django.test import RequestFactory, TestCase
-try:
+from wagtail import VERSION as WAGTAIL_VERSION
+
+if WAGTAIL_VERSION >= (3, 0):
     from wagtail.admin.panels import ObjectList
-except ImportError:
-    # Wagtail<3.0
+else:
     from wagtail.admin.edit_handlers import ObjectList
+
 from bs4 import BeautifulSoup
 
 from wagtailautocomplete.edit_handlers import AutocompletePanel
@@ -200,9 +201,7 @@ class TestAutocompletePanel(TestCase):
         self.assertIn('<span>This field is required.</span>', autocomplete_panel.render_as_field())
 
     def test_target_model(self):
-        autocomplete_panel = AutocompletePanel(
-            'owner'
-        )
+        autocomplete_panel = AutocompletePanel('owner', target_model=Person)
         if WAGTAIL_VERSION >= (3, 0):
             autocomplete_panel.bind_to_model(House)
         else:
