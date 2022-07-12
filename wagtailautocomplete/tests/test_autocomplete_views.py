@@ -7,7 +7,7 @@ if WAGTAIL_VERSION >= (3, 0):
     from wagtail.models import Site
 else:
     from wagtail.core.models import Site
-    
+
 from wagtailautocomplete.tests.testapp.models import House, Person
 
 
