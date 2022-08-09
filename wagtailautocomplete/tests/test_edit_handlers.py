@@ -1,8 +1,12 @@
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ImproperlyConfigured
 from django.test import RequestFactory, TestCase
+from wagtail import VERSION as WAGTAIL_VERSION
 
-from wagtail.admin.edit_handlers import ObjectList
+if WAGTAIL_VERSION >= (3, 0):
+    from wagtail.admin.panels import ObjectList
+else:
+    from wagtail.admin.edit_handlers import ObjectList
 
 from bs4 import BeautifulSoup
 
@@ -21,10 +25,13 @@ class TestAutocompletePanel(TestCase):
         model = House  # a model with a foreign key to Person
 
         # a AutocompletePanel class that works on House's 'owner' field
-        self.edit_handler = (
-            ObjectList([AutocompletePanel('owner')])
-            .bind_to(model=House, request=self.request)
-        )
+        if WAGTAIL_VERSION >= (3, 0):
+            self.edit_handler = ObjectList([AutocompletePanel("owner")]).bind_to_model(House)
+        else:
+            self.edit_handler = ObjectList([AutocompletePanel("owner")]).bind_to(
+                model=House, request=self.request
+            )
+
         self.base_autocomplete_panel = self.edit_handler.children[0]
 
         # build a form class containing the fields that AutocompletePanel wants
@@ -38,20 +45,28 @@ class TestAutocompletePanel(TestCase):
         )
 
         self.form = self.form_class(instance=self.test_house)
-        self.autocomplete_panel = self.base_autocomplete_panel.bind_to(
-            instance=self.test_house, form=self.form
-        )
+
+        if WAGTAIL_VERSION >= (3, 0):
+            self.autocomplete_panel = self.base_autocomplete_panel.get_bound_panel(
+                instance=self.test_house, form=self.form
+            )
+        else:
+            self.autocomplete_panel = self.base_autocomplete_panel.bind_to(
+                instance=self.test_house, form=self.form
+            )
 
     def test_form_field_uses_correct_widget(self):
         self.assertEqual(type(self.form.fields['owner'].widget), Autocomplete)
 
     def test_form_field_media(self):
         media_html = str(self.form.media)
+
         self.assertIn('wagtailautocomplete/dist.css', media_html)
         self.assertIn('wagtailautocomplete/dist.js', media_html)
 
     def test_render_js_init(self):
         result = self.autocomplete_panel.render_as_field()
+
         self.assertIn('initAutoCompleteWidget("id_owner");', result)
 
     def test_render_as_field(self):
@@ -60,6 +75,7 @@ class TestAutocompletePanel(TestCase):
 
         soup = BeautifulSoup(result, 'html5lib')
         elements = soup.find_all(attrs={'data-autocomplete-input': True})
+
         self.assertEqual(len(elements), 1)
         self.assertEqual(elements[0]['data-autocomplete-input-name'], 'owner')
         self.assertJSONEqual(elements[0]['data-autocomplete-input-value'], {
@@ -72,20 +88,27 @@ class TestAutocompletePanel(TestCase):
         # test the conversion of the form field's value from datadict
         field_value = elements[0]['data-autocomplete-input-value']
         form = self.form_class({'owner': field_value}, instance=self.test_house)
+
         self.assertTrue(form.is_valid())
 
     def test_render_as_empty_field(self):
         test_instance = House()
         form = self.form_class(instance=test_instance)
-        autocomplete_panel = self.base_autocomplete_panel.bind_to(
-            instance=test_instance, form=form, request=self.request
-        )
-
+        if WAGTAIL_VERSION >= (3, 0):
+            autocomplete_panel = self.base_autocomplete_panel.get_bound_panel(
+                instance=test_instance, form=form, request=self.request
+            )
+        else:
+            autocomplete_panel = self.base_autocomplete_panel.bind_to(
+                instance=test_instance, form=form, request=self.request
+            )
         result = autocomplete_panel.render_as_field()
+
         self.assertIn('<p class="help">the owner</p>', result)
 
         soup = BeautifulSoup(result, 'html5lib')
         element = soup.find(attrs={'data-autocomplete-input': True})
+
         self.assertIsNotNone(element)
         self.assertEqual(element['data-autocomplete-input-name'], 'owner')
         self.assertEqual(element['data-autocomplete-input-value'], 'null')
@@ -93,21 +116,31 @@ class TestAutocompletePanel(TestCase):
         self.assertIn('data-autocomplete-input-is-single', element.attrs)
 
     def test_render_multiple_as_field(self):
-        edit_handler = (
-            ObjectList([AutocompletePanel('occupants')])
-            .bind_to(model=House, request=self.request)
-        )
+        if WAGTAIL_VERSION >= (3, 0):
+            edit_handler = ObjectList([AutocompletePanel('occupants')]).bind_to_model(House)
+        else:
+            edit_handler = ObjectList([AutocompletePanel('occupants')]).bind_to(
+                model=House, request=self.request
+            )
+
         form_class = edit_handler.get_form_class()
         form = form_class(instance=self.test_house)
-        autocomplete_panel = edit_handler.children[0].bind_to(
-            instance=self.test_house, form=form, request=self.request
-        )
+
+        if WAGTAIL_VERSION >= (3, 0):
+            autocomplete_panel = edit_handler.children[0].get_bound_panel(
+                instance=self.test_house, form=form, request=self.request
+            )
+        else:
+            autocomplete_panel = edit_handler.children[0].bind_to(
+                instance=self.test_house, form=form, request=self.request
+            )
 
         result = autocomplete_panel.render_as_field()
         self.assertIn('Occupants', result)
 
         soup = BeautifulSoup(result, 'html5lib')
         element = soup.find(attrs={'data-autocomplete-input': True})
+
         self.assertIsNotNone(element)
         self.assertEqual(element['data-autocomplete-input-name'], 'occupants')
         self.assertJSONEqual(element['data-autocomplete-input-value'], [
@@ -122,24 +155,35 @@ class TestAutocompletePanel(TestCase):
         # test the conversion of the form field's value from datadict
         field_value = element['data-autocomplete-input-value']
         form = form_class({'occupants': field_value}, instance=self.test_house)
+
         self.assertTrue(form.is_valid())
 
     def test_render_create_as_field(self):
-        edit_handler = (
-            ObjectList([AutocompletePanel('group')])
-            .bind_to(model=Person, request=self.request)
-        )
+        if WAGTAIL_VERSION >= (3, 0):
+            edit_handler = ObjectList([AutocompletePanel('group')]).bind_to_model(Person)
+        else:
+            edit_handler = ObjectList([AutocompletePanel('group')]).bind_to(
+                model=Person, request=self.request
+            )
+
         form_class = edit_handler.get_form_class()
         form = form_class(instance=self.house_occupant)
-        autocomplete_panel = edit_handler.children[0].bind_to(
-            instance=self.house_occupant, form=form, request=self.request
-        )
+
+        if WAGTAIL_VERSION >= (3, 0):
+            autocomplete_panel = edit_handler.children[0].get_bound_panel(
+                instance=self.house_occupant, form=form, request=self.request
+            )
+        else:
+            autocomplete_panel = edit_handler.children[0].bind_to(
+                instance=self.house_occupant, form=form, request=self.request
+            )
 
         result = autocomplete_panel.render_as_field()
         self.assertIn('Group', result)
 
         soup = BeautifulSoup(result, 'html5lib')
         element = soup.find(attrs={'data-autocomplete-input': True})
+
         self.assertIsNotNone(element)
         self.assertEqual(element['data-autocomplete-input-name'], 'group')
         self.assertJSONEqual(element['data-autocomplete-input-value'], 'null')
@@ -153,29 +197,39 @@ class TestAutocompletePanel(TestCase):
         form = self.form_class({'owner': 'null'}, instance=self.test_house)
         self.assertFalse(form.is_valid())
 
-        autocomplete_panel = self.base_autocomplete_panel.bind_to(
-            instance=self.test_house, form=form, request=self.request
-        )
+        if WAGTAIL_VERSION >= (3, 0):
+            autocomplete_panel = self.base_autocomplete_panel.get_bound_panel(
+                instance=self.test_house, form=form, request=self.request
+            )
+        else:
+            autocomplete_panel = self.base_autocomplete_panel.bind_to(
+                instance=self.test_house, form=form, request=self.request
+            )
+
         self.assertIn('<span>This field is required.</span>', autocomplete_panel.render_as_field())
 
     def test_target_model(self):
-        autocomplete_panel = AutocompletePanel(
-            'owner'
-        ).bind_to(model=House)
+        if WAGTAIL_VERSION >= (3, 0):
+            autocomplete_panel = AutocompletePanel('owner', target_model=Person).bind_to_model(House)
+        else:
+            autocomplete_panel = AutocompletePanel('owner', target_model=Person).bind_to(model=House)
+
         self.assertEqual(autocomplete_panel.target_model, Person)
 
     def test_target_models_malformed_type(self):
-        autocomplete_panel = AutocompletePanel(
-            'owner',
-            target_model='testapp',
-        ).bind_to(model=House)
+        if WAGTAIL_VERSION >= (3, 0):
+            autocomplete_panel = AutocompletePanel('owner', target_model='testapp').bind_to_model(House)
+        else:
+            autocomplete_panel = AutocompletePanel('owner', target_model='testapp').bind_to(model=House)
+
         with self.assertRaises(ImproperlyConfigured):
             autocomplete_panel.target_model
 
     def test_target_models_nonexistent_type(self):
-        autocomplete_panel = AutocompletePanel(
-            'owner',
-            target_model='testapp.hous',
-        ).bind_to(model=House)
+        if WAGTAIL_VERSION >= (3, 0):
+            autocomplete_panel = AutocompletePanel('owner', target_model='testapp.hous').bind_to_model(House)
+        else:
+            autocomplete_panel = AutocompletePanel('owner', target_model='testapp.hous').bind_to(model=House)
+
         with self.assertRaises(ImproperlyConfigured):
             autocomplete_panel.target_model

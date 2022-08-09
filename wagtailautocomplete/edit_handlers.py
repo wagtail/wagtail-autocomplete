@@ -1,9 +1,14 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models import ManyToManyField
 from django.utils.functional import cached_property
+from wagtail import VERSION as WAGTAIL_VERSION
 
-from wagtail.admin.edit_handlers import FieldPanel
-from wagtail.core.utils import resolve_model_string
+if WAGTAIL_VERSION >= (3, 0):
+    from wagtail.admin.panels import FieldPanel
+    from wagtail.coreutils import resolve_model_string
+else:
+    from wagtail.admin.edit_handlers import FieldPanel
+    from wagtail.core.utils import resolve_model_string
 
 from .widgets import Autocomplete
 
@@ -42,6 +47,12 @@ class AutocompletePanel(FieldPanel):
                 is_single=_is_single_value(self.db_field),
             )
         }
+
+    if WAGTAIL_VERSION >= (3, 0):
+        def get_form_options(self):
+            options = super().get_form_options()
+            options['widgets'] = self.widget_overrides()
+            return options
 
     @cached_property
     def target_model(self):
