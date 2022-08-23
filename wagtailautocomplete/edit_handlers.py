@@ -46,7 +46,7 @@ class AutocompletePanel(FieldPanel):
                 db_field=self.db_field,
                 can_create=_can_create(self.target_model),
                 is_single=_is_single_value(self.db_field),
-                instance=self.instance
+                instance=getattr(self, "instance", None)
             )
         }
 
