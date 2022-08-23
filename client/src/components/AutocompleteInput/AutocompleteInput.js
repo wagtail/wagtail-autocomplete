@@ -49,19 +49,6 @@ class AutocompleteInput extends PureComponent {
     });
   }
 
-  getExclusions() {
-    const { value } = this.state;
-    if (!value) {
-      return "";
-    }
-
-    if (this.props.isSingle) {
-      return value.pk;
-    }
-
-    return value.map(({ pk }) => pk).join(",");
-  }
-
   checkNewSuggestions(value, checkDifferent = true) {
     if (checkDifferent && value === this.state.value) {
       return;
@@ -70,8 +57,9 @@ class AutocompleteInput extends PureComponent {
     getSuggestions({
       apiBase: this.props.apiBase,
       query: value,
+      db_field: this.props.db_field,
       type: this.props.type,
-      exclude: this.getExclusions()
+      instance: this.props.instance
     }).then(items => {
       this.setState({
         suggestions: items

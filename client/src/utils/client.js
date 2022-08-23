@@ -27,11 +27,12 @@ const post = (url, data) =>
     });
 
 
-export const getSuggestions = ({ apiBase, query, type, exclude }) => {
+export const getSuggestions = ({ apiBase, query, type, db_field, instance }) => {
   const params = {
     query,
     type,
-    exclude,
+    db_field,
+    instance,
   };
   const url = apiBase + 'search/';
 

@@ -43,8 +43,10 @@ class AutocompletePanel(FieldPanel):
         return {
             self.field_name: Autocomplete(
                 target_model=self.target_model,
+                db_field=self.db_field,
                 can_create=_can_create(self.target_model),
                 is_single=_is_single_value(self.db_field),
+                instance=self.instance
             )
         }
 

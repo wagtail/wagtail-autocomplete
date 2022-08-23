@@ -2,8 +2,10 @@
     data-autocomplete-wagtailadmin-home="{% url 'wagtailadmin_home' %}"
     data-autocomplete-input-name="{{ widget.name }}"
     data-autocomplete-input-value="{{ widget.value }}"
+    data-autocomplete-input-db-field="{{ widget.db_field }}"
     data-autocomplete-input-type="{{ widget.target_model }}"
     data-autocomplete-input-id="{{ widget.attrs.id }}"
+    data-autocomplete-input-instance="{{ widget.instance }}"
     {% if widget.can_create %}data-autocomplete-input-can-create{% endif %}
     {% if widget.is_single %}data-autocomplete-input-is-single{% endif %}
     data-autocomplete-input
