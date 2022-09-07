@@ -68,8 +68,8 @@ class SearchViewTestCase(TestCase):
         given a valid model type.
 
         """
-        response = self.client.get(
-            "/autocomplete/search/", {"type": "<invalid type>"})
+        response = self.client.post(
+            "/autocomplete/search/", data={"type": "<invalid type>"})
         self.assertEqual(response.status_code, 400)
 
     def test_invalid_limit(self):
@@ -78,37 +78,43 @@ class SearchViewTestCase(TestCase):
 
         """
         invalid = "abcde"
-        response = self.client.get("/autocomplete/search/", {"limit": invalid})
+        response = self.client.post("/autocomplete/search/", data={"limit": invalid})
         self.assertEqual(response.status_code, 400)
 
     def test_search_blank_single_exception_ignored(self):
         """The search view should handle a blank exclude clause."""
-        response = self.client.get(
-            "/autocomplete/search/"
-            "?type=testapp.Person"
-            "&query=note"
-            "&exclude="
+        response = self.client.post(
+            "/autocomplete/search/",
+            data={
+                "type": "testapp.Person",
+                "query": "note",
+                "exclude": "",
+            }
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()['items']), 2)
 
     def test_search_blank_multi_exceptions_ignored(self):
         """The search view should handle multiple blank exclude clauses."""
-        response = self.client.get(
-            "/autocomplete/search/"
-            "?type=testapp.Person"
-            "&query=note"
-            "&exclude=,,,"
+        response = self.client.post(
+            "/autocomplete/search/",
+            data={
+                "type": "testapp.Person",
+                "query": "note",
+                "exclude": ",,,",
+            }
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()['items']), 2)
 
     def test_search_valid_exception(self):
-        response = self.client.get(
-            "/autocomplete/search/"
-            "?type=testapp.Person"
-            "&query=note"
-            "&exclude={},102,103".format(self.target_page1.pk)
+        response = self.client.post(
+            "/autocomplete/search/",
+            data={
+                "type": "testapp.Person",
+                "query": "note",
+                "exclude": "{},102,103".format(self.target_page1.pk),
+            }
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()['items']), 1)

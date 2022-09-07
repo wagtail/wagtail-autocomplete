@@ -49,17 +49,17 @@ def objects(request):
     return JsonResponse(dict(items=list(results)))
 
 
-@require_GET
+@require_POST
 def search(request):
-    search_query = request.GET.get('query', '')
-    target_model = request.GET.get('type', 'wagtailcore.Page')
+    search_query = request.POST.get('query', '')
+    target_model = request.POST.get('type', 'wagtailcore.Page')
     try:
         model = apps.get_model(target_model)
     except Exception:
         return HttpResponseBadRequest()
 
     try:
-        limit = int(request.GET.get('limit', 100))
+        limit = int(request.POST.get('limit', 100))
     except ValueError:
         return HttpResponseBadRequest()
 
@@ -73,7 +73,7 @@ def search(request):
         # and thus should not be filtered with a call to `live`.
         queryset = queryset.live()
 
-    exclude = request.GET.get('exclude', '')
+    exclude = request.POST.get('exclude', '')
     if exclude:
         exclusions = [unquote(item) for item in exclude.split(',') if item]
         queryset = queryset.exclude(pk__in=exclusions)
