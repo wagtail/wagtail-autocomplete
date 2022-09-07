@@ -54,7 +54,7 @@ def search(request):
     search_query = request.POST.get('query', '')
     target_model = request.POST.get('type', 'wagtailcore.Page')
     try:
-        model = apps.get_model(target_model)
+        target_model = apps.get_model(target_model)
     except Exception:
         return HttpResponseBadRequest()
 
@@ -63,10 +63,10 @@ def search(request):
     except ValueError:
         return HttpResponseBadRequest()
 
-    field_name = getattr(model, 'autocomplete_search_field', 'title')
+    field_name = getattr(target_model, 'autocomplete_search_field', 'title')
     filter_kwargs = dict()
     filter_kwargs[field_name + '__icontains'] = search_query
-    queryset = model.objects.filter(**filter_kwargs)
+    queryset = target_model.objects.filter(**filter_kwargs)
 
     if getattr(queryset, 'live', None):
         # Non-Page models like Snippets won't have a live/published status

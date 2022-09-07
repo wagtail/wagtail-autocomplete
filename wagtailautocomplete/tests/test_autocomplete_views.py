@@ -62,6 +62,7 @@ class SearchViewTestCase(TestCase):
         )
         self.root_page.add_child(instance=self.single_page)
         self.single_page.occupants.add(self.target_page1, self.target_page2)
+        self.single_page.save()
 
     def test_target_model_not_found(self):
         """The search view should return a Bad Request response if not
@@ -92,7 +93,7 @@ class SearchViewTestCase(TestCase):
             }
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.json()['items']), 2)
+        self.assertEqual(len(response.json()['items']), 1)
 
     def test_search_blank_multi_exceptions_ignored(self):
         """The search view should handle multiple blank exclude clauses."""
@@ -104,8 +105,23 @@ class SearchViewTestCase(TestCase):
                 "exclude": ",,,",
             }
         )
+        self.assertEqual(len(self.single_page.occupants.all()), 2)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.json()['items']), 2)
+        self.assertEqual(len(response.json()['items']), 0)
+
+        # Now remove one occupant
+        self.single_page.occupants.remove(self.target_page1)
+        self.single_page.save()
+        response = self.client.get(
+            "/autocomplete/search/"
+            "?type=testapp.Person"
+            "&db_field=testapp.House.occupants"
+            "&query=note"
+            "&instance=%s" % self.single_page.pk
+        )
+        self.assertEqual(len(self.single_page.occupants.all()), 1)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()['items']), 1)
 
     def test_search_valid_exception(self):
         response = self.client.post(
@@ -116,9 +132,10 @@ class SearchViewTestCase(TestCase):
                 "exclude": "{},102,103".format(self.target_page1.pk),
             }
         )
+        self.assertEqual(self.single_page.owner, self.target_page1)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()['items']), 1)
-        self.assertEqual(response.json()['items'][0]['title'], 'Belle Note')
+        self.assertEqual(response.json()['items'][0]["pk"], self.target_page2.pk)
 
 
 class CreateViewTestCase(TestCase):
