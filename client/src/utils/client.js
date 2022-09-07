@@ -28,14 +28,13 @@ const post = (url, data) =>
 
 
 export const getSuggestions = ({ apiBase, query, type, exclude }) => {
-  const params = {
-    query,
-    type,
-    exclude,
-  };
+  const data = new FormData();
+  data.set('query', query);
+  data.set('type', type);
+  data.set('exclude', exclude);
   const url = apiBase + 'search/';
 
-  return get(url, params)
+  return post(url, data)
     .then(res => {
       if (!Array.isArray(res.items)) {
         return Promise.reject();
