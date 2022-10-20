@@ -65,13 +65,20 @@ class TestAutocompletePanel(TestCase):
         self.assertIn('wagtailautocomplete/dist.js', media_html)
 
     def test_render_js_init(self):
-        result = self.autocomplete_panel.render_as_field()
+        if WAGTAIL_VERSION >= (4, 0):
+            result = self.autocomplete_panel.render_html()
+        else:
+            result = self.autocomplete_panel.render_as_field()
 
         self.assertIn('initAutoCompleteWidget("id_owner");', result)
 
     def test_render_as_field(self):
-        result = self.autocomplete_panel.render_as_field()
-        self.assertIn('<p class="help">the owner</p>', result)
+        if WAGTAIL_VERSION >= (4, 0):
+            result = self.autocomplete_panel.render_html()
+            self.assertIn('<div class="help">the owner</div>', result)
+        else:
+            result = self.autocomplete_panel.render_as_field()
+            self.assertIn('<p class="help">the owner</p>', result)
 
         soup = BeautifulSoup(result, 'html5lib')
         elements = soup.find_all(attrs={'data-autocomplete-input': True})
@@ -102,9 +109,12 @@ class TestAutocompletePanel(TestCase):
             autocomplete_panel = self.base_autocomplete_panel.bind_to(
                 instance=test_instance, form=form, request=self.request
             )
-        result = autocomplete_panel.render_as_field()
-
-        self.assertIn('<p class="help">the owner</p>', result)
+        if WAGTAIL_VERSION >= (4, 0):
+            result = autocomplete_panel.render_html()
+            self.assertIn('<div class="help">the owner</div>', result)
+        else:
+            result = autocomplete_panel.render_as_field()
+            self.assertIn('<p class="help">the owner</p>', result)
 
         soup = BeautifulSoup(result, 'html5lib')
         element = soup.find(attrs={'data-autocomplete-input': True})
@@ -135,8 +145,14 @@ class TestAutocompletePanel(TestCase):
                 instance=self.test_house, form=form, request=self.request
             )
 
-        result = autocomplete_panel.render_as_field()
-        self.assertIn('Occupants', result)
+        if WAGTAIL_VERSION >= (4, 0):
+            result = autocomplete_panel.render_html()
+            # Wagtail 4 renders the label using Javascript,
+            # so we don't get a label in the HTML
+            self.assertIn('data-contentpath="occupants"', result)
+        else:
+            result = autocomplete_panel.render_as_field()
+            self.assertIn('Occupants', result)
 
         soup = BeautifulSoup(result, 'html5lib')
         element = soup.find(attrs={'data-autocomplete-input': True})
@@ -178,7 +194,11 @@ class TestAutocompletePanel(TestCase):
                 instance=self.house_occupant, form=form, request=self.request
             )
 
-        result = autocomplete_panel.render_as_field()
+        if WAGTAIL_VERSION >= (4, 0):
+            result = autocomplete_panel.render_html()
+        else:
+            result = autocomplete_panel.render_as_field()
+
         self.assertIn('Group', result)
 
         soup = BeautifulSoup(result, 'html5lib')
@@ -205,8 +225,14 @@ class TestAutocompletePanel(TestCase):
             autocomplete_panel = self.base_autocomplete_panel.bind_to(
                 instance=self.test_house, form=form, request=self.request
             )
-
-        self.assertIn('<span>This field is required.</span>', autocomplete_panel.render_as_field())
+        
+        if WAGTAIL_VERSION >= (4, 0):
+            result = autocomplete_panel.render_html()
+            soup = BeautifulSoup(result, 'html5lib')
+            self.assertIn('This field is required.', soup.find('p', class_='error-message').text)
+        else:
+            result = autocomplete_panel.render_as_field()
+            self.assertIn('<span>This field is required.</span>', result)
 
     def test_target_model(self):
         if WAGTAIL_VERSION >= (3, 0):
