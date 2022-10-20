@@ -225,7 +225,7 @@ class TestAutocompletePanel(TestCase):
             autocomplete_panel = self.base_autocomplete_panel.bind_to(
                 instance=self.test_house, form=form, request=self.request
             )
-        
+
         if WAGTAIL_VERSION >= (4, 0):
             result = autocomplete_panel.render_html()
             soup = BeautifulSoup(result, 'html5lib')
