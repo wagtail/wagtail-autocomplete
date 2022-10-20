@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Unreleased
+----------
+
+* Added Wagtail 4.x compatibility
+
 0.10 Release
 ------------
 
