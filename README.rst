@@ -13,7 +13,7 @@ Features
 ~~~~~~~~
 
 * Rapidly select related objects via a smooth autocomplete interface
-* A drop-in alternative to ``PageChooserPanel`` or ``SnippetChooserPanel``
+* A drop-in alternative to ``FieldPanel``
 * Create new objects from the autocomplete input if your search turns up blank
 * React component can be used outside of the Wagtail admin for public-facing forms
 * Default theme shares the color scheme and styles of the Wagtail admin
