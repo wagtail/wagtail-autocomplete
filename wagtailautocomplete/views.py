@@ -38,7 +38,9 @@ def objects(request):
     except Exception:
         return HttpResponseBadRequest()
 
-    if getattr(queryset, 'live', None):
+    # autocomplete_allow_unpublished allows you to skip the live check and just return full queryset
+    allow_unpublished = getattr(model, 'autocomplete_allow_unpublished', False)
+    if getattr(queryset, 'live', None) and not allow_unpublished:
         # Non-Page models like Snippets won't have a live/published status
         # and thus should not be filtered with a call to `live`.
         queryset = queryset.live()
@@ -68,7 +70,9 @@ def search(request):
     filter_kwargs[field_name + '__icontains'] = search_query
     queryset = model.objects.filter(**filter_kwargs)
 
-    if getattr(queryset, 'live', None):
+    # autocomplete_allow_unpublished allows you to skip the live check and just return full queryset
+    allow_unpublished = getattr(model, 'autocomplete_allow_unpublished', False)
+    if getattr(queryset, 'live', None) and not allow_unpublished:
         # Non-Page models like Snippets won't have a live/published status
         # and thus should not be filtered with a call to `live`.
         queryset = queryset.live()
