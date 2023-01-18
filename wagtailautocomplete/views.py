@@ -1,6 +1,7 @@
 from urllib.parse import unquote
 
 from django.apps import apps
+from django.db.models import QuerySet, Model
 from django.contrib.contenttypes.models import ContentType
 from django.http import (HttpResponseBadRequest, HttpResponseForbidden,
                          HttpResponseNotFound, JsonResponse)
@@ -63,10 +64,11 @@ def search(request):
     except ValueError:
         return HttpResponseBadRequest()
 
-    field_name = getattr(model, 'autocomplete_search_field', 'title')
-    filter_kwargs = dict()
-    filter_kwargs[field_name + '__icontains'] = search_query
-    queryset = model.objects.filter(**filter_kwargs)
+    if callable(getattr(model, 'autocomplete_custom_queryset_filter', None)):
+        queryset = model.autocomplete_custom_queryset_filter(search_query)
+        validate_queryset(queryset, model)
+    else:
+        queryset = filter_queryset(search_query, model)
 
     if getattr(queryset, 'live', None):
         # Non-Page models like Snippets won't have a live/published status
@@ -80,6 +82,45 @@ def search(request):
 
     results = map(render_page, queryset[:limit])
     return JsonResponse(dict(items=list(results)))
+
+
+def filter_queryset(search_query: str, model: Model) -> QuerySet:
+    """
+    Filter db entries of the given model for the given search_query and returns it. The filter operates on either the
+    default column title or the custom column defined in autocomplete_search_field.
+
+    Args:
+        search_query (str): Term to search for.
+        model (Model): Model to search in.
+
+    Returns:
+        QuerySet: QuerySet containing the search results.
+    """
+    field_name = getattr(model, 'autocomplete_search_field', 'title')
+    filter_kwargs = dict()
+    filter_kwargs[field_name + '__icontains'] = search_query
+    return model.objects.filter(**filter_kwargs)
+
+
+def validate_queryset(queryset: QuerySet, model: Model):
+    """
+    Validate that a given QuerySet is of type QuerySet and refers to the given model.
+
+    Args:
+        queryset (QuerySet): QuerySet to validate.
+        model (Model): Expected django model class.
+
+    Raises:
+        TypeError: Raised if given QuerySet is not of type QuerySet
+        TypeError: Raised if given QuerySet refers to a different model than expected.
+    """
+    if not isinstance(queryset, QuerySet):
+        raise TypeError(f'Function "autocomplete_custom_queryset_filter" of model {model} does not return a QuerySet.')
+
+    if queryset.model is not model:
+        raise TypeError(
+            f'Function "autocomplete_custom_queryset_filter" of model {model} does not return queryset of {model}.'
+        )
 
 
 @require_POST
