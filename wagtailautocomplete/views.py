@@ -1,8 +1,8 @@
 from urllib.parse import unquote
 
 from django.apps import apps
-from django.db.models import QuerySet, Model
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Model, QuerySet
 from django.http import (HttpResponseBadRequest, HttpResponseForbidden,
                          HttpResponseNotFound, JsonResponse)
 from django.views.decorators.http import require_GET, require_POST
@@ -86,8 +86,9 @@ def search(request):
 
 def filter_queryset(search_query: str, model: Model) -> QuerySet:
     """
-    Filter db entries of the given model for the given search_query and returns it. The filter operates on either the
-    default column title or the custom column defined in autocomplete_search_field.
+    Filter db entries of the given model for the given search_query and
+    returns it. The filter operates on either the default column title or the
+    custom column defined in autocomplete_search_field.
 
     Args:
         search_query (str): Term to search for.
@@ -104,7 +105,8 @@ def filter_queryset(search_query: str, model: Model) -> QuerySet:
 
 def validate_queryset(queryset: QuerySet, model: Model):
     """
-    Validate that a given QuerySet is of type QuerySet and refers to the given model.
+    Validate that a given QuerySet is of type QuerySet and refers to the given
+    model.
 
     Args:
         queryset (QuerySet): QuerySet to validate.
@@ -112,14 +114,19 @@ def validate_queryset(queryset: QuerySet, model: Model):
 
     Raises:
         TypeError: Raised if given QuerySet is not of type QuerySet
-        TypeError: Raised if given QuerySet refers to a different model than expected.
+        TypeError: Raised if given QuerySet refers to a different model than
+            expected.
     """
     if not isinstance(queryset, QuerySet):
-        raise TypeError(f'Function "autocomplete_custom_queryset_filter" of model {model} does not return a QuerySet.')
+        raise TypeError(
+            f'Function "autocomplete_custom_queryset_filter" of model {model}'
+            'does not return a QuerySet.'
+        )
 
     if queryset.model is not model:
         raise TypeError(
-            f'Function "autocomplete_custom_queryset_filter" of model {model} does not return queryset of {model}.'
+            f'Function "autocomplete_custom_queryset_filter" of model {model}'
+            'does not return queryset of {model}.'
         )
 
 
