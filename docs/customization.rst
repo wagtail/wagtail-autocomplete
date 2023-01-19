@@ -51,7 +51,7 @@ By default, the autocomplete widget will match input against the ``title`` field
 
         MyModel.objects.filter(my_special_field__icontains='part')
 
-    Additionally, this means that ``autocomplete_search_field`` *must* be a model field and cannot be an arbitrary property or method.
+    Additionally, this means that ``autocomplete_search_field`` *must* be a model field and cannot be an arbitrary property or method. There is also the possibility to define a custom filter function, described in `Custom QuerySet Filter Function`_.
 
 Custom Label Display
 ====================
@@ -69,3 +69,30 @@ By default, the autocomplete widget will display the ``title`` field from a mode
 
         def autocomplete_label(self):
             return self.my_special_field
+
+.. _Custom QuerySet Filter Function:
+
+Custom QuerySet Filter Function
+====================
+
+By default, the autocomplete widget uses an ``icontains`` lookup to search for matching items of the given model. To change that behavior a custom filter function can be defined, that will be called instead of the default filtering. The function needs to return a QuerySet of the expected model.
+
+.. code-block:: python
+
+    from django.db import models
+    from django.db.models import QuerySet
+    from wagtailautocomplete.edit_handlers import AutocompletePanel
+
+
+    class MyModel(models.Model):
+        my_special_field = models.CharField(max_length=255)
+
+        def autocomplete_label(self):
+            return self.my_special_field
+        
+        @staticmethod
+        def autocomplete_custom_queryset_filter(search_term: str) -> QuerySet:
+            field_name='my_special_field'
+            filter_kwargs = dict()
+            filter_kwargs[field_name + '__contains'] = search_term
+            return MyModel.objects.filter(**filter_kwargs)
