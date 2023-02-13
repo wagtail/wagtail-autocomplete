@@ -1,7 +1,6 @@
 import json
 
 from django import forms
-
 from wagtail.admin.staticfiles import versioned_static
 from wagtail.utils.widgets import WidgetWithScript
 
