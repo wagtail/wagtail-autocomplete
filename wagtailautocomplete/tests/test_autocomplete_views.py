@@ -1,15 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.test import TestCase
-from wagtail import VERSION as WAGTAIL_VERSION
-
-if WAGTAIL_VERSION >= (3, 0):
-    from wagtail.models import Site
-else:
-    from wagtail.core.models import Site
+from wagtail.models import Site
 
 from wagtailautocomplete.tests.testapp.models import House, Person
-
 
 User = get_user_model()
 
