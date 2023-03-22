@@ -2,6 +2,36 @@
 Changelog
 =========
 
+0.10 Release
+------------
+
+* Change the search view to use the HTTP POST method, which can prevent the request URI from becoming too long.
+* New feature: add the possibility of a custom filter function.
+
+0.9 Release
+-----------
+
+* Add Wagtail 3.x compatibility
+
+0.8.1 Release
+-------------
+
+* Change in behavior: the autocomplete endpoint will return a 404 response if no objects are found.
+* Update Javascript dependencies to remove security vulnerabilities.
+
+0.7 Release
+-----------
+
+* Breaking change: Drop deprecated ``page_type`` and ``is_single`` arguments from ``AutocompletePanel``.
+* Update the panel and widget codes based on panels of ``wagtail.admin.edit_handlers`` -- mainly ``PageChooserPanel``.
+* Update Javascript dependencies to remove security vulnerabilities.
+* Update use of deprecated ``django.conf.urls.url`` function.
+
+0.6.3 Release
+-------------
+
+* Remove native browser autocomplete form field.
+
 0.6 Release
 -----------
 
