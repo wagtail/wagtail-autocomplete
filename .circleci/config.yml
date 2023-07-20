@@ -3,12 +3,19 @@ jobs:
   build:
     working_directory: ~/wagtail-autocomplete-repo
     docker:
-      - image: randomknowledge/docker-pyenv-tox:maintenance_update-versions
+      - image: circleci/python:3.8-buster
     steps:
       - checkout
       - run:
+          name: install dependencies
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+            pip install -U pip
+            pip install ".[test]"
+      - run:
           name: tests
-          command: tox
+          command: venv/bin/tox
       - run:
           name: flake8
-          command: tox -e flake8
+          command: venv/bin/tox -e flake8
