@@ -48,7 +48,7 @@
     "@babel/preset-env": "^7.17.10",
     "@babel/preset-react": "^7.0.0",
     "@wagtail/eslint-config-wagtail": "^0.4.0",
-    "@wagtail/stylelint-config-wagtail": "^0.6.0",
+    "@wagtail/stylelint-config-wagtail": "^0.7.0",
     "autoprefixer": "^10.4.7",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^9.0.0",
