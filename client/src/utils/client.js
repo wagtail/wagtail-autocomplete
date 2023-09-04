@@ -1,9 +1,24 @@
 import axios from 'axios';
+import cookies from 'axios/lib/helpers/cookies';
 
 
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
+axios.interceptors.request.use(
+  config => {
+    if (!cookies.read(config.xsrfCookieName)) {
+      const csrfTokenInput = document.querySelectorAll("input[name='csrfmiddlewaretoken']");
+      if (csrfTokenInput.length > 0) {
+        config.headers.common[axios.defaults.xsrfHeaderName] = csrfTokenInput[0].value;;
+      }
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
 
 const get = (url, params) =>
   axios.get(url, { params })
