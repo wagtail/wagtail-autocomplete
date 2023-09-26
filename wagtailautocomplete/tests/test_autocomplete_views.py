@@ -173,3 +173,18 @@ class CreateViewTestCase(TestCase):
         response = self.client.post(
             "/admin/autocomplete/create/", {"value": "a"})
         assert response.status_code == 400
+
+    def test_autocomplete_create_raises_validation_error(self):
+        """The create view should return a Bad Request response if
+        `autocomplete_create` raises a `ValidationError`
+
+        """
+        self.client.force_login(self.superuser)
+        response = self.client.post(
+            "/admin/autocomplete/create/",
+            {
+                "type": "testapp.Group",
+                "value": "a" * 51,
+            },
+        )
+        assert response.status_code == 400

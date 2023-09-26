@@ -15,7 +15,10 @@ class Group(ClusterableModel):
 
     @classmethod
     def autocomplete_create(kls: type, value: str):
-        return kls.objects.create(title=value)
+        instance = kls(title=value)
+        instance.full_clean()
+        instance.save()
+        return instance
 
 
 class Person(models.Model):
