@@ -3,6 +3,7 @@ $black: #000;
 $gray: #e6e6e6;
 $light-coral: #ff7e77;
 $deep-sky-blue: #9d9fa0;
+$red: #ce4646;
 
 $input-border-color: $gray;
 $selection-bg: $light-coral;
@@ -11,6 +12,7 @@ $suggestions-bg: $white;
 $suggestions-bg-active: $light-coral;
 $suggestions-fg-active: $black;
 $search-icon-color: $deep-sky-blue;
+$error-message: $red;
 
 $wagtail-border-radius: 6px;
 
@@ -22,3 +24,4 @@ $search-icon-padding: 4px;
 @import 'selection';
 @import 'suggestions';
 @import 'search';
+@import 'errors';
