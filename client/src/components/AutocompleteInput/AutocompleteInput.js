@@ -21,7 +21,8 @@ class AutocompleteInput extends PureComponent {
       input: {
         value: ""
       },
-      suggestions: []
+      suggestions: [],
+      error: "",
     };
 
     if (props.fetchInitialValues) {
@@ -45,7 +46,8 @@ class AutocompleteInput extends PureComponent {
     const { value } = event.target;
     this.checkNewSuggestions(value);
     this.setState({
-      input: Object.assign({}, this.state.input, { value })
+      input: Object.assign({}, this.state.input, { value }),
+      error: "",
     });
   }
 
@@ -124,7 +126,7 @@ class AutocompleteInput extends PureComponent {
   }
 
   handleClick(value) {
-    this.setState({ value });
+    this.setState({ error: "", value });
 
     if (typeof this.props.onChange === "function") {
       this.props.onChange({ target: { value, _autocomplete: true } });
@@ -148,19 +150,25 @@ class AutocompleteInput extends PureComponent {
 
       this.setState({
         isLoading: false,
-        value: newValue
+        value: newValue,
+        error: "",
       });
 
       if (typeof this.props.onChange === "function") {
         this.props.onChange({ target: { value: newValue } });
       }
+    }).catch(error => {
+      this.setState({
+        isLoading: false,
+        error: `Failed to create new item "${value}".`
+      });
     });
     this.setState({ isLoading: true });
   }
 
   render() {
     const { name, isSingle, onChange, labelId } = this.props;
-    const { input, suggestions } = this.state;
+    const { input, suggestions, error } = this.state;
 
     const canCreate = this.props.canCreate && input.value.trim() !== "";
     const useHiddenInput = typeof onChange !== "function";
@@ -195,6 +203,9 @@ class AutocompleteInput extends PureComponent {
             onChange={this.handleChange}
             onClick={this.handleClick}
           />
+        )}
+        {error && (
+          <p className={nc("error-message")}>Error: {error}</p>
         )}
       </span>
     );

@@ -1,7 +1,9 @@
+from http import HTTPStatus
 from urllib.parse import unquote
 
 from django.apps import apps
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ValidationError
 from django.db.models import Model, QuerySet
 from django.http import (HttpResponseBadRequest, HttpResponseForbidden,
                          HttpResponseNotFound, JsonResponse)
@@ -154,5 +156,12 @@ def create(request, *args, **kwargs):
     if not callable(method):
         return HttpResponseBadRequest()
 
-    instance = method(value)
+    try:
+        instance = method(value)
+    except ValidationError as e:
+        return JsonResponse(
+            data=getattr(e, "message_dict", {"detail": "Invalid input."}),
+            status=HTTPStatus.BAD_REQUEST,
+        )
+
     return JsonResponse(render_page(instance))
