@@ -25,7 +25,7 @@ setup(
     license='BSD-3-Clause',
 
     install_requires=[
-        'wagtail>=4.1,<5.1',
+        'wagtail>=4.1',
     ],
 
     extras_require={
@@ -55,11 +55,11 @@ setup(
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
         'Framework :: Django',
-        'Framework :: Django :: 3.2',
-        'Framework :: Django :: 4.0',
-        'Framework :: Django :: 4.1',
         'Framework :: Django :: 3',
+        'Framework :: Django :: 3.2',
         'Framework :: Django :: 4',
+        'Framework :: Django :: 4.1',
+        'Framework :: Django :: 4.2',
         'Framework :: Wagtail',
         'Framework :: Wagtail :: 4',
         'Framework :: Wagtail :: 5',
