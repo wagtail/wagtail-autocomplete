@@ -27,7 +27,7 @@ class Autocomplete(WidgetWithScript):
     def format_value(self, value):
         if not value:
             return 'null'
-        if type(value) == list:
+        if isinstance(value, list):
             return json.dumps([
                 render_page(page)
                 for page in self.target_model.objects.filter(pk__in=value)
