@@ -1,45 +1,52 @@
-import axios from 'axios';
-import cookies from 'axios/unsafe/helpers/cookies';
+import Cookies from 'js-cookie';
+
+const XSRF_COOKIE_NAME = 'csrftoken';
+const XSRF_HEADER_NAME = 'X-CSRFToken';
 
 
-axios.defaults.xsrfCookieName = 'csrftoken';
-axios.defaults.xsrfHeaderName = 'X-CSRFToken';
-
-axios.interceptors.request.use(
-  config => {
-    if (!cookies.read(config.xsrfCookieName)) {
+function httpRequest(url, {body, ...customConfig} = {}) {
+  let headers = {};
+  if (body) {
+    if (Cookies.get(XSRF_COOKIE_NAME)) {
+      headers[XSRF_HEADER_NAME] = Cookies.get(XSRF_COOKIE_NAME);
+    } else {
       const csrfTokenInput = document.querySelectorAll("input[name='csrfmiddlewaretoken']");
       if (csrfTokenInput.length > 0) {
-        config.headers.common[axios.defaults.xsrfHeaderName] = csrfTokenInput[0].value;;
+        headers[XSRF_HEADER_NAME] = csrfTokenInput[0].value;
       }
     }
-    return config;
-  },
-  error => {
-    return Promise.reject(error);
   }
-);
 
-const get = (url, params) =>
-  axios.get(url, { params })
-    .then(res => {
-      if (res.status < 200 || res.status >= 300) {
-        return Promise.reject();
-      }
+  const config = {
+    method: body ? 'POST' : 'GET',
+    ...customConfig,
+    headers: {
+      ...headers,
+      ...customConfig.headers,
+    },
+  };
 
-      return res.data;
-    });
+  if (body) {
+    config.body = body;
+  }
+
+  return window.fetch(
+    url,
+    config,
+  ).then(async response => {
+    if (response.ok) {
+      return await response.json();
+    } else {
+      return Promise.reject();
+    }
+  });
+};
 
 
-const post = (url, data) =>
-  axios.post(url, data)
-    .then(res => {
-      if (res.status < 200 || res.status >= 300) {
-        return Promise.reject();
-      }
+const get = (url, params) => httpRequest(`${url}?${new URLSearchParams(params).toString()}`);
 
-      return res.data;
-    });
+
+const post = (url, data) => httpRequest(url, {body: data});
 
 
 export const getSuggestions = ({ apiBase, query, type, exclude }) => {
