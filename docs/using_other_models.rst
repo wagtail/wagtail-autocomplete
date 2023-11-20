@@ -11,17 +11,16 @@ Selecting Snippets
 
 For example, we have a Django model ``Link`` that we have registered as a snippet.
 We also have a ``BlogPage`` model that would traditionally use a
-:class:`~wagtail:wagtail.wagtailsnippets.edit_handlers.SnippetChooserPanel`
+:class:`~wagtail:wagtail.admin.panels.FieldPanel`
 
 
 .. code-block:: python
 
     from django.db import models
 
-    from wagtail.wagtailadmin.edit_handlers import FieldPanel
-    from wagtail.wagtailcore.models import Page
-    from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
-    from wagtail.wagtailsnippets.models import register_snippet
+    from wagtail.admin.panels import FieldPanel
+    from wagtail.models import Page
+    from wagtail.snippets.models import register_snippet
 
     @register_snippet
     class Link(models.Model):
@@ -43,11 +42,11 @@ We also have a ``BlogPage`` model that would traditionally use a
         )
 
         content_panels = [
-            SnippetChooserPanel('external_link'),
+            FieldPanel('external_link'),
         ]
 
 We can replace the
-:class:`~wagtail:wagtail.wagtailsnippets.edit_handlers.SnippetChooserPanel`
+:class:`~wagtail:wagtail.admin.panels.FieldPanel`
 usage with
 :class:`AutocompletePanel`.
 

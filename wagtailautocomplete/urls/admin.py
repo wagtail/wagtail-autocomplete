@@ -1,8 +1,5 @@
 from django.urls import re_path
-try:
-    from wagtail.admin.decorators import require_admin_access
-except ImportError:
-    from wagtail.admin.auth import require_admin_access
+from wagtail.admin.auth import require_admin_access
 
 from wagtailautocomplete.views import create, objects, search
 

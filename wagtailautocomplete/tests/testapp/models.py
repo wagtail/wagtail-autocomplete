@@ -1,5 +1,4 @@
 from django.db import models
-
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from modelcluster.models import ClusterableModel
 

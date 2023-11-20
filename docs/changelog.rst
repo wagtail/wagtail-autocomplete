@@ -2,6 +2,14 @@
 Changelog
 =========
 
+Unreleased
+----------
+
+* Remove tests for Wagtail 4.2 and 5.0 as they have reached their EOL
+* Added Wagtail 5.x compatibility
+* Added tests for Python 3.10 and 3.11
+* Remove support for versions of Wagtail < 4.1 (Wagtail 4.1 or later now required)
+
 0.10 Release
 ------------
 

@@ -21,7 +21,7 @@ We have a ``BlogPage`` that lets the editor select an ``AuthorPage`` page.
         )
 
 The ``AuthorPage`` would traditionally be selected with a
-:class:`~wagtail:wagtail.wagtailadmin.edit_handlers.PageChooserPanel`,
+:class:`~wagtail:wagtail.admin.panels.PageChooserPanel`,
 like the following.
 
 .. code-block:: python
@@ -54,12 +54,12 @@ AutocompletePanel
     to a model class or a model string in ``app_label.ModelName`` syntax.
 
     .. note::
-        Unlike :class:`~wagtail:wagtail.wagtailadmin.edit_handlers.PageChooserPanel`,
-        ``AutocompletePanel`` does not support receiving ``target_model`` as a list.
+        Unlike :class:`~wagtail:wagtail.admin.panels.PageChooserPanel`,
+        ``AutocompletePanel`` does not take a ``page_type`` argument but uses ``target_model`` argument, but it cannot be a list.
 
     .. note::
         ``AutocompletePanel`` does not support receiving the ``can_choose_root``
-        argument that :class:`~wagtail:wagtail.wagtailadmin.edit_handlers.PageChooserPanel`
+        argument that :class:`~wagtail:wagtail.admin.panels.PageChooserPanel`
         does.
 
 Multiple Selection With Clusterable Models
@@ -76,7 +76,7 @@ provide a multiple selection widget. For example:
 .. code-block:: python
 
     from django.db import models
-    from wagtail.core.models import Page
+    from wagtail.models import Page
     from modelcluster.models import ClusterableModel
     from modelcluster.fields import ParentalManyToManyField
 

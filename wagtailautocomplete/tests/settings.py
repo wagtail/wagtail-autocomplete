@@ -1,5 +1,3 @@
-from wagtail import VERSION as WAGTAIL_VERSION
-
 SECRET_KEY = 'NOTSECRET'
 
 DATABASES = {
@@ -14,7 +12,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.staticfiles',
-    'wagtail' if WAGTAIL_VERSION >= (3, 0) else "wagtail.core",
+    'wagtail',
     'wagtail.documents',
     'wagtail.images',
     'wagtail.admin',
