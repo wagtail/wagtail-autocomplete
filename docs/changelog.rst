@@ -2,6 +2,13 @@
 Changelog
 =========
 
+0.11 Release
+------------
+
+* Add handling of validation errors during creation of objects.
+* Fix bug where searches failed if Django's CSRF cookie was configured with ``CSRF_COOKIE_HTTPONLY`` set to ``True``
+* Update Javascript dependencies to remove security vulnerabilities.
+
 0.10 Release
 ------------
 
