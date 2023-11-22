@@ -54,6 +54,10 @@
         path {
             fill: $suggestions-bg;
         }
+
+        @media (prefers-color-scheme: dark) {
+            background-color: $suggestions-bg-dark;
+        }
     }
 
     &__item--active {
