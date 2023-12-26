@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  test_py38:
     working_directory: ~/wagtail-autocomplete-repo
     docker:
       - image: circleci/python:3.8-buster
@@ -15,7 +15,75 @@ jobs:
             pip install ".[test]"
       - run:
           name: tests
-          command: venv/bin/tox
+          command: venv/bin/tox -e py38
       - run:
           name: flake8
           command: venv/bin/tox -e flake8
+
+  test_py39:
+    working_directory: ~/wagtail-autocomplete-repo
+    docker:
+      - image: circleci/python:3.9-buster
+    steps:
+      - checkout
+      - run:
+          name: install dependencies
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+            pip install -U pip
+            pip install ".[test]"
+      - run:
+          name: tests
+          command: venv/bin/tox -e py39
+      - run:
+          name: flake8
+          command: venv/bin/tox -e flake8
+
+  test_py310:
+    working_directory: ~/wagtail-autocomplete-repo
+    docker:
+      - image: circleci/python:3.10-buster
+    steps:
+      - checkout
+      - run:
+          name: install dependencies
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+            pip install -U pip
+            pip install ".[test]"
+      - run:
+          name: tests
+          command: venv/bin/tox -e py310
+      - run:
+          name: flake8
+          command: venv/bin/tox -e flake8
+
+  test_py311:
+    working_directory: ~/wagtail-autocomplete-repo
+    docker:
+      - image: circleci/python:3.11-buster
+    steps:
+      - checkout
+      - run:
+          name: install dependencies
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+            pip install -U pip
+            pip install ".[test]"
+      - run:
+          name: tests
+          command: venv/bin/tox -e py311
+      - run:
+          name: flake8
+          command: venv/bin/tox -e flake8
+
+workflows:
+  test_python:
+    jobs:
+      - test_py38
+      - test_py39
+      - test_py310
+      - test_py311
