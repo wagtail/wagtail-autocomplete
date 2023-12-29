@@ -55,6 +55,10 @@
             fill: $suggestions-bg;
         }
 
+        .w-theme-dark & {
+            background-color: $suggestions-bg-dark;
+        }
+
         @media (prefers-color-scheme: dark) {
             background-color: $suggestions-bg-dark;
         }
