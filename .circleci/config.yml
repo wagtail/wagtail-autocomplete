@@ -15,7 +15,7 @@ jobs:
             pip install ".[test]"
       - run:
           name: tests
-          command: venv/bin/tox -e py38
+          command: venv/bin/tox -f py38
       - run:
           name: flake8
           command: venv/bin/tox -e flake8
@@ -35,7 +35,7 @@ jobs:
             pip install ".[test]"
       - run:
           name: tests
-          command: venv/bin/tox -e py39
+          command: venv/bin/tox -f py39
       - run:
           name: flake8
           command: venv/bin/tox -e flake8
@@ -55,7 +55,7 @@ jobs:
             pip install ".[test]"
       - run:
           name: tests
-          command: venv/bin/tox -e py310
+          command: venv/bin/tox -f py310
       - run:
           name: flake8
           command: venv/bin/tox -e flake8
@@ -75,7 +75,7 @@ jobs:
             pip install ".[test]"
       - run:
           name: tests
-          command: venv/bin/tox -e py311
+          command: venv/bin/tox -f py311
       - run:
           name: flake8
           command: venv/bin/tox -e flake8
