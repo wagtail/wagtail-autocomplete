@@ -5,10 +5,9 @@ Changelog
 Unreleased
 ----------
 
-* Remove tests for Wagtail 4.2 and 5.0 as they have reached their EOL
-* Added Wagtail 5.x compatibility
-* Added tests for Python 3.10 and 3.11
-* Remove support for versions of Wagtail < 4.1 (Wagtail 4.1 or later now required)
+* Added Wagtail 6.0 compatibility
+* Added tests for Django 5.0
+* Added tests for Python 3.12
 
 0.11 Release
 ------------
@@ -16,6 +15,10 @@ Unreleased
 * Add handling of validation errors during creation of objects.
 * Fix bug where searches failed if Django's CSRF cookie was configured with ``CSRF_COOKIE_HTTPONLY`` set to ``True``
 * Update Javascript dependencies to remove security vulnerabilities.
+* Remove tests for Wagtail 4.2 and 5.0 as they have reached their EOL
+* Added Wagtail 5.x compatibility
+* Added tests for Python 3.10 and 3.11
+* Remove support for versions of Wagtail < 4.1 (Wagtail 4.1 or later now required)
 
 0.10 Release
 ------------
