@@ -10,7 +10,6 @@ if WAGTAIL_VERSION >= (6, 0):  # type: ignore
 
     from django.forms.widgets import Widget
 
-
     class Autocomplete(Widget):  # type: ignore
         template_name = 'wagtailautocomplete/autocomplete.html'
 
@@ -68,7 +67,6 @@ if WAGTAIL_VERSION >= (6, 0):  # type: ignore
             )
 else:
     from wagtail.utils.widgets import WidgetWithScript
-
 
     class Autocomplete(WidgetWithScript):
         template_name = 'wagtailautocomplete/autocomplete.html'
