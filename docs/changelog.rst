@@ -8,6 +8,7 @@ Unreleased
 * Added Wagtail 6.0 compatibility
 * Added tests for Django 5.0
 * Added tests for Python 3.12
+* Remove support for versions of Wagtail < 5.2 (Wagtail 5.2 or later now required)
 
 0.11 Release
 ------------
