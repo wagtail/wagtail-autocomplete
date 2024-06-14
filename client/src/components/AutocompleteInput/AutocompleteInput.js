@@ -74,10 +74,13 @@ class AutocompleteInput extends PureComponent {
       query: value,
       type: this.props.type,
       exclude: this.getExclusions()
-    }).then(items => {
-      this.setState({
-        suggestions: items
-      });
+    }).then(result => {
+      // Only load the results if it matches the current query
+      if (result.query === value) {
+        this.setState({
+          suggestions: result.items
+        });
+      }
     });
   }
 
