@@ -5,6 +5,7 @@ Changelog
 Unreleased
 ----------
 
+* Added Wagtail 6.2 to the tox testing matrix
 * Added Wagtail 6.x compatibility
 * Added tests for Django 5.0
 * Added tests for Python 3.12
