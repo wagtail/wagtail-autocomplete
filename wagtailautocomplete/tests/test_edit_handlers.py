@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ImproperlyConfigured
 from django.test import RequestFactory, TestCase
+from wagtail import VERSION as WAGTAIL_VERSION
 from wagtail.admin.panels import ObjectList
 
 from wagtailautocomplete.edit_handlers import AutocompletePanel
@@ -50,7 +51,11 @@ class TestAutocompletePanel(TestCase):
 
     def test_render_js_init(self):
         result = self.autocomplete_panel.render_html()
-        self.assertIn('initAutoCompleteWidget("id_owner");', result)
+
+        if WAGTAIL_VERSION >= (6, 0):  # type: ignore
+            self.assertIn('data-autocomplete-input-id="id_owner"', result)
+        else:
+            self.assertIn('initAutoCompleteWidget("id_owner");', result)
 
     def test_render_as_field(self):
         result = self.autocomplete_panel.render_html()
