@@ -23,8 +23,13 @@ def render_page(page):
     if callable(getattr(page, 'autocomplete_label', None)):
         title = page.autocomplete_label()
     elif (
-        hasattr(settings, "WAGTAILAUTOCOMPLETE_CUSTOM_SEARCH_FIELD") and
-        page._meta.label in settings.WAGTAILAUTOCOMPLETE_CUSTOM_SEARCH_FIELD
+        hasattr(
+            settings,
+            "WAGTAILAUTOCOMPLETE_CUSTOM_SEARCH_FIELD",
+        ) and (
+            page._meta.label
+            in settings.WAGTAILAUTOCOMPLETE_CUSTOM_SEARCH_FIELD
+        )
     ):
         title = settings.WAGTAILAUTOCOMPLETE_CUSTOM_SEARCH_FIELD[
             page._meta.label
@@ -125,8 +130,13 @@ def filter_queryset(search_query: str, model: Model) -> QuerySet:
     if field_name:
         filter_kwargs[field_name + '__icontains'] = search_query
     elif (
-        hasattr(settings, "WAGTAILAUTOCOMPLETE_CUSTOM_FILTER_FIELDS") and
-        model._meta.label in settings.WAGTAILAUTOCOMPLETE_CUSTOM_FILTER_FIELDS
+        hasattr(
+            settings,
+            "WAGTAILAUTOCOMPLETE_CUSTOM_FILTER_FIELDS",
+        ) and (
+            model._meta.label
+            in settings.WAGTAILAUTOCOMPLETE_CUSTOM_FILTER_FIELDS
+        )
     ):
         field_names = settings.WAGTAILAUTOCOMPLETE_CUSTOM_FILTER_FIELDS[
             model._meta.label
