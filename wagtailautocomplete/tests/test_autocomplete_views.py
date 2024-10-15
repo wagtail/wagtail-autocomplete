@@ -1,9 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from wagtail.models import Site
 
-from wagtailautocomplete.tests.testapp.models import House, Person
+from wagtailautocomplete.tests.testapp.models import Group, House, Person
 
 User = get_user_model()
 
@@ -113,6 +113,103 @@ class SearchViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()['items']), 1)
         self.assertEqual(response.json()['items'][0]['title'], 'Belle Note')
+
+    def test_search_by_default_field(self):
+        """By default, a model's title is used."""
+        group = Group.objects.create(title="Some Group")
+        response = self.client.post(
+            "/autocomplete/search/",
+            data={"type": "testapp.Group", "query": "some"},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            set(item["pk"] for item in response.json()["items"]),
+            {group.pk},
+        )
+
+    def test_search_by_autocomplete_search_field(self):
+        """
+        A model's 'autocomplete_search_field' attribute is used in the search.
+        """
+        response = self.client.post(
+            "/autocomplete/search/",
+            data={"type": "testapp.Person", "query": "note"},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            set(item["pk"] for item in response.json()["items"]),
+            set([self.target_page1.pk, self.target_page2.pk]),
+        )
+
+    @override_settings(
+        WAGTAILAUTOCOMPLETE_CUSTOM_FILTER_FIELDS={
+            "testapp.House": {"fields": ["name"]},
+        },
+        WAGTAILAUTOCOMPLETE_CUSTOM_SEARCH_FIELD={"testapp.House": "name"},
+    )
+    def test_search_by_field_from_setting_field_name(self):
+        """
+        Search by field from WAGTAILAUTOCOMPLETE_CUSTOM_SEARCH_FIELD setting.
+        """
+        response = self.client.post(
+            "/autocomplete/search/",
+            data={"type": "testapp.House", "query": "singly"},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            set(item["pk"] for item in response.json()["items"]),
+            {self.single_page.pk},
+        )
+
+    @override_settings(
+        WAGTAILAUTOCOMPLETE_CUSTOM_FILTER_FIELDS={
+            "testapp.House": {"fields": ["name"]},
+        },
+        WAGTAILAUTOCOMPLETE_CUSTOM_SEARCH_FIELD={
+            "testapp.House": lambda house: f"House named {house.name}",
+        },
+    )
+    def test_search_by_field_from_setting_callable(self):
+        """
+        Search by WAGTAILAUTOCOMPLETE_CUSTOM_SEARCH_FIELD setting callable.
+        """
+        response = self.client.post(
+            "/autocomplete/search/",
+            data={"type": "testapp.House", "query": "singly"},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            set(item["pk"] for item in response.json()["items"]),
+            {self.single_page.pk},
+        )
+        self.assertEqual(
+            set(item["title"] for item in response.json()["items"]),
+            {f"House named {self.single_page.name}"},
+        )
+
+    @override_settings(
+        WAGTAILAUTOCOMPLETE_CUSTOM_FILTER_FIELDS={
+            "testapp.Person": {"fields": ["group"]},
+        },
+        WAGTAILAUTOCOMPLETE_CUSTOM_SEARCH_FIELD={"testapp.Person": "group"},
+    )
+    def test_search_autocomplete_search_field_and_setting(self):
+        """
+        Search when model defines search field in an attribute and a setting.
+
+        When a model defines an autocomplete_search_field attribute and it is
+        also in the WAGTAILAUTOCOMPLETE_CUSTOM_SEARCH_FIELD setting, the
+        autocomplete_search_field attribute takes precedence.
+        """
+        response = self.client.post(
+            "/autocomplete/search/",
+            data={"type": "testapp.Person", "query": "note"},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            set(item["pk"] for item in response.json()["items"]),
+            set([self.target_page1.pk, self.target_page2.pk]),
+        )
 
 
 class CreateViewTestCase(TestCase):
