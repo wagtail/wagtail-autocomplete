@@ -1,18 +1,17 @@
 import json
 
-from django import forms
+from django.forms import widgets, Media
 from wagtail.admin.staticfiles import versioned_static
 from wagtail.utils.widgets import WidgetWithScript
 
 from .views import render_page
 
 
-class Autocomplete(WidgetWithScript):
+class Autocomplete(widgets.TextInput):
     template_name = 'wagtailautocomplete/autocomplete.html'
 
     def __init__(self, target_model, can_create=False, is_single=True, attrs=None):
         super().__init__(attrs)
-
         self.target_model = target_model
         self.can_create = can_create
         self.is_single = is_single
@@ -49,16 +48,14 @@ class Autocomplete(WidgetWithScript):
             return value.get('pk', None)
         return None
 
-    def render_js_init(self, id_, name, value):
-        return "initAutoCompleteWidget({id});".format(
-            id=json.dumps(id_),
-        )
-
     @property
     def media(self):
-        return forms.Media(
+        return Media(
             css={
                 'all': [versioned_static('wagtailautocomplete/dist.css')],
             },
-            js=[versioned_static('wagtailautocomplete/dist.js')],
+            js=[
+                versioned_static('wagtailautocomplete/dist.js'),
+                versioned_static('wagtailautocomplete/controller.js'),
+            ],
         )
