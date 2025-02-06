@@ -2,7 +2,6 @@ import json
 
 from django.forms import widgets, Media
 from wagtail.admin.staticfiles import versioned_static
-from wagtail.utils.widgets import WidgetWithScript
 
 from .views import render_page
 
