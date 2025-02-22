@@ -67,7 +67,7 @@ def search(request):
         return HttpResponseBadRequest()
 
     if callable(getattr(model, 'autocomplete_custom_queryset_filter', None)):
-        queryset = model.autocomplete_custom_queryset_filter(search_query)
+        queryset = model.autocomplete_custom_queryset_filter(request, search_query)
         validate_queryset(queryset, model)
     else:
         queryset = filter_queryset(search_query, model)
