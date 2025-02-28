@@ -89,9 +89,9 @@ By default, the autocomplete widget uses an ``icontains`` lookup to search for m
 
         def autocomplete_label(self):
             return self.my_special_field
-        
+
         @staticmethod
-        def autocomplete_custom_queryset_filter(search_term: str) -> QuerySet:
+        def autocomplete_custom_queryset_filter(request, search_term: str) -> QuerySet:
             field_name='my_special_field'
             filter_kwargs = dict()
             filter_kwargs[field_name + '__contains'] = search_term
