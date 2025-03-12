@@ -83,7 +83,7 @@ def search(request):
         queryset = queryset.exclude(pk__in=exclusions)
 
     results = map(render_page, queryset[:limit])
-    return JsonResponse(dict(items=list(results)))
+    return JsonResponse({"query": search_query, "items": list(results)})
 
 
 def filter_queryset(search_query: str, model: Model) -> QuerySet:

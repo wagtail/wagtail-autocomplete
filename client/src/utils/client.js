@@ -62,7 +62,7 @@ export const getSuggestions = ({ apiBase, query, type, exclude }) => {
         return Promise.reject();
       }
 
-      return res.items;
+      return res;
     });
 };
 
