@@ -47,10 +47,7 @@ class TestAutocompletePanel(TestCase):
 
         self.assertIn('wagtailautocomplete/dist.css', media_html)
         self.assertIn('wagtailautocomplete/dist.js', media_html)
-
-    def test_render_js_init(self):
-        result = self.autocomplete_panel.render_html()
-        self.assertIn('initAutoCompleteWidget("id_owner");', result)
+        self.assertIn('wagtailautocomplete/controller.js', media_html)
 
     def test_render_as_field(self):
         result = self.autocomplete_panel.render_html()
