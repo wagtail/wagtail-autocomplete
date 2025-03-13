@@ -39,7 +39,7 @@ def objects(request):
         ]
         queryset = model.objects.filter(pk__in=pks)
         if callable(getattr(model, 'autocomplete_custom_queryset_objects', None)):
-            queryset = model.autocomplete_custom_queryset_objects()
+            queryset = model.autocomplete_custom_queryset_objects(request=request)
             validate_queryset(queryset, model)
         else:
             queryset = model.objects.filter(pk__in=pks)
