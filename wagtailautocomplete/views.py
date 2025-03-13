@@ -5,12 +5,8 @@ from django.apps import apps
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.db.models import Model, QuerySet
-from django.http import (
-    HttpResponseBadRequest,
-    HttpResponseForbidden,
-    HttpResponseNotFound,
-    JsonResponse,
-)
+from django.http import (HttpResponseBadRequest, HttpResponseForbidden,
+                         HttpResponseNotFound, JsonResponse)
 from django.views.decorators.http import require_GET, require_POST
 
 
@@ -150,7 +146,10 @@ def create(request, *args, **kwargs):
         return HttpResponseBadRequest()
 
     content_type = ContentType.objects.get_for_model(model)
-    permission_label = '{}.add_{}'.format(content_type.app_label, content_type.model)
+    permission_label = '{}.add_{}'.format(
+        content_type.app_label,
+        content_type.model
+    )
     if not request.user.has_perm(permission_label):
         return HttpResponseForbidden()
 
