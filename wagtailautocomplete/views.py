@@ -33,7 +33,11 @@ def objects(request):
         return HttpResponseBadRequest()
 
     try:
-        pks = [unquote(pk) for pk in pks_param.split(',')]
+        pks = [
+            unquote(pk)
+            for pk in pks_param.split(',')
+        ]
+        queryset = model.objects.filter(pk__in=pks)
         if callable(getattr(model, 'autocomplete_custom_queryset_objects', None)):
             queryset = model.autocomplete_custom_queryset_objects()
             validate_queryset(queryset, model)
