@@ -2,9 +2,10 @@ from http import HTTPStatus
 from urllib.parse import unquote
 
 from django.apps import apps
+from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
-from django.db.models import Model, QuerySet
+from django.db.models import Model, Q, QuerySet
 from django.http import (HttpResponseBadRequest, HttpResponseForbidden,
                          HttpResponseNotFound, JsonResponse)
 from django.views.decorators.http import require_GET, require_POST
@@ -14,8 +15,27 @@ def render_page(page):
     if getattr(page, 'specific', None):
         # For support of non-Page models like Snippets.
         page = page.specific
+    # Determine the title from either (in this order):
+    #  1. a page's autocomplete_label() method
+    #  2. an entry for the page in the WAGTAILAUTOCOMPLETE_CUSTOM_SEARCH_FIELD
+    #     setting
+    #  3. the page's title field
     if callable(getattr(page, 'autocomplete_label', None)):
         title = page.autocomplete_label()
+    elif (
+        hasattr(
+            settings,
+            "WAGTAILAUTOCOMPLETE_CUSTOM_SEARCH_FIELD",
+        ) and (
+            page._meta.label
+            in settings.WAGTAILAUTOCOMPLETE_CUSTOM_SEARCH_FIELD
+        )
+    ):
+        title = settings.WAGTAILAUTOCOMPLETE_CUSTOM_SEARCH_FIELD[
+            page._meta.label
+        ]
+        if callable(title):
+            title = title(page)
     else:
         title = page.title
     return dict(pk=page.pk, title=title)
@@ -90,7 +110,8 @@ def filter_queryset(search_query: str, model: Model) -> QuerySet:
     """
     Filter db entries of the given model for the given search_query and
     returns it. The filter operates on either the default column title or the
-    custom column defined in autocomplete_search_field.
+    custom column defined in autocomplete_search_field or the sutom columns
+    defined in a setting.
 
     Args:
         search_query (str): Term to search for.
@@ -99,9 +120,36 @@ def filter_queryset(search_query: str, model: Model) -> QuerySet:
     Returns:
         QuerySet: QuerySet containing the search results.
     """
-    field_name = getattr(model, 'autocomplete_search_field', 'title')
+    # Determine the filter kwargs from either (in this order):
+    #  1. a page's autocomplete_search_field() method
+    #  2. an entry for the page in the WAGTAILAUTOCOMPLETE_CUSTOM_FILTER_FIELDS
+    #     setting
+    #  3. the page's title field
+    field_name = getattr(model, 'autocomplete_search_field', None)
     filter_kwargs = dict()
-    filter_kwargs[field_name + '__icontains'] = search_query
+    if field_name:
+        filter_kwargs[field_name + '__icontains'] = search_query
+    elif (
+        hasattr(
+            settings,
+            "WAGTAILAUTOCOMPLETE_CUSTOM_FILTER_FIELDS",
+        ) and (
+            model._meta.label
+            in settings.WAGTAILAUTOCOMPLETE_CUSTOM_FILTER_FIELDS
+        )
+    ):
+        field_names = settings.WAGTAILAUTOCOMPLETE_CUSTOM_FILTER_FIELDS[
+            model._meta.label
+        ].get("fields", [])
+        for field_name in field_names:
+            filter_kwargs[field_name + '__icontains'] = search_query
+        connector = settings.WAGTAILAUTOCOMPLETE_CUSTOM_FILTER_FIELDS[
+            model._meta.label
+        ].get("connector", Q.OR)
+        return model.objects.filter(**filter_kwargs, _connector=connector)
+    else:
+        filter_kwargs['title__icontains'] = search_query
+
     return model.objects.filter(**filter_kwargs)
 
 
