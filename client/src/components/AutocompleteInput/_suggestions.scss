@@ -59,8 +59,13 @@
             background-color: $suggestions-bg-dark;
         }
 
-        @media (prefers-color-scheme: dark) {
-            background-color: $suggestions-bg-dark;
+        .w-theme-system & {
+            @media (prefers-color-scheme: dark) {
+              background-color: $suggestions-bg-dark;
+            }
+            @media (prefers-color-scheme: light) {
+              background-color: $suggestions-bg;
+            }
         }
     }
 
