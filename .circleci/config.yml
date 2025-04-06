@@ -1,25 +1,5 @@
 version: 2
 jobs:
-  test_py38:
-    working_directory: ~/wagtail-autocomplete-repo
-    docker:
-      - image: cimg/python:3.8
-    steps:
-      - checkout
-      - run:
-          name: install dependencies
-          command: |
-            python -m venv venv
-            . venv/bin/activate
-            pip install -U pip
-            pip install ".[test]"
-      - run:
-          name: tests
-          command: venv/bin/tox -f py38
-      - run:
-          name: flake8
-          command: venv/bin/tox -e flake8
-
   test_py39:
     working_directory: ~/wagtail-autocomplete-repo
     docker:
@@ -80,11 +60,31 @@ jobs:
           name: flake8
           command: venv/bin/tox -e flake8
 
+  test_py312:
+    working_directory: ~/wagtail-autocomplete-repo
+    docker:
+      - image: cimg/python:3.12
+    steps:
+      - checkout
+      - run:
+          name: install dependencies
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+            pip install -U pip
+            pip install ".[test]"
+      - run:
+          name: tests
+          command: venv/bin/tox -f py312
+      - run:
+          name: flake8
+          command: venv/bin/tox -e flake8
+
 workflows:
   version: 2
   build:
     jobs:
-      - test_py38
       - test_py39
       - test_py310
       - test_py311
+      - test_py312
