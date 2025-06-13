@@ -38,13 +38,18 @@ def objects(request):
             for pk in pks_param.split(',')
         ]
         queryset = model.objects.filter(pk__in=pks)
+        if callable(getattr(model, 'autocomplete_custom_queryset_objects', None)):
+            queryset = model.autocomplete_custom_queryset_objects(request=request)
+            validate_queryset(queryset, model)
+        else:
+            queryset = model.objects.filter(pk__in=pks)
+            if getattr(queryset, 'live', None):
+                # Non-Page models like Snippets won't have a live/published status
+                # and thus should not be filtered with a call to `live`.
+                queryset = queryset.live()
+
     except Exception:
         return HttpResponseBadRequest()
-
-    if getattr(queryset, 'live', None):
-        # Non-Page models like Snippets won't have a live/published status
-        # and thus should not be filtered with a call to `live`.
-        queryset = queryset.live()
 
     if queryset.count() != len(pks):
         return HttpResponseNotFound('Some objects are either missing or deleted')
@@ -72,10 +77,10 @@ def search(request):
     else:
         queryset = filter_queryset(search_query, model)
 
-    if getattr(queryset, 'live', None):
-        # Non-Page models like Snippets won't have a live/published status
-        # and thus should not be filtered with a call to `live`.
-        queryset = queryset.live()
+        if getattr(queryset, 'live', None):
+            # Non-Page models like Snippets won't have a live/published status
+            # and thus should not be filtered with a call to `live`.
+            queryset = queryset.live()
 
     exclude = request.POST.get('exclude', '')
     if exclude:

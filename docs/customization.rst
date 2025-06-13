@@ -81,6 +81,7 @@ By default, the autocomplete widget uses an ``icontains`` lookup to search for m
 
     from django.db import models
     from django.db.models import QuerySet
+    from django.http import HttpRequest
     from wagtailautocomplete.edit_handlers import AutocompletePanel
 
 
@@ -89,10 +90,17 @@ By default, the autocomplete widget uses an ``icontains`` lookup to search for m
 
         def autocomplete_label(self):
             return self.my_special_field
-        
+
+        # This is used on the `search/` admin endpoint
         @staticmethod
         def autocomplete_custom_queryset_filter(search_term: str) -> QuerySet:
             field_name='my_special_field'
             filter_kwargs = dict()
             filter_kwargs[field_name + '__contains'] = search_term
             return MyModel.objects.filter(**filter_kwargs)
+
+        # This is used on the `objects/` admin endpoint
+        @staticmethod
+        def autocomplete_custom_queryset_objects(*, request: HttpRequest) -> QuerySet:
+            # You can use the request to filter the queryset
+            return MyModel.objects.filter(show_in_search=True)
