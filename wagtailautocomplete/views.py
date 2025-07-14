@@ -72,10 +72,10 @@ def search(request):
     else:
         queryset = filter_queryset(search_query, model)
 
-    if getattr(queryset, 'live', None):
-        # Non-Page models like Snippets won't have a live/published status
-        # and thus should not be filtered with a call to `live`.
-        queryset = queryset.live()
+        if getattr(queryset, 'live', None):
+            # Non-Page models like Snippets won't have a live/published status
+            # and thus should not be filtered with a call to `live`.
+            queryset = queryset.live()
 
     exclude = request.POST.get('exclude', '')
     if exclude:
