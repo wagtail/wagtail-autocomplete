@@ -5,8 +5,12 @@ from django.apps import apps
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.db.models import Model, QuerySet
-from django.http import (HttpResponseBadRequest, HttpResponseForbidden,
-                         HttpResponseNotFound, JsonResponse)
+from django.http import (
+    HttpResponseBadRequest,
+    HttpResponseForbidden,
+    HttpResponseNotFound,
+    JsonResponse,
+)
 from django.views.decorators.http import require_GET, require_POST
 
 
@@ -38,6 +42,7 @@ def objects(request):
             for pk in pks_param.split(',')
         ]
         queryset = model.objects.filter(pk__in=pks)
+
     except Exception:
         return HttpResponseBadRequest()
 
@@ -67,15 +72,15 @@ def search(request):
         return HttpResponseBadRequest()
 
     if callable(getattr(model, 'autocomplete_custom_queryset_filter', None)):
-        queryset = model.autocomplete_custom_queryset_filter(search_query)
+        queryset = model.autocomplete_custom_queryset_filter(search_query, request=request)
         validate_queryset(queryset, model)
     else:
         queryset = filter_queryset(search_query, model)
 
-    if getattr(queryset, 'live', None):
-        # Non-Page models like Snippets won't have a live/published status
-        # and thus should not be filtered with a call to `live`.
-        queryset = queryset.live()
+        if getattr(queryset, 'live', None):
+            # Non-Page models like Snippets won't have a live/published status
+            # and thus should not be filtered with a call to `live`.
+            queryset = queryset.live()
 
     exclude = request.POST.get('exclude', '')
     if exclude:
