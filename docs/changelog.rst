@@ -2,6 +2,16 @@
 Changelog
 =========
 
+Unreleased
+----------
+
+* Add support for Django 5.0 & 5.1 (testing only)
+* Add support for Wagtail 6.0 to 6.4 (testing only)
+* Add support for Python 3.13 (testing only)
+* Remove support for Django 3.2
+* Remove support for Wagtail less than 5.2
+* Remove support for Python 3.8
+
 0.12 Release
 ----------
 
