@@ -100,6 +100,26 @@ jobs:
       - run:
           name: flake8
           command: venv/bin/tox -e flake8
+  
+  test_py314:
+    working_directory: ~/wagtail-autocomplete-repo
+    docker:
+      - image: cimg/python:3.14
+    steps:
+      - checkout
+      - run:
+          name: install dependencies
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+            pip install -U pip
+            pip install ".[test]"
+      - run:
+          name: tests
+          command: venv/bin/tox -f py314
+      - run:
+          name: flake8
+          command: venv/bin/tox -e flake8
 
 workflows:
   version: 2
@@ -110,3 +130,4 @@ workflows:
       - test_py311
       - test_py312
       - test_py313
+      - test_py314
