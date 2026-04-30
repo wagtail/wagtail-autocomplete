@@ -1,21 +1,32 @@
+# EditorConfig for Little Weaver Web Collective Style
+# http://editorconfig.org/ http://littleweaverweb.com/
+
 root = true
 
 [*]
 end_of_line = lf
-insert_final_newline = true
-trim_trailing_whitespace = true
-
-[*.{css,js,json,py,yml,rst}]
-indent_style = space
-
-[*.{js,py}]
 charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
 
-[*.{css,py,scss,rst}]
+[*.rst]
+indent_style = space
 indent_size = 4
 
-[*.{js,json,yml}]
+[*.{yaml,yml,json}]
+indent_style = space
 indent_size = 2
+quote_type = single
 
-[*.md]
-trim_trailing_whitespace = false
+[*.{html,sass,js,jsx,scss,css,php,svg}]
+charset = utf-8
+indent_style = tab
+
+# Newlines in an included HTML file can add unwanted spaces
+[*.{html,svg}]
+insert_final_newline = false
+
+# PEP 8 Compliant
+[*.py]
+indent_style = space
+indent_size = 4
