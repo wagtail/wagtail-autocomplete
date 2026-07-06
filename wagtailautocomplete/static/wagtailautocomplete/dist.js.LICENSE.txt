@@ -10,9 +10,9 @@ object-assign
 	http://jedwatson.github.io/classnames
 */
 
-/*! js-cookie v3.0.5 | MIT */
+/*! js-cookie v3.0.7 | MIT */
 
-/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
+/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */
 
 /** @license React v0.19.1
  * scheduler.production.min.js

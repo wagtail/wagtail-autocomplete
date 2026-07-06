@@ -5,8 +5,7 @@
  */
 window._wagtailautocompleteUniqueId = 0;
 
-
-const getUniqueId = () => `wagtailautocomplete-${window._wagtailautocompleteUniqueId++}`;
-
+const getUniqueId = () =>
+	`wagtailautocomplete-${window._wagtailautocompleteUniqueId++}`;
 
 export default getUniqueId;

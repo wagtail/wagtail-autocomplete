@@ -1,9 +1,9 @@
 import AutocompleteInput, {
-  initAutocompleteInput
+	initAutocompleteInput,
 } from "./components/AutocompleteInput";
 
 export { AutocompleteInput, initAutocompleteInput };
 
-window.initAutoCompleteWidget = autocompleteInputNode => {
-  initAutocompleteInput(autocompleteInputNode);
+window.initAutoCompleteWidget = (autocompleteInputNode) => {
+	initAutocompleteInput(autocompleteInputNode);
 };

@@ -1,13 +1,13 @@
-@use 'sass:math';
+@use "sass:math";
 
 $space-between: 2%;
 
 .c-wagtailautocomplete__layout {
-    display: flex;
-    justify-content: space-between;
+	display: flex;
+	justify-content: space-between;
 
-    &__item {
-        // Cheap but robust padding when combined with space-between
-        width: 50% - math.div($space-between, 2);
-    }
+	&__item {
+		// Cheap but robust padding when combined with space-between
+		width: 50% - math.div($space-between, 2);
+	}
 }

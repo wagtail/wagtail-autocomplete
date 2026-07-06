@@ -9,223 +9,223 @@ import Multi from "./Multi";
 import "./AutocompleteInput.scss";
 
 class AutocompleteInput extends PureComponent {
-  constructor(props, ...args) {
-    super(props, ...args);
+	constructor(props, ...args) {
+		super(props, ...args);
 
-    this.handleClick = this.handleClick.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleCreate = this.handleCreate.bind(this);
+		this.handleClick = this.handleClick.bind(this);
+		this.handleChange = this.handleChange.bind(this);
+		this.handleCreate = this.handleCreate.bind(this);
 
-    this.state = {
-      value: props.value,
-      input: {
-        value: ""
-      },
-      suggestions: [],
-      error: "",
-    };
+		this.state = {
+			value: props.value,
+			input: {
+				value: "",
+			},
+			suggestions: [],
+			error: "",
+		};
 
-    if (props.fetchInitialValues) {
-      this.fetchInitialValues(props.value);
-    }
-  }
+		if (props.fetchInitialValues) {
+			this.fetchInitialValues(props.value);
+		}
+	}
 
-  componentDidMount() {
-    this.checkNewSuggestions("", false);
-  }
+	componentDidMount() {
+		this.checkNewSuggestions("", false);
+	}
 
-  get value() {
-    if (this.props.controlled) {
-      return this.props.value;
-    }
+	get value() {
+		if (this.props.controlled) {
+			return this.props.value;
+		}
 
-    return this.state.value;
-  }
+		return this.state.value;
+	}
 
-  handleChange(event) {
-    const { value } = event.target;
-    this.checkNewSuggestions(value);
-    this.setState({
-      input: Object.assign({}, this.state.input, { value }),
-      error: "",
-    });
-  }
+	handleChange(event) {
+		const { value } = event.target;
+		this.checkNewSuggestions(value);
+		this.setState({
+			input: Object.assign({}, this.state.input, { value }),
+			error: "",
+		});
+	}
 
-  getExclusions() {
-    const { value } = this.state;
-    if (!value) {
-      return "";
-    }
+	getExclusions() {
+		const { value } = this.state;
+		if (!value) {
+			return "";
+		}
 
-    if (this.props.isSingle) {
-      return value.pk;
-    }
+		if (this.props.isSingle) {
+			return value.pk;
+		}
 
-    return value.map(({ pk }) => pk).join(",");
-  }
+		return value.map(({ pk }) => pk).join(",");
+	}
 
-  checkNewSuggestions(value, checkDifferent = true) {
-    if (checkDifferent && value === this.state.value) {
-      return;
-    }
+	checkNewSuggestions(value, checkDifferent = true) {
+		if (checkDifferent && value === this.state.value) {
+			return;
+		}
 
-    getSuggestions({
-      apiBase: this.props.apiBase,
-      query: value,
-      type: this.props.type,
-      exclude: this.getExclusions()
-    }).then(items => {
-      this.setState({
-        suggestions: items
-      });
-    });
-  }
+		getSuggestions({
+			apiBase: this.props.apiBase,
+			query: value,
+			type: this.props.type,
+			exclude: this.getExclusions(),
+		}).then((items) => {
+			this.setState({
+				suggestions: items,
+			});
+		});
+	}
 
-  fetchInitialValues(value) {
-    if (!value) {
-      return;
-    }
+	fetchInitialValues(value) {
+		if (!value) {
+			return;
+		}
 
-    const isMulti = Array.isArray(value);
-    if (isMulti && value.length === 0) {
-      return;
-    }
+		const isMulti = Array.isArray(value);
+		if (isMulti && value.length === 0) {
+			return;
+		}
 
-    let pks = null;
-    if (isMulti) {
-      pks = value.map(({ pk }) => encodeURI(pk)).join(",");
-    } else {
-      pks = value.pk;
-    }
+		let pks = null;
+		if (isMulti) {
+			pks = value.map(({ pk }) => encodeURI(pk)).join(",");
+		} else {
+			pks = value.pk;
+		}
 
-    getObjects({
-      apiBase: this.props.apiBase,
-      pks,
-      type: this.props.type
-    }).then(items => {
-      let newValue = null;
-      if (isMulti) {
-        newValue = this.state.value.map(val => {
-          const page = items.find(obj => obj.pk === val.pk);
-          if (!page) {
-            return val;
-          }
+		getObjects({
+			apiBase: this.props.apiBase,
+			pks,
+			type: this.props.type,
+		}).then((items) => {
+			let newValue = null;
+			if (isMulti) {
+				newValue = this.state.value.map((val) => {
+					const page = items.find((obj) => obj.pk === val.pk);
+					if (!page) {
+						return val;
+					}
 
-          return page;
-        });
-      } else {
-        newValue = items[0];
-      }
+					return page;
+				});
+			} else {
+				newValue = items[0];
+			}
 
-      this.setState({ value: newValue });
+			this.setState({ value: newValue });
 
-      if (typeof this.props.onChange === "function") {
-        this.props.onChange({ target: { value: newValue } });
-      }
-    });
-  }
+			if (typeof this.props.onChange === "function") {
+				this.props.onChange({ target: { value: newValue } });
+			}
+		});
+	}
 
-  handleClick(value) {
-    this.setState({ error: "", value });
+	handleClick(value) {
+		this.setState({ error: "", value });
 
-    if (typeof this.props.onChange === "function") {
-      this.props.onChange({ target: { value, _autocomplete: true } });
-    }
-  }
+		if (typeof this.props.onChange === "function") {
+			this.props.onChange({ target: { value, _autocomplete: true } });
+		}
+	}
 
-  handleCreate() {
-    const { value } = this.state.input;
-    if (value.trim() === "") {
-      return;
-    }
+	handleCreate() {
+		const { value } = this.state.input;
+		if (value.trim() === "") {
+			return;
+		}
 
-    createObject({
-      apiBase: this.props.apiBase,
-      type: this.props.type,
-      value
-    }).then(data => {
-      const newValue = this.props.isSingle
-        ? data
-        : (this.state.value || []).concat(data);
+		createObject({
+			apiBase: this.props.apiBase,
+			type: this.props.type,
+			value,
+		})
+			.then((data) => {
+				const newValue = this.props.isSingle
+					? data
+					: (this.state.value || []).concat(data);
 
-      this.setState({
-        isLoading: false,
-        value: newValue,
-        error: "",
-      });
+				this.setState({
+					isLoading: false,
+					value: newValue,
+					error: "",
+				});
 
-      if (typeof this.props.onChange === "function") {
-        this.props.onChange({ target: { value: newValue } });
-      }
-    }).catch(error => {
-      this.setState({
-        isLoading: false,
-        error: `Failed to create new item "${value}".`
-      });
-    });
-    this.setState({ isLoading: true });
-  }
+				if (typeof this.props.onChange === "function") {
+					this.props.onChange({ target: { value: newValue } });
+				}
+			})
+			.catch((error) => {
+				this.setState({
+					isLoading: false,
+					error: `Failed to create new item "${value}".`,
+				});
+			});
+		this.setState({ isLoading: true });
+	}
 
-  render() {
-    const { name, isSingle, onChange, labelId } = this.props;
-    const { input, suggestions, error } = this.state;
+	render() {
+		const { name, isSingle, onChange, labelId } = this.props;
+		const { input, suggestions, error } = this.state;
 
-    const canCreate = this.props.canCreate && input.value.trim() !== "";
-    const useHiddenInput = typeof onChange !== "function";
+		const canCreate = this.props.canCreate && input.value.trim() !== "";
+		const useHiddenInput = typeof onChange !== "function";
 
-    return (
-      <span className={nc()}>
-        {useHiddenInput && (
-          <input type="hidden" value={JSON.stringify(this.value)} name={name} />
-        )}
+		return (
+			<span className={nc()}>
+				{useHiddenInput && (
+					<input type="hidden" value={JSON.stringify(this.value)} name={name} />
+				)}
 
-        {isSingle && (
-          <Single
-            input={input}
-            suggestions={suggestions}
-            selected={this.value}
-            labelId={labelId}
-            canCreate={canCreate}
-            onCreate={this.handleCreate}
-            onChange={this.handleChange}
-            onClick={this.handleClick}
-          />
-        )}
+				{isSingle && (
+					<Single
+						input={input}
+						suggestions={suggestions}
+						selected={this.value}
+						labelId={labelId}
+						canCreate={canCreate}
+						onCreate={this.handleCreate}
+						onChange={this.handleChange}
+						onClick={this.handleClick}
+					/>
+				)}
 
-        {!isSingle && (
-          <Multi
-            input={input}
-            suggestions={suggestions}
-            selections={this.value || Multi.defaultProps.selections}
-            labelId={labelId}
-            canCreate={canCreate}
-            onCreate={this.handleCreate}
-            onChange={this.handleChange}
-            onClick={this.handleClick}
-          />
-        )}
-        {error && (
-          <p className={nc("error-message")}>Error: {error}</p>
-        )}
-      </span>
-    );
-  }
+				{!isSingle && (
+					<Multi
+						input={input}
+						suggestions={suggestions}
+						selections={this.value || Multi.defaultProps.selections}
+						labelId={labelId}
+						canCreate={canCreate}
+						onCreate={this.handleCreate}
+						onChange={this.handleChange}
+						onClick={this.handleClick}
+					/>
+				)}
+				{error && <p className={nc("error-message")}>Error: {error}</p>}
+			</span>
+		);
+	}
 }
 
 AutocompleteInput.defaultProps = {
-  fetchInitialValues: false,
-  controlled: false
+	fetchInitialValues: false,
+	controlled: false,
 };
 
 AutocompleteInput.propTypes = {
-  name: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
-  canCreate: PropTypes.bool.isRequired,
-  isSingle: PropTypes.bool.isRequired,
-  onChange: PropTypes.func,
-  fetchInitialValues: PropTypes.bool,
-  apiBase: PropTypes.string.isRequired,
-  controlled: PropTypes.bool.isRequired
+	name: PropTypes.string.isRequired,
+	type: PropTypes.string.isRequired,
+	canCreate: PropTypes.bool.isRequired,
+	isSingle: PropTypes.bool.isRequired,
+	onChange: PropTypes.func,
+	fetchInitialValues: PropTypes.bool,
+	apiBase: PropTypes.string.isRequired,
+	controlled: PropTypes.bool.isRequired,
 };
 
 export default AutocompleteInput;
