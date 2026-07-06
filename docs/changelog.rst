@@ -2,6 +2,20 @@
 Changelog
 =========
 
+Unreleased
+----------
+
+Wagtail 7.2 Upgrade
+* Add support for Wagtail 7.2 (testing only)
+* Remove Support for Wagtail 6.4 and 7.1 (testing only)
+* Add support for Python 3.14
+
+Wagtail 7.0 Upgrade
+* Add support for Django 5.2 (testing only)
+* Add support for Wagtail 7.0 (testing only)
+* Remove support for Django 5.0 (testing only)
+* Remove support for Wagtail 5.2 to 6.2 (testing only)
+
 0.12 Release
 ----------
 
