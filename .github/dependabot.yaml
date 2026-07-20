@@ -1,0 +1,30 @@
+version: 2
+updates:
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'sunday'
+    cooldown:
+      default-days: 7
+
+  - package-ecosystem: 'pre-commit'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'sunday'
+    cooldown:
+      default-days: 7
+
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'sunday'
+    cooldown:
+      default-days: 7
+    allow:
+      - dependency-type: 'all'
+    commit-message:
+      prefix: 'build'
+      include: 'scope'
