@@ -59,13 +59,14 @@ class Suggestions extends PureComponent {
     const dY = item.offsetHeight;
     const containerBottom =
       this.suggestionsElm.scrollTop + this.suggestionsElm.offsetHeight;
-    if (this.state.index < index && item.offsetTop > containerBottom) {
+    const { index: currentIndex } = this.state;
+    if (currentIndex < index && item.offsetTop > containerBottom) {
       // We only want to be movin' on down if we definitely need to scroll to
       // see the target item. This means we have to check both that its offset
       // is past where we've scrolled and the height of the container.
       this.suggestionsElm.scrollTop += dY;
     } else if (
-      this.state.index > index &&
+      currentIndex > index &&
       item.offsetTop - dY > this.suggestionsElm.scrollTop
     ) {
       // Movin' on up
@@ -98,7 +99,7 @@ class Suggestions extends PureComponent {
 
   handleKeyPress(event) {
     const { index } = this.state;
-    const { suggestions, canCreate } = this.props;
+    const { suggestions, canCreate, onCreate, onClick } = this.props;
 
     let visible = true;
 
@@ -122,9 +123,9 @@ class Suggestions extends PureComponent {
       event.preventDefault();
 
       if (index === suggestions.length) {
-        this.props.onCreate();
+        onCreate();
       } else {
-        this.props.onClick(suggestions[index]);
+        onClick(suggestions[index]);
       }
     } else if (event.key === "Escape") {
       visible = false;
@@ -142,7 +143,8 @@ class Suggestions extends PureComponent {
       event.target.classList.contains("suggestions__item") ||
       (event.target.parentNode &&
         event.target.parentNode.classList.contains("suggestions__item"));
-    if (!inComponent && this.state.visible) {
+    const { visible } = this.state;
+    if (!inComponent && visible) {
       this.setState({ visible: false });
     }
   }
@@ -163,15 +165,15 @@ class Suggestions extends PureComponent {
       labelId
     } = this.props;
 
-    const { visible } = this.state;
+    const { visible, index: activeIndex } = this.state;
 
-    const display = this.state.visible ? "block" : "none";
+    const display = visible ? "block" : "none";
 
     const displayCreateItem = canCreate && input.value.trim() !== "";
 
     const isExpanded = visible && suggestions.length > 0;
     const activeDescendantId = isExpanded
-      ? `${this.suggestionsControlsId}-${this.state.index}`
+      ? `${this.suggestionsControlsId}-${activeIndex}`
       : "";
 
     return (
@@ -231,7 +233,7 @@ class Suggestions extends PureComponent {
               onClick={onClick.bind(null, suggestion)}
               onMouseEnter={this.handleMouseEnter.bind(this, index)}
               className={classNames("suggestions__item", {
-                "suggestions__item--active": index === this.state.index
+                "suggestions__item--active": index === activeIndex
               })}
               ref={ref => {
                 this.suggestionItemsElm[index] = ref;
@@ -261,7 +263,7 @@ class Suggestions extends PureComponent {
                 "suggestions__item--create",
                 {
                   "suggestions__item--active":
-                    suggestions.length === this.state.index
+                    suggestions.length === activeIndex
                 }
               )}
               id={`${this.suggestionsControlsId}-${suggestions.length}`}

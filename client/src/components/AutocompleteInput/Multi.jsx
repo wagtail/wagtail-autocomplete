@@ -22,10 +22,17 @@ class Multi extends PureComponent {
 	}
 
 	render() {
-		const { selections, onChange, onCreate, canCreate, input, labelId } =
-			this.props;
+		const {
+			selections,
+			onChange,
+			onCreate,
+			canCreate,
+			input,
+			labelId,
+			suggestions: allSuggestions,
+		} = this.props;
 
-		const suggestions = this.props.suggestions.filter((suggestion) => {
+		const suggestions = allSuggestions.filter((suggestion) => {
 			if (!selections) {
 				return true;
 			}

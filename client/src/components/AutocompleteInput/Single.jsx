@@ -15,6 +15,7 @@ class Single extends PureComponent {
       onCreate,
       input,
       canCreate,
+      suggestions: allSuggestions,
     } = this.props;
 
     if (selected) {
@@ -35,7 +36,7 @@ class Single extends PureComponent {
       );
     }
 
-    const suggestions = this.props.suggestions.filter(suggestion => {
+    const suggestions = allSuggestions.filter(suggestion => {
       if (!selected) {
         return true;
       }
