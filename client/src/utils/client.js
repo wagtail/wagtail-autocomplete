@@ -34,9 +34,8 @@ function httpRequest(url, { body, ...customConfig } = {}) {
 	return window.fetch(url, config).then((response) => {
 		if (response.ok) {
 			return response.json();
-		} else {
-			return Promise.reject();
 		}
+		return Promise.reject();
 	});
 }
 
