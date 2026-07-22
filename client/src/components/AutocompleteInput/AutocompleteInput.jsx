@@ -226,7 +226,7 @@ AutocompleteInput.propTypes = {
 	onChange: PropTypes.func,
 	fetchInitialValues: PropTypes.bool,
 	apiBase: PropTypes.string.isRequired,
-	controlled: PropTypes.bool.isRequired,
+	controlled: PropTypes.bool,
 };
 
 export default AutocompleteInput;
