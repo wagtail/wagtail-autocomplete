@@ -24,14 +24,14 @@ var common = {
 	},
 
 	resolve: {
-		extensions: [".js"],
+		extensions: [".js", ".jsx"],
 		modules: ["node_modules"],
 	},
 
 	module: {
 		rules: [
 			{
-				test: /\.js$/,
+				test: /\.jsx?$/,
 				loader: "babel-loader",
 				include: [path.join(__dirname, "/client/")],
 			},

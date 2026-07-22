@@ -17,8 +17,8 @@
   "scripts": {
     "build": "webpack --mode production",
     "start": "webpack watch --devtool eval-source-map --mode development",
-    "lint:js": "eslint ./client",
-    "lint:js:fix": "eslint --fix ./client",
+    "lint:js": "eslint --ext .js,.jsx ./client",
+    "lint:js:fix": "eslint --fix --ext .js,.jsx ./client",
     "lint:css": "stylelint **/*.scss",
     "test": "jest client"
   },
