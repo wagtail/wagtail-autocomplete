@@ -80,7 +80,6 @@
     "style-loader": "^3.3.4",
     "stylelint": "^15.11.0",
     "webpack": "^5.108.4",
-    "webpack-bundle-tracker": "^1.8.1",
     "webpack-cli": "^4.10.0",
     "webpack-merge": "^4.2.2"
   },
