@@ -118,7 +118,7 @@ class AutocompleteInput extends PureComponent {
 					return page;
 				});
 			} else {
-				newValue = items[0];
+				[newValue] = items;
 			}
 
 			this.setState({ value: newValue });
