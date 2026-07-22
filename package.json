@@ -59,7 +59,7 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^9.0.0",
     "babel-jest": "^30.2.0",
-    "babel-loader": "^8.0.0",
+    "babel-loader": "^10.1.1",
     "babel-plugin-add-module-exports": "^0.2.1",
     "css-loader": "^6.7.1",
     "enzyme": "^3.11.0",
