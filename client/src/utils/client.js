@@ -4,7 +4,7 @@ const XSRF_COOKIE_NAME = "csrftoken";
 const XSRF_HEADER_NAME = "X-CSRFToken";
 
 function httpRequest(url, { body, ...customConfig } = {}) {
-	let headers = {};
+	const headers = {};
 	if (body) {
 		if (Cookies.get(XSRF_COOKIE_NAME)) {
 			headers[XSRF_HEADER_NAME] = Cookies.get(XSRF_COOKIE_NAME);
