@@ -31,9 +31,9 @@ function httpRequest(url, { body, ...customConfig } = {}) {
 		config.body = body;
 	}
 
-	return window.fetch(url, config).then(async (response) => {
+	return window.fetch(url, config).then((response) => {
 		if (response.ok) {
-			return await response.json();
+			return response.json();
 		} else {
 			return Promise.reject();
 		}
