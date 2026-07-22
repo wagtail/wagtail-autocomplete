@@ -154,7 +154,6 @@ class AutocompleteInput extends PureComponent {
 				const newValue = isSingle ? data : (stateValue || []).concat(data);
 
 				this.setState({
-					isLoading: false,
 					value: newValue,
 					error: "",
 				});
@@ -165,11 +164,9 @@ class AutocompleteInput extends PureComponent {
 			})
 			.catch(() => {
 				this.setState({
-					isLoading: false,
 					error: `Failed to create new item "${value}".`,
 				});
 			});
-		this.setState({ isLoading: true });
 	}
 
 	render() {
