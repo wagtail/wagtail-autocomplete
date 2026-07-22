@@ -163,7 +163,7 @@ class AutocompleteInput extends PureComponent {
 					onChange({ target: { value: newValue } });
 				}
 			})
-			.catch((error) => {
+			.catch(() => {
 				this.setState({
 					isLoading: false,
 					error: `Failed to create new item "${value}".`,
