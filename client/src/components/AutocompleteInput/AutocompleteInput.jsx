@@ -216,6 +216,7 @@ class AutocompleteInput extends PureComponent {
 AutocompleteInput.defaultProps = {
 	fetchInitialValues: false,
 	controlled: false,
+	onChange: undefined,
 };
 
 AutocompleteInput.propTypes = {

@@ -6,6 +6,10 @@ const IconPropTypes = {
 	className: PropTypes.string,
 };
 
+const IconDefaultProps = {
+	className: undefined,
+};
+
 const SearchIcon = ({ className }) => (
 	<svg
 		className={className}
@@ -21,6 +25,7 @@ const SearchIcon = ({ className }) => (
 );
 
 SearchIcon.propTypes = IconPropTypes;
+SearchIcon.defaultProps = IconDefaultProps;
 
 const RightArrowIcon = ({ className }) => (
 	<svg
@@ -33,6 +38,7 @@ const RightArrowIcon = ({ className }) => (
 );
 
 RightArrowIcon.propTypes = IconPropTypes;
+RightArrowIcon.defaultProps = IconDefaultProps;
 
 const RemoveIcon = ({ className }) => (
 	<svg
@@ -45,5 +51,6 @@ const RemoveIcon = ({ className }) => (
 );
 
 RemoveIcon.propTypes = IconPropTypes;
+RemoveIcon.defaultProps = IconDefaultProps;
 
 export { SearchIcon, RightArrowIcon, RemoveIcon };
