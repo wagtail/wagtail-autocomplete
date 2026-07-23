@@ -1,13 +1,14 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import Single from './Single';
 
 
 const mockProps = {
   suggestions: [
-    { id: 1, title: 'Alice' },
-    { id: 2, title: 'Tekisha' },
+    { pk: 1, title: 'Alice' },
+    { pk: 2, title: 'Tekisha' },
   ],
   selected: null,
   onChange: jest.fn(),
@@ -19,14 +20,28 @@ const mockProps = {
 
 
 describe('Single', () => {
-  it('exists', () => {
-    expect(Single).toBeDefined();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('mounts', () => {
-    const single = shallow(
-      <Single {...mockProps} />
-    );
-    expect(single).toMatchSnapshot();
+  it('renders suggestions when nothing is selected', () => {
+    render(<Single {...mockProps} />);
+
+    const input = screen.getByRole('combobox');
+    expect(input).toBeInTheDocument();
+
+    fireEvent.focus(input);
+    expect(screen.getByRole('option', { name: 'Alice' })).toBeInTheDocument();
+  });
+
+  it('renders the selected item with a way to remove it', async () => {
+    const user = userEvent.setup();
+    render(<Single {...mockProps} selected={{ pk: 1, title: 'Alice' }} />);
+
+    expect(screen.getByText('Alice')).toBeInTheDocument();
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /remove/i }));
+    expect(mockProps.onClick.mock.calls[0][0]).toBeNull();
   });
 });

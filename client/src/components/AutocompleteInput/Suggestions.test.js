@@ -1,13 +1,13 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { render, screen, fireEvent } from '@testing-library/react';
 
 import Suggestions from './Suggestions';
 
 
 const mockProps = {
   suggestions: [
-    { id: 1, title: 'Alice' },
-    { id: 2, title: 'Tekisha' },
+    { pk: 1, title: 'Alice' },
+    { pk: 2, title: 'Tekisha' },
   ],
   onChange: jest.fn(),
   onCreate: jest.fn(),
@@ -18,19 +18,18 @@ const mockProps = {
 
 
 describe('Suggestions', () => {
-  it('exists', () => {
-    expect(Suggestions).toBeDefined();
-  });
+  it('renders a combobox with the given suggestions once focused', () => {
+    render(<Suggestions {...mockProps} />);
 
-  it('mounts', () => {
-    const suggestions = shallow(
-      <Suggestions {...mockProps} />
-    );
-    expect(suggestions).toMatchSnapshot();
+    const input = screen.getByRole('combobox');
+    fireEvent.focus(input);
+
+    expect(screen.getByRole('option', { name: 'Alice' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Tekisha' })).toBeInTheDocument();
   });
 
   it('does not show create new if input value is blank', () => {
-    const suggestions = shallow(
+    render(
       <Suggestions
         {...mockProps}
         input={{ value: ' ' }}
@@ -38,15 +37,19 @@ describe('Suggestions', () => {
       />
     );
 
-    const item = suggestions.findWhere(node => (
-      node.type() === 'li' &&
-      node.text().startsWith('Create new')
-    ));
-    expect(item.exists()).toEqual(false);
+    fireEvent.focus(screen.getByRole('combobox'));
+
+    // The "create new" item doesn't carry role="option" like the other
+    // suggestions do, so it can't be queried by role like they can.
+    expect(
+      screen.queryByText((content, element) => (
+        element.tagName === 'LI' && element.textContent.startsWith('Create new')
+      ))
+    ).not.toBeInTheDocument();
   });
 
   it('does show create new if input value is not blank', () => {
-    const suggestions = shallow(
+    render(
       <Suggestions
         {...mockProps}
         input={{ value: 'new item' }}
@@ -54,40 +57,40 @@ describe('Suggestions', () => {
       />
     );
 
-    const item = suggestions.findWhere(node => (
-      node.type() === 'li' &&
-      node.text().startsWith('Create new') &&
-      node.text().includes('new item')
-    ));
-    expect(item.exists()).toEqual(true);
+    fireEvent.focus(screen.getByRole('combobox'));
+
+    expect(
+      screen.getByText((content, element) => (
+        element.tagName === 'LI' &&
+        element.textContent.startsWith('Create new') &&
+        element.textContent.includes('new item')
+      ))
+    ).toBeInTheDocument();
   });
 
   it('sets the correct aria owns id', () => {
-    const suggestions = shallow(
-      <Suggestions {...mockProps} />
-    );
+    render(<Suggestions {...mockProps} />);
 
-    const ariaOwnsId = suggestions.find('input').prop('aria-owns');
-    const id = suggestions.find('ul').prop('id');
-    expect(id).toBeTruthy();
-    expect(id).toEqual(ariaOwnsId);
+    const input = screen.getByRole('combobox');
+    fireEvent.focus(input);
+
+    const listbox = screen.getByRole('listbox');
+    expect(listbox.id).toBeTruthy();
+    expect(input).toHaveAttribute('aria-owns', listbox.id);
   });
 
   it('sets the correct aria active descendant id', () => {
-    const suggestions = shallow(
-      <Suggestions {...mockProps} />
-    );
+    render(<Suggestions {...mockProps} />);
 
-    let activeDescendantId = suggestions.find('input').prop('aria-activedescendant');
-    expect(activeDescendantId).toBeFalsy();
+    const input = screen.getByRole('combobox');
+    expect(input.getAttribute('aria-activedescendant')).toBeFalsy();
 
-    suggestions.setState({ visible: true, index: 0 });
-    activeDescendantId = suggestions.find('input').prop('aria-activedescendant');
-    const selectedOptionId = suggestions.find('li').get(0).props.id;
-    const differentOptionId = suggestions.find('li').get(1).props.id;
-    expect(activeDescendantId).toBeTruthy();
-    expect(differentOptionId).toBeTruthy();
-    expect(activeDescendantId).toEqual(selectedOptionId);
-    expect(selectedOptionId === differentOptionId).toEqual(false);
+    fireEvent.focus(input);
+
+    const options = screen.getAllByRole('option');
+    expect(options[0].id).toBeTruthy();
+    expect(options[1].id).toBeTruthy();
+    expect(input).toHaveAttribute('aria-activedescendant', options[0].id);
+    expect(options[0].id === options[1].id).toEqual(false);
   });
 });
