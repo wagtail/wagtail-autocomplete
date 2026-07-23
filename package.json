@@ -60,7 +60,7 @@
     "babel-eslint": "^9.0.0",
     "babel-jest": "^30.4.1",
     "babel-loader": "^10.1.1",
-    "babel-plugin-add-module-exports": "^0.3.3",
+    "babel-plugin-add-module-exports": "^1.0.4",
     "css-loader": "^6.11.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.8",
