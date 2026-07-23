@@ -1,0 +1,40 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python-version: "3.9"
+            tox-factor: py39
+          - python-version: "3.10"
+            tox-factor: py310
+          - python-version: "3.11"
+            tox-factor: py311
+          - python-version: "3.12"
+            tox-factor: py312
+          - python-version: "3.13"
+            tox-factor: py313
+          - python-version: "3.14"
+            tox-factor: py314
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          pip install -U pip
+          pip install ".[test]"
+      - name: Run tests
+        run: tox -f ${{ matrix.tox-factor }}
+      - name: flake8
+        run: tox -e flake8
