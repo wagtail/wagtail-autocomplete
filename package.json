@@ -91,6 +91,6 @@
     "js-cookie": "^3.0.8",
     "prop-types": "^15.8.1",
     "react": "^16.14.0",
-    "react-dom": "^16.14.0"
+    "react-dom": "^19.2.7"
   }
 }
