@@ -36,6 +36,12 @@ export default [
         ...globals.jest,
       },
     },
+    rules: {
+      // Spreading a mockProps fixture into JSX is the standard way to build
+      // test cases; the rule's concern about unknown/unauditable props on
+      // rendered output doesn't apply to test fixtures.
+      'react/jsx-props-no-spreading': 'off',
+    },
   },
   {
     files: ['**/__mocks__/**'],
