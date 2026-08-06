@@ -194,7 +194,7 @@ class Suggestions extends PureComponent {
             onFocus={this.handleFocus}
             onChange={onChange}
             onKeyDown={this.handleKeyPress}
-            {...input}
+            value={input.value}
             id={labelId}
             role="combobox"
             aria-expanded={isExpanded}
