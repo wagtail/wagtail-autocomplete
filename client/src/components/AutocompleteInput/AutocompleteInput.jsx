@@ -4,7 +4,7 @@ import React, { PureComponent } from "react";
 import { createObject, getObjects, getSuggestions } from "../../utils/client";
 import Multi from "./Multi";
 import Single from "./Single";
-import { nc } from ".";
+import { nc } from "./nc";
 
 import "./AutocompleteInput.scss";
 

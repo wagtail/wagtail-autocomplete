@@ -3,7 +3,7 @@ import React, { PureComponent } from "react";
 
 import getUniqueId from "../../utils/getUniqueId";
 import { RightArrowIcon, SearchIcon } from "./Icons";
-import { nc } from ".";
+import { nc } from "./nc";
 
 const classNames = (...args) => nc(nclassNames(...args));
 

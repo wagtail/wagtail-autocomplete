@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 
 import { RemoveIcon } from "./Icons";
 import Suggestions from "./Suggestions";
-import { nc } from ".";
+import { nc } from "./nc";
 
 class Multi extends PureComponent {
 	constructor(...args) {
