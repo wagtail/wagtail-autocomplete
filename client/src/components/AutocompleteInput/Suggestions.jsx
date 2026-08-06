@@ -8,12 +8,16 @@ import { nc } from "./nc";
 const classNames = (...args) => nc(nclassNames(...args));
 
 class Suggestions extends PureComponent {
-  constructor(...args) {
-    super(...args);
+  constructor(props, ...args) {
+    super(props, ...args);
 
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleBlurClick = this.handleBlurClick.bind(this);
     this.handleFocus = this.handleFocus.bind(this);
+
+    // Was previously set in componentWillMount, which runs before the
+    // initial render just like the constructor does.
+    this.suggestionsControlsId = getUniqueId();
 
     // An object to track individual suggestion items by array index.
     // This is used to look at scrolling offsets during keyboard
@@ -26,24 +30,24 @@ class Suggestions extends PureComponent {
     };
   }
 
-  componentWillMount() {
-    this.suggestionsControlsId = getUniqueId();
-  }
-
   componentDidMount() {
     window.addEventListener("click", this.handleBlurClick);
   }
 
-  componentWillUnmount() {
-    window.removeEventListener("click", this.handleBlurClick);
+  componentDidUpdate(prevProps) {
+    const { suggestions: prevSuggestions } = prevProps;
+    const { suggestions } = this.props;
+    if (prevSuggestions === suggestions) {
+      return;
+    }
+
+    if (this.shouldResetIndex(prevSuggestions)) {
+      this.setState({ index: 0 });
+    }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.shouldResetIndex(nextProps)) {
-      this.setState({
-        index: 0
-      });
-    }
+  componentWillUnmount() {
+    window.removeEventListener("click", this.handleBlurClick);
   }
 
   scrollToSuggestion(index) {
@@ -75,22 +79,22 @@ class Suggestions extends PureComponent {
   }
 
   /**
-   * If the suggestion at the curent index has changed, the index
+   * If the suggestion at the current index has changed, the index
    * needs to be reset.
    */
-  shouldResetIndex(nextProps) {
-    const { suggestions } = this.props;
-    if (suggestions.length === 0) {
+  shouldResetIndex(prevSuggestions) {
+    if (prevSuggestions.length === 0) {
       return true;
     }
 
     const { index } = this.state;
-    if (index >= nextProps.suggestions.length) {
+    const { suggestions } = this.props;
+    if (index >= suggestions.length) {
       return true;
     }
 
-    const currentId = suggestions[index].pk;
-    return nextProps.suggestions[index].pk !== currentId;
+    const currentId = prevSuggestions[index].pk;
+    return suggestions[index].pk !== currentId;
   }
 
   handleMouseEnter(index) {
