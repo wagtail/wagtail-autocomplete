@@ -1,9 +1,9 @@
-import React, { PureComponent } from "react";
 import nclassNames from "classnames";
+import React, { PureComponent } from "react";
 
 import getUniqueId from "../../utils/getUniqueId";
+import { RightArrowIcon, SearchIcon } from "./Icons";
 import { nc } from ".";
-import { SearchIcon, RightArrowIcon } from "./Icons";
 
 const classNames = (...args) => nc(nclassNames(...args));
 

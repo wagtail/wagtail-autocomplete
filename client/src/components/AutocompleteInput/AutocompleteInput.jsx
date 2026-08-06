@@ -1,10 +1,10 @@
-import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
+import React, { PureComponent } from "react";
 
-import { nc } from ".";
-import { getSuggestions, getObjects, createObject } from "../../utils/client";
-import Single from "./Single";
+import { createObject, getObjects, getSuggestions } from "../../utils/client";
 import Multi from "./Multi";
+import Single from "./Single";
+import { nc } from ".";
 
 import "./AutocompleteInput.scss";
 

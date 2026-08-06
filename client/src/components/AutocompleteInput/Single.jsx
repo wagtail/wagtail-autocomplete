@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 
-import { nc } from '.';
 import { RemoveIcon } from './Icons';
 import Suggestions from './Suggestions';
+import { nc } from '.';
 
 
 class Single extends PureComponent {
