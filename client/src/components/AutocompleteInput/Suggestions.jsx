@@ -202,6 +202,7 @@ class Suggestions extends PureComponent {
             id={labelId}
             role="combobox"
             aria-expanded={isExpanded}
+            aria-controls={this.suggestionsControlsId}
             aria-owns={this.suggestionsControlsId}
             aria-haspopup="true"
             aria-autocomplete="list"
@@ -232,6 +233,9 @@ class Suggestions extends PureComponent {
           role="listbox"
         >
           {suggestions.map((suggestion, index) => (
+            // Keyboard interaction is handled by the input above via
+            // aria-activedescendant; options never receive DOM focus.
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events
             <li
               key={suggestion.pk}
               onClick={onClick.bind(null, suggestion)}
@@ -244,6 +248,7 @@ class Suggestions extends PureComponent {
               }}
               id={`${this.suggestionsControlsId}-${index}`}
               role="option"
+              aria-selected={index === activeIndex}
             >
               <span>{suggestion.title}</span>
 
@@ -252,6 +257,9 @@ class Suggestions extends PureComponent {
           ))}
 
           {displayCreateItem && (
+            // Keyboard interaction is handled by the input above via
+            // aria-activedescendant; options never receive DOM focus.
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events
             <li
               key="create"
               onClick={onCreate}
@@ -271,6 +279,8 @@ class Suggestions extends PureComponent {
                 }
               )}
               id={`${this.suggestionsControlsId}-${suggestions.length}`}
+              role="option"
+              aria-selected={suggestions.length === activeIndex}
             >
               Create new “{input.value}”
             </li>
