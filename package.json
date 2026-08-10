@@ -31,7 +31,7 @@
     "@babel/preset-env": "^7.29.7",
     "@babel/preset-react": "^7.29.7",
     "@wagtail/eslint-config-wagtail": "^0.5.0",
-    "@wagtail/stylelint-config-wagtail": "^0.8.0",
+    "@wagtail/stylelint-config-wagtail": "^2.0.0",
     "autoprefixer": "^10.5.4",
     "babel-jest": "^30.4.1",
     "babel-loader": "^10.1.1",
