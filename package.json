@@ -5,6 +5,9 @@
   "repository": "https://littleweaver/wagtail-autocomplete",
   "license": "BSD-3-Clause",
   "main": "client/src/index.js",
+  "overrides": {
+    "cheerio": "1.0.0-rc.12"
+  },
   "jest": {
     "testEnvironment": "jsdom",
     "moduleNameMapper": {
