@@ -4,7 +4,7 @@ $gray: #e6e6e6;
 $light-coral: #ff7e77;
 $deep-sky-blue: #9d9fa0;
 $red: #ce4646;
-$dark: #333333;
+$dark: #333;
 
 $input-border-color: $gray;
 $selection-bg: $light-coral;
@@ -20,6 +20,19 @@ $wagtail-border-radius: 6px;
 
 $search-icon-width: 36px;
 $search-icon-padding: 4px;
+$search-icon-z-index: 2;
+$search-input-padding-inline-start: $search-icon-width + 2 * $search-icon-padding;
+
+$zero: 0;
+
+$item-font-size: 1.2em;
+$item-spacing: 1.2em;
+
+$selection-margin-bottom: 1em;
+$selection-padding: 0.9em 1.2em;
+
+$suggestions-item-padding: 0.9em 0.6em;
+$suggestions-item-z-index: 1000;
 
 @import "accessibility";
 @import "layout";

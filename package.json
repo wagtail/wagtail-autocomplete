@@ -23,7 +23,11 @@
     "test": "jest client"
   },
   "stylelint": {
-    "extends": "@wagtail/stylelint-config-wagtail"
+    "extends": "@wagtail/stylelint-config-wagtail",
+    "rules": {
+      "scss/selector-no-union-class-name": null,
+      "scss/selector-class-pattern": null
+    }
   },
   "author": "Emily Horsman <me@emilyhorsman.com>",
   "devDependencies": {
@@ -54,7 +58,7 @@
     "postcss-loader": "^7.3.4",
     "sass": "^1.101.3",
     "sass-loader": "^17.0.0",
-    "stylelint": "^15.11.0",
+    "stylelint": "^17.14.1",
     "typescript-eslint": "^8.54.0",
     "webpack": "^5.108.4",
     "webpack-cli": "^4.10.0",

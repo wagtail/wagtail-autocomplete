@@ -1,9 +1,9 @@
 input.c-wagtailautocomplete__search {
-	padding-left: $search-icon-width + 2 * $search-icon-padding;
+	padding-inline-start: $search-input-padding-inline-start;
 
 	&--has-input {
-		border-bottom-left-radius: 0;
-		border-bottom-right-radius: 0;
+		border-end-start-radius: $zero;
+		border-end-end-radius: $zero;
 	}
 }
 
@@ -13,8 +13,8 @@ div.c-wagtailautocomplete__search-input-container {
 
 svg.c-wagtailautocomplete__search-icon {
 	position: absolute;
-	z-index: 2;
-	left: $search-icon-padding;
+	z-index: $search-icon-z-index;
+	inset-inline-start: $search-icon-padding;
 	top: 7px;
 	height: $search-icon-width;
 	width: $search-icon-width;
