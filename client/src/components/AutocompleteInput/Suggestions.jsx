@@ -1,19 +1,23 @@
-import React, { PureComponent } from "react";
 import nclassNames from "classnames";
+import React, { PureComponent } from "react";
 
 import getUniqueId from "../../utils/getUniqueId";
-import { nc } from ".";
-import { SearchIcon, RightArrowIcon } from "./Icons";
+import { RightArrowIcon, SearchIcon } from "./Icons";
+import { nc } from "./nc";
 
 const classNames = (...args) => nc(nclassNames(...args));
 
 class Suggestions extends PureComponent {
-  constructor(...args) {
-    super(...args);
+  constructor(props, ...args) {
+    super(props, ...args);
 
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleBlurClick = this.handleBlurClick.bind(this);
     this.handleFocus = this.handleFocus.bind(this);
+
+    // Was previously set in componentWillMount, which runs before the
+    // initial render just like the constructor does.
+    this.suggestionsControlsId = getUniqueId();
 
     // An object to track individual suggestion items by array index.
     // This is used to look at scrolling offsets during keyboard
@@ -26,24 +30,24 @@ class Suggestions extends PureComponent {
     };
   }
 
-  componentWillMount() {
-    this.suggestionsControlsId = getUniqueId();
-  }
-
   componentDidMount() {
     window.addEventListener("click", this.handleBlurClick);
   }
 
-  componentWillUnmount() {
-    window.removeEventListener("click", this.handleBlurClick);
+  componentDidUpdate(prevProps) {
+    const { suggestions: prevSuggestions } = prevProps;
+    const { suggestions } = this.props;
+    if (prevSuggestions === suggestions) {
+      return;
+    }
+
+    if (this.shouldResetIndex(prevSuggestions)) {
+      this.setState({ index: 0 });
+    }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.shouldResetIndex(nextProps)) {
-      this.setState({
-        index: 0
-      });
-    }
+  componentWillUnmount() {
+    window.removeEventListener("click", this.handleBlurClick);
   }
 
   scrollToSuggestion(index) {
@@ -59,13 +63,14 @@ class Suggestions extends PureComponent {
     const dY = item.offsetHeight;
     const containerBottom =
       this.suggestionsElm.scrollTop + this.suggestionsElm.offsetHeight;
-    if (this.state.index < index && item.offsetTop > containerBottom) {
+    const { index: currentIndex } = this.state;
+    if (currentIndex < index && item.offsetTop > containerBottom) {
       // We only want to be movin' on down if we definitely need to scroll to
       // see the target item. This means we have to check both that its offset
       // is past where we've scrolled and the height of the container.
       this.suggestionsElm.scrollTop += dY;
     } else if (
-      this.state.index > index &&
+      currentIndex > index &&
       item.offsetTop - dY > this.suggestionsElm.scrollTop
     ) {
       // Movin' on up
@@ -74,22 +79,22 @@ class Suggestions extends PureComponent {
   }
 
   /**
-   * If the suggestion at the curent index has changed, the index
+   * If the suggestion at the current index has changed, the index
    * needs to be reset.
    */
-  shouldResetIndex(nextProps) {
-    const { suggestions } = this.props;
-    if (suggestions.length === 0) {
+  shouldResetIndex(prevSuggestions) {
+    if (prevSuggestions.length === 0) {
       return true;
     }
 
     const { index } = this.state;
-    if (index >= nextProps.suggestions.length) {
+    const { suggestions } = this.props;
+    if (index >= suggestions.length) {
       return true;
     }
 
-    const currentId = suggestions[index].pk;
-    return nextProps.suggestions[index].pk !== currentId;
+    const currentId = prevSuggestions[index].pk;
+    return suggestions[index].pk !== currentId;
   }
 
   handleMouseEnter(index) {
@@ -98,7 +103,7 @@ class Suggestions extends PureComponent {
 
   handleKeyPress(event) {
     const { index } = this.state;
-    const { suggestions, canCreate } = this.props;
+    const { suggestions, canCreate, onCreate, onClick } = this.props;
 
     let visible = true;
 
@@ -122,9 +127,9 @@ class Suggestions extends PureComponent {
       event.preventDefault();
 
       if (index === suggestions.length) {
-        this.props.onCreate();
+        onCreate();
       } else {
-        this.props.onClick(suggestions[index]);
+        onClick(suggestions[index]);
       }
     } else if (event.key === "Escape") {
       visible = false;
@@ -142,7 +147,8 @@ class Suggestions extends PureComponent {
       event.target.classList.contains("suggestions__item") ||
       (event.target.parentNode &&
         event.target.parentNode.classList.contains("suggestions__item"));
-    if (!inComponent && this.state.visible) {
+    const { visible } = this.state;
+    if (!inComponent && visible) {
       this.setState({ visible: false });
     }
   }
@@ -163,15 +169,15 @@ class Suggestions extends PureComponent {
       labelId
     } = this.props;
 
-    const { visible } = this.state;
+    const { visible, index: activeIndex } = this.state;
 
-    const display = this.state.visible ? "block" : "none";
+    const display = visible ? "block" : "none";
 
     const displayCreateItem = canCreate && input.value.trim() !== "";
 
     const isExpanded = visible && suggestions.length > 0;
     const activeDescendantId = isExpanded
-      ? `${this.suggestionsControlsId}-${this.state.index}`
+      ? `${this.suggestionsControlsId}-${activeIndex}`
       : "";
 
     return (
@@ -192,10 +198,11 @@ class Suggestions extends PureComponent {
             onFocus={this.handleFocus}
             onChange={onChange}
             onKeyDown={this.handleKeyPress}
-            {...input}
+            value={input.value}
             id={labelId}
             role="combobox"
             aria-expanded={isExpanded}
+            aria-controls={this.suggestionsControlsId}
             aria-owns={this.suggestionsControlsId}
             aria-haspopup="true"
             aria-autocomplete="list"
@@ -226,18 +233,22 @@ class Suggestions extends PureComponent {
           role="listbox"
         >
           {suggestions.map((suggestion, index) => (
+            // Keyboard interaction is handled by the input above via
+            // aria-activedescendant; options never receive DOM focus.
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events
             <li
               key={suggestion.pk}
               onClick={onClick.bind(null, suggestion)}
               onMouseEnter={this.handleMouseEnter.bind(this, index)}
               className={classNames("suggestions__item", {
-                "suggestions__item--active": index === this.state.index
+                "suggestions__item--active": index === activeIndex
               })}
               ref={ref => {
                 this.suggestionItemsElm[index] = ref;
               }}
               id={`${this.suggestionsControlsId}-${index}`}
               role="option"
+              aria-selected={index === activeIndex}
             >
               <span>{suggestion.title}</span>
 
@@ -246,6 +257,9 @@ class Suggestions extends PureComponent {
           ))}
 
           {displayCreateItem && (
+            // Keyboard interaction is handled by the input above via
+            // aria-activedescendant; options never receive DOM focus.
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events
             <li
               key="create"
               onClick={onCreate}
@@ -261,10 +275,12 @@ class Suggestions extends PureComponent {
                 "suggestions__item--create",
                 {
                   "suggestions__item--active":
-                    suggestions.length === this.state.index
+                    suggestions.length === activeIndex
                 }
               )}
               id={`${this.suggestionsControlsId}-${suggestions.length}`}
+              role="option"
+              aria-selected={suggestions.length === activeIndex}
             >
               Create new “{input.value}”
             </li>

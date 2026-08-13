@@ -1,24 +1,24 @@
 .c-wagtailautocomplete__selection {
 	background-color: $selection-bg;
 	color: $selection-fg;
-	font-size: 1.2em;
+	font-size: $item-font-size;
 	border-radius: $wagtail-border-radius;
-	margin-bottom: 1em;
+	margin-bottom: $selection-margin-bottom;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 
 	&:last-child {
-		margin-bottom: 0;
+		margin-bottom: $zero;
 	}
 
 	&--single {
-		margin-bottom: 0;
+		margin-bottom: $zero;
 	}
 
 	&__label,
 	&__button {
-		padding: 0.9em 1.2em;
+		padding: $selection-padding;
 	}
 
 	&__button {
@@ -27,8 +27,8 @@
 	}
 
 	&__icon {
-		width: 1.2em;
-		height: 1.2em;
+		width: $item-spacing;
+		height: $item-spacing;
 
 		path {
 			fill: $selection-fg;

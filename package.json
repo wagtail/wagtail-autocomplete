@@ -5,6 +5,9 @@
   "repository": "https://littleweaver/wagtail-autocomplete",
   "license": "BSD-3-Clause",
   "main": "client/src/index.js",
+  "overrides": {
+    "cheerio": "1.0.0-rc.12"
+  },
   "jest": {
     "testEnvironment": "jsdom",
     "moduleNameMapper": {
@@ -18,11 +21,16 @@
     "build": "webpack --mode production",
     "start": "webpack watch --devtool eval-source-map --mode development",
     "lint:js": "eslint ./client",
+    "lint:js:fix": "eslint --fix ./client",
     "lint:css": "stylelint **/*.scss",
     "test": "jest client"
   },
   "stylelint": {
-    "extends": "@wagtail/stylelint-config-wagtail"
+    "extends": "@wagtail/stylelint-config-wagtail",
+    "rules": {
+      "scss/selector-no-union-class-name": null,
+      "scss/selector-class-pattern": null
+    }
   },
   "author": "Emily Horsman <me@emilyhorsman.com>",
   "devDependencies": {
@@ -30,18 +38,22 @@
     "@babel/core": "^7.29.7",
     "@babel/preset-env": "^7.29.7",
     "@babel/preset-react": "^7.29.7",
-    "@wagtail/eslint-config-wagtail": "^0.5.0",
+    "@eslint/js": "^9.39.5",
+    "@stylistic/eslint-plugin": "^5.8.0",
+    "@wagtail/eslint-config-wagtail": "^0.6.0",
     "@wagtail/stylelint-config-wagtail": "^2.0.0",
     "autoprefixer": "^10.5.4",
     "babel-jest": "^30.4.1",
     "babel-loader": "^10.1.1",
     "css-loader": "^6.11.0",
-    "enzyme": "^3.11.0",
-    "enzyme-adapter-react-16": "^1.15.8",
-    "eslint": "^8.57.1",
-    "eslint-plugin-import": "^2.32.0",
+    "eslint": "^9.39.5",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-import-x": "^4.17.1",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.9.0",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
     "mini-css-extract-plugin": "^1.6.2",
@@ -49,7 +61,8 @@
     "postcss-loader": "^7.3.4",
     "sass": "^1.101.3",
     "sass-loader": "^17.0.0",
-    "stylelint": "^15.11.0",
+    "stylelint": "^17.14.1",
+    "typescript-eslint": "^8.54.0",
     "webpack": "^5.108.4",
     "webpack-cli": "^4.10.0",
     "webpack-merge": "^4.2.2"
@@ -58,6 +71,8 @@
     "classlist-polyfill": "^1.2.0",
     "classnames": "^2.5.1",
     "element-dataset": "^2.2.6",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.8",
     "js-cookie": "^3.0.8",
     "prop-types": "^15.8.1",
     "react": "^16.14.0",

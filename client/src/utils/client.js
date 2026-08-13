@@ -4,7 +4,7 @@ const XSRF_COOKIE_NAME = "csrftoken";
 const XSRF_HEADER_NAME = "X-CSRFToken";
 
 function httpRequest(url, { body, ...customConfig } = {}) {
-	let headers = {};
+	const headers = {};
 	if (body) {
 		if (Cookies.get(XSRF_COOKIE_NAME)) {
 			headers[XSRF_HEADER_NAME] = Cookies.get(XSRF_COOKIE_NAME);
@@ -31,12 +31,11 @@ function httpRequest(url, { body, ...customConfig } = {}) {
 		config.body = body;
 	}
 
-	return window.fetch(url, config).then(async (response) => {
+	return window.fetch(url, config).then((response) => {
 		if (response.ok) {
-			return await response.json();
-		} else {
-			return Promise.reject();
+			return response.json();
 		}
+		return Promise.reject();
 	});
 }
 

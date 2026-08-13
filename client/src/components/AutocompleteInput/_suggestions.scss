@@ -1,14 +1,14 @@
 .c-wagtailautocomplete__suggestions {
 	display: flex;
 	flex-direction: column;
-	border-bottom-left-radius: $wagtail-border-radius;
-	border-bottom-right-radius: $wagtail-border-radius;
+	border-end-start-radius: $wagtail-border-radius;
+	border-end-end-radius: $wagtail-border-radius;
 	overflow-y: scroll;
 	max-height: 30vh;
 
 	&::-webkit-scrollbar,
 	&::-webkit-scrollbar-track {
-		border-bottom-right-radius: $wagtail-border-radius;
+		border-end-end-radius: $wagtail-border-radius;
 	}
 
 	&::-webkit-scrollbar-track {
@@ -17,21 +17,21 @@
 
 	&--populated {
 		border: 1px solid $input-border-color;
-		border-top-width: 0;
+		border-top-width: $zero;
 	}
 
 	&__item {
 		cursor: pointer;
 		border: 1px solid $input-border-color;
-		border-top-width: 0;
-		border-left-width: 0;
-		border-right-width: 0;
-		font-size: 1.2em;
-		padding: 0.9em 0.6em;
+		border-top-width: $zero;
+		border-inline-start-width: $zero;
+		border-inline-end-width: $zero;
+		font-size: $item-font-size;
+		padding: $suggestions-item-padding;
 		background-color: $suggestions-bg;
 
 		// Minimum factor of 10 that is above Wagtail admin components.
-		z-index: 1000;
+		z-index: $suggestions-item-z-index;
 
 		// We don't want the flex parent to crush our content to get us to
 		// fit into the max-height, bro.
@@ -42,7 +42,7 @@
 		align-items: center;
 
 		&:last-child {
-			border-bottom-width: 0;
+			border-bottom-width: $zero;
 		}
 
 		svg {

@@ -1,10 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import { namespaceClassName } from "../../utils/props";
 import AutocompleteInput from "./AutocompleteInput";
-
-const nc = namespaceClassName("c-wagtailautocomplete");
+import { nc } from "./nc";
 
 const initAutocompleteInput = (autocompleteNode) => {
 	const wagtailadminHome =

@@ -1,10 +1,10 @@
-import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
+import React, { PureComponent } from "react";
 
-import { nc } from ".";
-import { getSuggestions, getObjects, createObject } from "../../utils/client";
-import Single from "./Single";
+import { createObject, getObjects, getSuggestions } from "../../utils/client";
 import Multi from "./Multi";
+import Single from "./Single";
+import { nc } from "./nc";
 
 import "./AutocompleteInput.scss";
 
@@ -35,29 +35,33 @@ class AutocompleteInput extends PureComponent {
 	}
 
 	get value() {
-		if (this.props.controlled) {
-			return this.props.value;
+		const { controlled, value } = this.props;
+		if (controlled) {
+			return value;
 		}
 
-		return this.state.value;
+		const { value: stateValue } = this.state;
+		return stateValue;
 	}
 
 	handleChange(event) {
 		const { value } = event.target;
+		const { input } = this.state;
 		this.checkNewSuggestions(value);
 		this.setState({
-			input: Object.assign({}, this.state.input, { value }),
+			input: { ...input, value },
 			error: "",
 		});
 	}
 
 	getExclusions() {
+		const { isSingle } = this.props;
 		const { value } = this.state;
 		if (!value) {
 			return "";
 		}
 
-		if (this.props.isSingle) {
+		if (isSingle) {
 			return value.pk;
 		}
 
@@ -65,14 +69,16 @@ class AutocompleteInput extends PureComponent {
 	}
 
 	checkNewSuggestions(value, checkDifferent = true) {
-		if (checkDifferent && value === this.state.value) {
+		const { value: currentValue } = this.state;
+		if (checkDifferent && value === currentValue) {
 			return;
 		}
 
+		const { apiBase, type } = this.props;
 		getSuggestions({
-			apiBase: this.props.apiBase,
+			apiBase,
 			query: value,
-			type: this.props.type,
+			type,
 			exclude: this.getExclusions(),
 		}).then((items) => {
 			this.setState({
@@ -98,14 +104,12 @@ class AutocompleteInput extends PureComponent {
 			pks = value.pk;
 		}
 
-		getObjects({
-			apiBase: this.props.apiBase,
-			pks,
-			type: this.props.type,
-		}).then((items) => {
+		const { apiBase, type } = this.props;
+		getObjects({ apiBase, pks, type }).then((items) => {
 			let newValue = null;
 			if (isMulti) {
-				newValue = this.state.value.map((val) => {
+				const { value: currentValue } = this.state;
+				newValue = currentValue.map((val) => {
 					const page = items.find((obj) => obj.pk === val.pk);
 					if (!page) {
 						return val;
@@ -114,13 +118,14 @@ class AutocompleteInput extends PureComponent {
 					return page;
 				});
 			} else {
-				newValue = items[0];
+				[newValue] = items;
 			}
 
 			this.setState({ value: newValue });
 
-			if (typeof this.props.onChange === "function") {
-				this.props.onChange({ target: { value: newValue } });
+			const { onChange } = this.props;
+			if (typeof onChange === "function") {
+				onChange({ target: { value: newValue } });
 			}
 		});
 	}
@@ -128,51 +133,47 @@ class AutocompleteInput extends PureComponent {
 	handleClick(value) {
 		this.setState({ error: "", value });
 
-		if (typeof this.props.onChange === "function") {
-			this.props.onChange({ target: { value, _autocomplete: true } });
+		const { onChange } = this.props;
+		if (typeof onChange === "function") {
+			onChange({ target: { value, _autocomplete: true } });
 		}
 	}
 
 	handleCreate() {
-		const { value } = this.state.input;
+		const { input } = this.state;
+		const { value } = input;
 		if (value.trim() === "") {
 			return;
 		}
 
-		createObject({
-			apiBase: this.props.apiBase,
-			type: this.props.type,
-			value,
-		})
+		const { apiBase, type } = this.props;
+		createObject({ apiBase, type, value })
 			.then((data) => {
-				const newValue = this.props.isSingle
-					? data
-					: (this.state.value || []).concat(data);
+				const { isSingle, onChange } = this.props;
+				const { value: stateValue } = this.state;
+				const newValue = isSingle ? data : (stateValue || []).concat(data);
 
 				this.setState({
-					isLoading: false,
 					value: newValue,
 					error: "",
 				});
 
-				if (typeof this.props.onChange === "function") {
-					this.props.onChange({ target: { value: newValue } });
+				if (typeof onChange === "function") {
+					onChange({ target: { value: newValue } });
 				}
 			})
-			.catch((error) => {
+			.catch(() => {
 				this.setState({
-					isLoading: false,
 					error: `Failed to create new item "${value}".`,
 				});
 			});
-		this.setState({ isLoading: true });
 	}
 
 	render() {
-		const { name, isSingle, onChange, labelId } = this.props;
+		const { name, isSingle, onChange, labelId, canCreate: canCreateProp } = this.props;
 		const { input, suggestions, error } = this.state;
 
-		const canCreate = this.props.canCreate && input.value.trim() !== "";
+		const canCreate = canCreateProp && input.value.trim() !== "";
 		const useHiddenInput = typeof onChange !== "function";
 
 		return (
@@ -215,6 +216,7 @@ class AutocompleteInput extends PureComponent {
 AutocompleteInput.defaultProps = {
 	fetchInitialValues: false,
 	controlled: false,
+	onChange: undefined,
 };
 
 AutocompleteInput.propTypes = {
@@ -225,7 +227,7 @@ AutocompleteInput.propTypes = {
 	onChange: PropTypes.func,
 	fetchInitialValues: PropTypes.bool,
 	apiBase: PropTypes.string.isRequired,
-	controlled: PropTypes.bool.isRequired,
+	controlled: PropTypes.bool,
 };
 
 export default AutocompleteInput;
