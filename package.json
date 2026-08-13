@@ -1,6 +1,6 @@
 {
   "name": "wagtail-autocomplete",
-  "version": "0.12.1",
+  "version": "0.0.0",
   "description": "An Autocomplete edit handler for Pages, Snippets, and more.",
   "repository": "https://littleweaver/wagtail-autocomplete",
   "license": "BSD-3-Clause",

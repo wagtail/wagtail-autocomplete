@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=64"]
+requires = ["setuptools>=64", "setuptools_scm[toml]>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -59,8 +59,7 @@ include-package-data = true
 [tool.setuptools.packages.find]
 include = ["wagtailautocomplete*"]
 
-[tool.setuptools.dynamic]
-version = { attr = "wagtailautocomplete.__version__" }
+[tool.setuptools_scm]
 
 [tool.pytest.ini_options]
 testpaths = ["wagtailautocomplete", "docs"]
