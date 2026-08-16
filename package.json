@@ -65,7 +65,7 @@
     "typescript-eslint": "^8.69.0",
     "webpack": "^5.110.3",
     "webpack-cli": "^7.2.3",
-    "webpack-merge": "^4.2.2"
+    "webpack-merge": "^6.0.1"
   },
   "dependencies": {
     "classlist-polyfill": "^1.2.0",
