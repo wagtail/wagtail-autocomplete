@@ -1,0 +1,22 @@
+[
+  {
+    "model": "testapp.person",
+    "pk": 1,
+    "fields": {"name": "First Person", "group": null}
+  },
+  {
+    "model": "testapp.person",
+    "pk": 2,
+    "fields": {"name": "Second Person", "group": null}
+  },
+  {
+    "model": "testapp.person",
+    "pk": 3,
+    "fields": {"name": "Third Person", "group": null}
+  },
+  {
+    "model": "testapp.house",
+    "pk": 1,
+    "fields": {"name": "View Point House", "owner": 1, "occupants": [1, 2]}
+  }
+]
