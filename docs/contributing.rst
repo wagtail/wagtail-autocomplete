@@ -83,4 +83,12 @@ To run the test suite against all dependency permutations, ensure that you have 
 
     tox
 
+To run the test app interactively, run:
+
+.. code-block:: sh
+
+    tox -e interactive
+
+Now you can visit http://localhost:8000/admin/ in a browser and log in with ``admin`` / ``changeme``.
+
 If you make changes to test models, you must regenerate the migrations in ``wagtailautocomplete/tests/testapp/migrations/``. This can be a sort of tricky process and is left as an excercise to the reader until I'm able to standardize a mechanism for doing so. Since test models are ephemeral it is OK, and even preferable, to regenerate migrations from scratch for each change.
