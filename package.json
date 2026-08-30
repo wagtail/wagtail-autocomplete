@@ -75,7 +75,7 @@
     "enzyme-adapter-react-16": "^1.15.8",
     "js-cookie": "^3.0.8",
     "prop-types": "^15.8.1",
-    "react": "^16.14.0",
+    "react": "^19.2.8",
     "react-dom": "^16.14.0"
   }
 }
