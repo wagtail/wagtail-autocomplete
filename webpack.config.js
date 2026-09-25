@@ -1,5 +1,5 @@
 var webpack = require("webpack");
-var merge = require("webpack-merge");
+var { merge } = require("webpack-merge");
 var autoprefixer = require("autoprefixer");
 var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 var path = require("path");
