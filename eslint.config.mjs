@@ -19,7 +19,7 @@ export default [
     },
     settings: {
       react: {
-        version: '16.14.0',
+        version: '19.3.0',
       },
       'import-x/extensions': ['.js', '.jsx'],
       'import-x/resolver': {
