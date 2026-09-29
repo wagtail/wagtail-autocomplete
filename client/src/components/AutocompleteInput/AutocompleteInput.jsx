@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React, { PureComponent } from "react";
 
 import { createObject, getObjects, getSuggestions } from "../../utils/client";
@@ -217,17 +216,6 @@ AutocompleteInput.defaultProps = {
 	fetchInitialValues: false,
 	controlled: false,
 	onChange: undefined,
-};
-
-AutocompleteInput.propTypes = {
-	name: PropTypes.string.isRequired,
-	type: PropTypes.string.isRequired,
-	canCreate: PropTypes.bool.isRequired,
-	isSingle: PropTypes.bool.isRequired,
-	onChange: PropTypes.func,
-	fetchInitialValues: PropTypes.bool,
-	apiBase: PropTypes.string.isRequired,
-	controlled: PropTypes.bool,
 };
 
 export default AutocompleteInput;

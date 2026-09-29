@@ -13,8 +13,8 @@
     "moduleNameMapper": {
       "\\.scss$": "<rootDir>/client/src/__mocks__/styleMock.js"
     },
-    "setupFiles": [
-      "<rootDir>/client/src/setupTests.js"
+    "setupFilesAfterEnv": [
+      "<rootDir>/client/src/jest.setup.js"
     ]
   },
   "scripts": {
@@ -40,6 +40,8 @@
     "@babel/preset-react": "^8.0.1",
     "@eslint/js": "^9.39.5",
     "@stylistic/eslint-plugin": "^5.10.0",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
     "@wagtail/eslint-config-wagtail": "^0.6.0",
     "@wagtail/stylelint-config-wagtail": "^2.0.0",
     "autoprefixer": "^10.5.4",
@@ -71,11 +73,8 @@
     "classlist-polyfill": "^1.2.0",
     "classnames": "^2.5.1",
     "element-dataset": "^2.2.6",
-    "enzyme": "^3.11.0",
-    "enzyme-adapter-react-16": "^1.15.8",
     "js-cookie": "^3.0.8",
-    "prop-types": "^15.8.1",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0"
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   }
 }
