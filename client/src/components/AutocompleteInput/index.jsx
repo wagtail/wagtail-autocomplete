@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 
 import AutocompleteInput from "./AutocompleteInput";
 import { nc } from "./nc";
@@ -19,7 +19,8 @@ const initAutocompleteInput = (autocompleteNode) => {
 		return;
 	}
 
-	ReactDOM.render(
+	const root = createRoot(autocompleteNode);
+	root.render(
 		<AutocompleteInput
 			name={name}
 			value={value}
@@ -29,7 +30,6 @@ const initAutocompleteInput = (autocompleteNode) => {
 			isSingle={isSingle}
 			apiBase={wagtailadminHome + "autocomplete/"}
 		/>,
-		autocompleteNode,
 	);
 };
 
