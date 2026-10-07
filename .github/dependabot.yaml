@@ -15,6 +15,18 @@ updates:
       day: 'sunday'
     cooldown:
       default-days: 7
+    ignore:
+      # Keep ESLint on 9.x. ESLint 10 is incompatible with needed plugins:
+      # eslint-plugin-react, eslint-plugin-jsx-a11y, eslint-plugin-import
+      - dependency-name: '*mirrors-eslint*'
+        update-types:
+          - 'version-update:semver-major'
+      - dependency-name: 'eslint'
+        update-types:
+          - 'version-update:semver-major'
+      - dependency-name: '@eslint/js'
+        update-types:
+          - 'version-update:semver-major'
 
   - package-ecosystem: 'npm'
     directory: '/'
@@ -28,3 +40,12 @@ updates:
     commit-message:
       prefix: 'build'
       include: 'scope'
+    ignore:
+      # Keep ESLint on 9.x. ESLint 10 is incompatible with needed plugins:
+      # eslint-plugin-react, eslint-plugin-jsx-a11y, eslint-plugin-import
+      - dependency-name: 'eslint'
+        update-types:
+          - 'version-update:semver-major'
+      - dependency-name: '@eslint/js'
+        update-types:
+          - 'version-update:semver-major'
