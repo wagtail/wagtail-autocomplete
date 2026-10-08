@@ -4,6 +4,7 @@ from urllib.parse import unquote
 from django.apps import apps
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
+from django.db import connections, router
 from django.db.models import Model, QuerySet
 from django.http import (
     HttpResponseBadRequest,
@@ -25,6 +26,56 @@ def render_page(page):
     return {"pk": page.pk, "title": title}
 
 
+def integer_range(model, internal_type):
+    """
+    Return the smallest and largest integers the model's database accepts for
+    the given field type, or None for a custom type the backend doesn't know.
+    """
+    connection = connections[router.db_for_read(model)]
+    try:
+        low, high = connection.ops.integer_field_range(internal_type)
+    except KeyError:
+        return None
+    # Django < 5.0 reports no range for SQLite, which still can't handle
+    # integers outside 64 bits.
+    if low is None:
+        low = -(2**63)
+    if high is None:
+        high = 2**63 - 1
+    return low, high
+
+
+def clean_pks(model, values):
+    """
+    Convert primary keys from a request with the model's primary key field,
+    so invalid or out of range values fail before reaching the database.
+
+    Raises:
+        ValidationError, TypeError, ValueError: Raised if a value isn't a
+            valid primary key. Built-in fields raise ValidationError, but
+            custom fields may raise the others.
+    """
+    field = model._meta.pk
+    # A multi-table inherited model's primary key, such as page_ptr on Page
+    # subclasses, links to its parent's.
+    while field.is_relation and field.target_field is not field:
+        field = field.target_field
+
+    pks = [field.to_python(unquote(value)) for value in values]
+    # Check the values the database will receive: custom fields may convert to
+    # other types, such as hashids, and back to integers when querying.
+    integers = [
+        value
+        for value in (field.get_prep_value(pk) for pk in pks)
+        if isinstance(value, int)
+    ]
+    if integers:
+        bounds = integer_range(model, field.get_internal_type())
+        if bounds and not all(bounds[0] <= value <= bounds[1] for value in integers):
+            raise ValidationError("Primary key out of range.")
+    return pks
+
+
 @require_GET
 def objects(request):
     pks_param = request.GET.get("pks")
@@ -37,18 +88,19 @@ def objects(request):
         return HttpResponseBadRequest()
 
     try:
-        pks = [unquote(pk) for pk in pks_param.split(",")]
-        queryset = model.objects.filter(pk__in=pks)
-
+        pks = clean_pks(model, pks_param.split(","))
     except (TypeError, ValueError, ValidationError):
         return HttpResponseBadRequest()
+
+    queryset = model.objects.filter(pk__in=pks)
 
     if getattr(queryset, "live", None):
         # Non-Page models like Snippets won't have a live/published status
         # and thus should not be filtered with a call to `live`.
         queryset = queryset.live()
 
-    if queryset.count() != len(pks):
+    # Each pk matches at most one object, so ignore repeats.
+    if queryset.count() != len(set(pks)):
         return HttpResponseNotFound("Some objects are either missing or deleted")
     results = map(render_page, queryset)
     return JsonResponse({"items": list(results)})
@@ -67,6 +119,10 @@ def search(request):
         limit = int(request.POST.get("limit", 100))
     except ValueError:
         return HttpResponseBadRequest()
+    # Querysets can't be sliced with a negative number, and databases reject
+    # a LIMIT above their largest integer.
+    if not 0 <= limit <= integer_range(model, "BigIntegerField")[1]:
+        return HttpResponseBadRequest()
 
     if callable(getattr(model, "autocomplete_custom_queryset_filter", None)):
         queryset = model.autocomplete_custom_queryset_filter(
@@ -83,7 +139,10 @@ def search(request):
 
     exclude = request.POST.get("exclude", "")
     if exclude:
-        exclusions = [unquote(item) for item in exclude.split(",") if item]
+        try:
+            exclusions = clean_pks(model, [item for item in exclude.split(",") if item])
+        except (TypeError, ValueError, ValidationError):
+            return HttpResponseBadRequest()
         queryset = queryset.exclude(pk__in=exclusions)
 
     results = map(render_page, queryset[:limit])
