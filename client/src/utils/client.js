@@ -72,9 +72,9 @@ export const getSuggestions = ({ apiBase, query, type, exclude }) => {
 	});
 };
 
-export const getObjects = ({ apiBase, ids, type }) => {
+export const getObjects = ({ apiBase, pks, type }) => {
 	const params = {
-		ids,
+		pks,
 		type,
 	};
 	const url = apiBase + "objects/";

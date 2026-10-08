@@ -104,29 +104,34 @@ class AutocompleteInput extends PureComponent {
 		const pks = joinPks(isMulti ? value.map(({ pk }) => pk) : [value.pk]);
 
 		const { apiBase, type } = this.props;
-		getObjects({ apiBase, pks, type }).then((items) => {
-			let newValue = null;
-			if (isMulti) {
-				const { value: currentValue } = this.state;
-				newValue = currentValue.map((val) => {
-					const page = items.find((obj) => obj.pk === val.pk);
-					if (!page) {
-						return val;
-					}
+		getObjects({ apiBase, pks, type })
+			.then((items) => {
+				let newValue = null;
+				if (isMulti) {
+					const { value: currentValue } = this.state;
+					newValue = currentValue.map((val) => {
+						const page = items.find((obj) => obj.pk === val.pk);
+						if (!page) {
+							return val;
+						}
 
-					return page;
-				});
-			} else {
-				[newValue] = items;
-			}
+						return page;
+					});
+				} else {
+					[newValue] = items;
+				}
 
-			this.setState({ value: newValue });
+				this.setState({ value: newValue });
 
-			const { onChange } = this.props;
-			if (typeof onChange === "function") {
-				onChange({ target: { value: newValue } });
-			}
-		});
+				const { onChange } = this.props;
+				if (typeof onChange === "function") {
+					onChange({ target: { value: newValue } });
+				}
+			})
+			.catch(() => {
+				// Keep the current value if the lookup fails, for example with
+				// a 404 when an object has been deleted or unpublished.
+			});
 	}
 
 	handleClick(value) {
