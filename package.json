@@ -6,7 +6,10 @@
   "license": "BSD-3-Clause",
   "main": "client/src/index.js",
   "overrides": {
-    "cheerio": "1.0.0-rc.12"
+    "cheerio": "1.0.0-rc.12",
+    "babel-preset-current-node-syntax": {
+      "@babel/core": "$@babel/core"
+    }
   },
   "jest": {
     "testEnvironment": "jsdom",
