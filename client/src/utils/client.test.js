@@ -9,7 +9,11 @@ describe("joinPks", () => {
 		expect(joinPks(["a,b", "50%", "c d"])).toBe("a%2Cb,50%25,c%20d");
 	});
 
-	it("returns an empty string for no pks", () => {
+	it("skips missing pks", () => {
+		expect(joinPks([1, undefined, null, 0, ""])).toBe("1,0,");
+	});
+
+		it("returns an empty string for no pks", () => {
 		expect(joinPks([])).toBe("");
 	});
 });

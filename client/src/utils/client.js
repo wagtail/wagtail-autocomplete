@@ -42,10 +42,14 @@ function httpRequest(url, { body, ...customConfig } = {}) {
 /**
  * Join primary keys for the objects view's pks and the search view's exclude.
  * Each pk is encoded so commas and percent signs in string pks survive; the
- * views split on commas and decode each pk.
+ * views split on commas and decode each pk. Missing pks are skipped rather
+ * than sent as "undefined" or "null".
  */
 export const joinPks = (pks) =>
-	pks.map((pk) => encodeURIComponent(pk)).join(",");
+	pks
+		.filter((pk) => pk !== undefined && pk !== null)
+		.map((pk) => encodeURIComponent(pk))
+		.join(",");
 
 const get = (url, params) =>
 	httpRequest(`${url}?${new URLSearchParams(params).toString()}`);
