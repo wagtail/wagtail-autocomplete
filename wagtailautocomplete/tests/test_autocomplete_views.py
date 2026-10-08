@@ -1,10 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
-from django.db import connection
 from django.test import TestCase
 from wagtail.models import Site
 
 from wagtailautocomplete.tests.testapp.models import House, Person
+from wagtailautocomplete.views import integer_range
 
 User = get_user_model()
 
@@ -43,6 +43,17 @@ class ObjectsViewTestCase(TestCase):
 
         """
         response = self.client.get("/autocomplete/objects/", {"pks": "9" * 30})
+        assert response.status_code == 400
+
+    def test_out_of_range_pks_page_subclass(self):
+        """The objects view should return a Bad Request response if given
+        primary keys too large for the database for a Page subclass, whose
+        primary key links to its parent's.
+
+        """
+        response = self.client.get(
+            "/autocomplete/objects/", {"pks": "9" * 30, "type": "testapp.TestPage"}
+        )
         assert response.status_code == 400
 
     def test_missing_objects(self):
@@ -115,7 +126,7 @@ class SearchViewTestCase(TestCase):
         supports.
 
         """
-        largest = connection.ops.integer_field_range("BigIntegerField")[1]
+        largest = integer_range(Person, "BigIntegerField")[1]
         response = self.client.post(
             "/autocomplete/search/",
             data={"type": "testapp.Person", "query": "note", "limit": largest},

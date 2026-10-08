@@ -5,7 +5,7 @@ from django.apps import apps
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.db import connections, router
-from django.db.models import Model, QuerySet
+from django.db.models import IntegerField, Model, QuerySet
 from django.http import (
     HttpResponseBadRequest,
     HttpResponseForbidden,
@@ -26,20 +26,45 @@ def render_page(page):
     return {"pk": page.pk, "title": title}
 
 
+def integer_range(model, internal_type):
+    """
+    Return the smallest and largest integers the model's database accepts for
+    the given field type.
+    """
+    connection = connections[router.db_for_read(model)]
+    low, high = connection.ops.integer_field_range(internal_type)
+    # Django < 5.0 reports no range for SQLite, which still can't handle
+    # integers outside 64 bits.
+    if low is None:
+        low = -(2**63)
+    if high is None:
+        high = 2**63 - 1
+    return low, high
+
+
 def clean_pks(model, values):
     """
     Convert primary keys from a request with the model's primary key field,
     so invalid or out of range values fail before reaching the database.
 
     Raises:
-        ValidationError: Raised if a value isn't a valid primary key.
+        ValidationError, TypeError, ValueError: Raised if a value isn't a
+            valid primary key. Built-in fields raise ValidationError, but
+            custom fields may raise the others.
     """
     field = model._meta.pk
-    pks = []
-    for value in values:
-        pk = field.to_python(unquote(value))
-        field.run_validators(pk)
-        pks.append(pk)
+    # A multi-table inherited model's primary key, such as page_ptr on Page
+    # subclasses, links to its parent's.
+    while field.is_relation:
+        field = field.target_field
+
+    pks = [field.to_python(unquote(value)) for value in values]
+    if None in pks:
+        raise ValidationError("Primary keys can't be empty.")
+    if isinstance(field, IntegerField):
+        low, high = integer_range(model, field.get_internal_type())
+        if not all(low <= pk <= high for pk in pks):
+            raise ValidationError("Primary key out of range.")
     return pks
 
 
@@ -56,7 +81,7 @@ def objects(request):
 
     try:
         pks = clean_pks(model, pks_param.split(","))
-    except ValidationError:
+    except (TypeError, ValueError, ValidationError):
         return HttpResponseBadRequest()
 
     queryset = model.objects.filter(pk__in=pks)
@@ -87,9 +112,7 @@ def search(request):
         return HttpResponseBadRequest()
     # Querysets can't be sliced with a negative number, and databases reject
     # a LIMIT above their largest integer.
-    connection = connections[router.db_for_read(model)]
-    max_limit = connection.ops.integer_field_range("BigIntegerField")[1]
-    if not 0 <= limit <= max_limit:
+    if not 0 <= limit <= integer_range(model, "BigIntegerField")[1]:
         return HttpResponseBadRequest()
 
     if callable(getattr(model, "autocomplete_custom_queryset_filter", None)):
@@ -109,7 +132,7 @@ def search(request):
     if exclude:
         try:
             exclusions = clean_pks(model, [item for item in exclude.split(",") if item])
-        except ValidationError:
+        except (TypeError, ValueError, ValidationError):
             return HttpResponseBadRequest()
         queryset = queryset.exclude(pk__in=exclusions)
 

@@ -1,6 +1,7 @@
 from django.db import models
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from modelcluster.models import ClusterableModel
+from wagtail.models import Page
 
 
 class House(ClusterableModel):
@@ -30,3 +31,7 @@ class Person(models.Model):
 
     def autocomplete_label(self):
         return self.name
+
+
+class TestPage(Page):
+    pass
