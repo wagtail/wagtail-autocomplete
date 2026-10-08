@@ -36,6 +36,14 @@ class ObjectsViewTestCase(TestCase):
         response = self.client.get("/autocomplete/objects/", {"pks": invalid})
         assert response.status_code == 400
 
+    def test_out_of_range_pks(self):
+        """The objects view should return a Bad Request response if given
+        primary keys too large for the database.
+
+        """
+        response = self.client.get("/autocomplete/objects/", {"pks": "9" * 30})
+        assert response.status_code == 400
+
     def test_missing_objects(self):
         """The objects view should return a Not Found response if the given pk
         don't have any associated object
@@ -74,6 +82,28 @@ class SearchViewTestCase(TestCase):
         """
         invalid = "abcde"
         response = self.client.post("/autocomplete/search/", data={"limit": invalid})
+        self.assertEqual(response.status_code, 400)
+
+    def test_invalid_exclude(self):
+        """The search view should return Bad Request if given non-numeric
+        primary keys to exclude.
+
+        """
+        response = self.client.post(
+            "/autocomplete/search/",
+            data={"type": "testapp.Person", "exclude": "abcde"},
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_out_of_range_exclude(self):
+        """The search view should return Bad Request if given primary keys
+        to exclude that are too large for the database.
+
+        """
+        response = self.client.post(
+            "/autocomplete/search/",
+            data={"type": "testapp.Person", "exclude": "9" * 30},
+        )
         self.assertEqual(response.status_code, 400)
 
     def test_search_blank_single_exception_ignored(self):

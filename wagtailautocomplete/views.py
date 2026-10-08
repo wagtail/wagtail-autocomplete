@@ -25,6 +25,23 @@ def render_page(page):
     return {"pk": page.pk, "title": title}
 
 
+def clean_pks(model, values):
+    """
+    Convert primary keys from a request with the model's primary key field,
+    so invalid or out of range values fail before reaching the database.
+
+    Raises:
+        ValidationError: Raised if a value isn't a valid primary key.
+    """
+    field = model._meta.pk
+    pks = []
+    for value in values:
+        pk = field.to_python(unquote(value))
+        field.run_validators(pk)
+        pks.append(pk)
+    return pks
+
+
 @require_GET
 def objects(request):
     pks_param = request.GET.get("pks")
@@ -37,11 +54,11 @@ def objects(request):
         return HttpResponseBadRequest()
 
     try:
-        pks = [unquote(pk) for pk in pks_param.split(",")]
-        queryset = model.objects.filter(pk__in=pks)
-
-    except (TypeError, ValueError, ValidationError):
+        pks = clean_pks(model, pks_param.split(","))
+    except ValidationError:
         return HttpResponseBadRequest()
+
+    queryset = model.objects.filter(pk__in=pks)
 
     if getattr(queryset, "live", None):
         # Non-Page models like Snippets won't have a live/published status
@@ -83,7 +100,10 @@ def search(request):
 
     exclude = request.POST.get("exclude", "")
     if exclude:
-        exclusions = [unquote(item) for item in exclude.split(",") if item]
+        try:
+            exclusions = clean_pks(model, [item for item in exclude.split(",") if item])
+        except ValidationError:
+            return HttpResponseBadRequest()
         queryset = queryset.exclude(pk__in=exclusions)
 
     results = map(render_page, queryset[:limit])
