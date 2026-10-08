@@ -102,14 +102,21 @@ class AutocompleteInput extends PureComponent {
 		}
 
 		const pks = joinPks(isMulti ? value.map(({ pk }) => pk) : [value.pk]);
+		if (!pks) {
+			return;
+		}
 
 		const { apiBase, type } = this.props;
-		getObjects({ apiBase, pks, type })
-			.then((items) => {
+		getObjects({ apiBase, pks, type }).then(
+			(items) => {
+				// Ignore the response if the value changed while it loaded.
+				if (this.value !== value) {
+					return;
+				}
+
 				let newValue = null;
 				if (isMulti) {
-					const { value: currentValue } = this.state;
-					newValue = currentValue.map((val) => {
+					newValue = value.map((val) => {
 						const page = items.find((obj) => obj.pk === val.pk);
 						if (!page) {
 							return val;
@@ -127,11 +134,12 @@ class AutocompleteInput extends PureComponent {
 				if (typeof onChange === "function") {
 					onChange({ target: { value: newValue } });
 				}
-			})
-			.catch(() => {
+			},
+			() => {
 				// Keep the current value if the lookup fails, for example with
 				// a 404 when an object has been deleted or unpublished.
-			});
+			},
+		);
 	}
 
 	handleClick(value) {
