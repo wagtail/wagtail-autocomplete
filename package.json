@@ -61,7 +61,7 @@
     "postcss-loader": "^8.2.1",
     "sass": "^1.103.1",
     "sass-loader": "^17.0.1",
-    "stylelint": "^17.15.0",
+    "stylelint": "^17.16.0",
     "typescript-eslint": "^8.69.0",
     "webpack": "^5.110.3",
     "webpack-cli": "^7.2.3",
