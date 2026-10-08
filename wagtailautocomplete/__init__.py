@@ -1,6 +1,5 @@
 from importlib.metadata import PackageNotFoundError, version
 
-
 try:
     __version__ = version("wagtail-autocomplete")
 except PackageNotFoundError:

@@ -38,7 +38,7 @@ class ObjectsViewTestCase(TestCase):
 
     def test_missing_objects(self):
         """The objects view should return a Not Found response if the given pk
-            don't have any associated object
+        don't have any associated object
         """
         response = self.client.get("/autocomplete/objects/", {"pks": "99"})
         assert response.status_code == 404
@@ -63,7 +63,8 @@ class SearchViewTestCase(TestCase):
 
         """
         response = self.client.post(
-            "/autocomplete/search/", data={"type": "<invalid type>"})
+            "/autocomplete/search/", data={"type": "<invalid type>"}
+        )
         self.assertEqual(response.status_code, 400)
 
     def test_invalid_limit(self):
@@ -83,10 +84,10 @@ class SearchViewTestCase(TestCase):
                 "type": "testapp.Person",
                 "query": "note",
                 "exclude": "",
-            }
+            },
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.json()['items']), 2)
+        self.assertEqual(len(response.json()["items"]), 2)
 
     def test_search_blank_multi_exceptions_ignored(self):
         """The search view should handle multiple blank exclude clauses."""
@@ -96,10 +97,10 @@ class SearchViewTestCase(TestCase):
                 "type": "testapp.Person",
                 "query": "note",
                 "exclude": ",,,",
-            }
+            },
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.json()['items']), 2)
+        self.assertEqual(len(response.json()["items"]), 2)
 
     def test_search_valid_exception(self):
         response = self.client.post(
@@ -107,12 +108,12 @@ class SearchViewTestCase(TestCase):
             data={
                 "type": "testapp.Person",
                 "query": "note",
-                "exclude": "{},102,103".format(self.target_page1.pk),
-            }
+                "exclude": f"{self.target_page1.pk},102,103",
+            },
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.json()['items']), 1)
-        self.assertEqual(response.json()['items'][0]['title'], 'Belle Note')
+        self.assertEqual(len(response.json()["items"]), 1)
+        self.assertEqual(response.json()["items"][0]["title"], "Belle Note")
 
 
 class CreateViewTestCase(TestCase):
@@ -120,8 +121,7 @@ class CreateViewTestCase(TestCase):
         self.superuser = User.objects.create(
             username="testuser", password="unusable", is_superuser=True
         )
-        self.adminuser = User.objects.create(
-            username="testuser2", password="unusable")
+        self.adminuser = User.objects.create(username="testuser2", password="unusable")
         # Permission to log into the admin, but not to change
         # anything.
         admin_permission = Permission.objects.get(codename="access_admin")
@@ -143,8 +143,7 @@ class CreateViewTestCase(TestCase):
         """
         self.client.force_login(self.superuser)
         response = self.client.post(
-            "/admin/autocomplete/create/",
-            {"value": "a", "type": "<invalid type>"}
+            "/admin/autocomplete/create/", {"value": "a", "type": "<invalid type>"}
         )
         assert response.status_code == 400
 
@@ -154,8 +153,7 @@ class CreateViewTestCase(TestCase):
 
         """
         self.client.force_login(self.adminuser)
-        response = self.client.post(
-            "/admin/autocomplete/create/", {"value": "a"})
+        response = self.client.post("/admin/autocomplete/create/", {"value": "a"})
         assert response.status_code == 403
 
     def test_autocomplete_create_not_implemented(self):
@@ -164,8 +162,7 @@ class CreateViewTestCase(TestCase):
 
         """
         self.client.force_login(self.superuser)
-        response = self.client.post(
-            "/admin/autocomplete/create/", {"value": "a"})
+        response = self.client.post("/admin/autocomplete/create/", {"value": "a"})
         assert response.status_code == 400
 
     def test_autocomplete_create_raises_validation_error(self):
