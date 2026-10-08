@@ -34,4 +34,5 @@ class Person(models.Model):
 
 
 class TestPage(Page):
-    pass
+    # Not a test class, despite its name
+    __test__ = False
