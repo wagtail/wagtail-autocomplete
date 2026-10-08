@@ -44,6 +44,16 @@ export default [
     },
   },
   {
+    // Jest setup file; its name doesn't match the shared config's test globs.
+    files: ['client/src/setupTests.js'],
+    rules: {
+      'import-x/no-extraneous-dependencies': [
+        'error',
+        { devDependencies: true },
+      ],
+    },
+  },
+  {
     files: ['**/__mocks__/**'],
     languageOptions: {
       globals: {
