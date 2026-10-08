@@ -1,6 +1,11 @@
 import React, { PureComponent } from "react";
 
-import { createObject, getObjects, getSuggestions } from "../../utils/client";
+import {
+	createObject,
+	getObjects,
+	getSuggestions,
+	joinPks,
+} from "../../utils/client";
 import Multi from "./Multi";
 import Single from "./Single";
 import { nc } from "./nc";
@@ -61,10 +66,10 @@ class AutocompleteInput extends PureComponent {
 		}
 
 		if (isSingle) {
-			return value.pk;
+			return joinPks([value.pk]);
 		}
 
-		return value.map(({ pk }) => pk).join(",");
+		return joinPks(value.map(({ pk }) => pk));
 	}
 
 	checkNewSuggestions(value, checkDifferent = true) {
@@ -96,12 +101,7 @@ class AutocompleteInput extends PureComponent {
 			return;
 		}
 
-		let pks = null;
-		if (isMulti) {
-			pks = value.map(({ pk }) => encodeURI(pk)).join(",");
-		} else {
-			pks = value.pk;
-		}
+		const pks = joinPks(isMulti ? value.map(({ pk }) => pk) : [value.pk]);
 
 		const { apiBase, type } = this.props;
 		getObjects({ apiBase, pks, type }).then((items) => {
