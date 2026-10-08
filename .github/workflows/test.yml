@@ -40,14 +40,12 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.14"
-      # Run ruff through pre-commit so its version comes from
+      # Runs ruff and the file checks at the versions pinned in
       # .pre-commit-config.yaml
       - name: Install pre-commit
         run: pip install pre-commit
-      - name: Lint Python
-        run: pre-commit run ruff-check --all-files --show-diff-on-failure
-      - name: Check Python formatting
-        run: pre-commit run ruff-format --all-files --show-diff-on-failure
+      - name: Run pre-commit hooks
+        run: pre-commit run --all-files --show-diff-on-failure
 
   js-test:
     runs-on: ubuntu-latest
