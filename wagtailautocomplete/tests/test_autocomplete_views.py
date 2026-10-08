@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
+from django.db import connection
 from django.test import TestCase
 from wagtail.models import Site
 
@@ -83,6 +84,44 @@ class SearchViewTestCase(TestCase):
         invalid = "abcde"
         response = self.client.post("/autocomplete/search/", data={"limit": invalid})
         self.assertEqual(response.status_code, 400)
+
+    def test_negative_limit(self):
+        """The search view should return Bad Request if given a negative
+        query limit.
+
+        """
+        response = self.client.post("/autocomplete/search/", data={"limit": "-1"})
+        self.assertEqual(response.status_code, 400)
+
+    def test_out_of_range_limit(self):
+        """The search view should return Bad Request if given a query limit
+        too large for the database.
+
+        """
+        response = self.client.post("/autocomplete/search/", data={"limit": "9" * 30})
+        self.assertEqual(response.status_code, 400)
+
+    def test_zero_limit(self):
+        """The search view should return no results for a query limit of 0."""
+        response = self.client.post(
+            "/autocomplete/search/",
+            data={"type": "testapp.Person", "query": "note", "limit": "0"},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["items"], [])
+
+    def test_largest_limit(self):
+        """The search view should accept the largest limit the database
+        supports.
+
+        """
+        largest = connection.ops.integer_field_range("BigIntegerField")[1]
+        response = self.client.post(
+            "/autocomplete/search/",
+            data={"type": "testapp.Person", "query": "note", "limit": largest},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()["items"]), 2)
 
     def test_invalid_exclude(self):
         """The search view should return Bad Request if given non-numeric

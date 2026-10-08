@@ -4,6 +4,7 @@ from urllib.parse import unquote
 from django.apps import apps
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
+from django.db import connections, router
 from django.db.models import Model, QuerySet
 from django.http import (
     HttpResponseBadRequest,
@@ -83,6 +84,12 @@ def search(request):
     try:
         limit = int(request.POST.get("limit", 100))
     except ValueError:
+        return HttpResponseBadRequest()
+    # Querysets can't be sliced with a negative number, and databases reject
+    # a LIMIT above their largest integer.
+    connection = connections[router.db_for_read(model)]
+    max_limit = connection.ops.integer_field_range("BigIntegerField")[1]
+    if not 0 <= limit <= max_limit:
         return HttpResponseBadRequest()
 
     if callable(getattr(model, "autocomplete_custom_queryset_filter", None)):
