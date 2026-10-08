@@ -4,7 +4,6 @@ from django.test import TestCase
 from wagtail.models import Site
 
 from wagtailautocomplete.tests.testapp.models import House, Person
-from wagtailautocomplete.views import integer_range
 
 User = get_user_model()
 
@@ -122,17 +121,21 @@ class SearchViewTestCase(TestCase):
         self.assertEqual(response.json()["items"], [])
 
     def test_largest_limit(self):
-        """The search view should accept the largest limit the database
-        supports.
-
-        """
-        largest = integer_range(Person, "BigIntegerField")[1]
+        """The search view should accept the largest 64-bit limit."""
         response = self.client.post(
             "/autocomplete/search/",
-            data={"type": "testapp.Person", "query": "note", "limit": largest},
+            data={"type": "testapp.Person", "query": "note", "limit": 2**63 - 1},
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()["items"]), 2)
+
+    def test_limit_just_out_of_range(self):
+        """The search view should return Bad Request for a limit one past the
+        largest 64-bit integer.
+
+        """
+        response = self.client.post("/autocomplete/search/", data={"limit": 2**63})
+        self.assertEqual(response.status_code, 400)
 
     def test_invalid_exclude(self):
         """The search view should return Bad Request if given non-numeric

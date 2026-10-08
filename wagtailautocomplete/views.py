@@ -5,7 +5,7 @@ from django.apps import apps
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.db import connections, router
-from django.db.models import IntegerField, Model, QuerySet
+from django.db.models import Model, QuerySet
 from django.http import (
     HttpResponseBadRequest,
     HttpResponseForbidden,
@@ -32,7 +32,11 @@ def integer_range(model, internal_type):
     the given field type.
     """
     connection = connections[router.db_for_read(model)]
-    low, high = connection.ops.integer_field_range(internal_type)
+    try:
+        low, high = connection.ops.integer_field_range(internal_type)
+    except KeyError:
+        # A custom field type the backend doesn't know
+        low = high = None
     # Django < 5.0 reports no range for SQLite, which still can't handle
     # integers outside 64 bits.
     if low is None:
@@ -55,15 +59,15 @@ def clean_pks(model, values):
     field = model._meta.pk
     # A multi-table inherited model's primary key, such as page_ptr on Page
     # subclasses, links to its parent's.
-    while field.is_relation:
+    while field.is_relation and field.target_field is not field:
         field = field.target_field
 
     pks = [field.to_python(unquote(value)) for value in values]
-    if None in pks:
-        raise ValidationError("Primary keys can't be empty.")
-    if isinstance(field, IntegerField):
+    # Custom integer fields may convert to other types, such as hashids.
+    integers = [pk for pk in pks if isinstance(pk, int)]
+    if integers:
         low, high = integer_range(model, field.get_internal_type())
-        if not all(low <= pk <= high for pk in pks):
+        if not all(low <= pk <= high for pk in integers):
             raise ValidationError("Primary key out of range.")
     return pks
 
