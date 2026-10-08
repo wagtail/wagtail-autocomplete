@@ -1,4 +1,4 @@
-import { shallow } from 'enzyme';
+import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 
 import Suggestions from './Suggestions';
@@ -6,8 +6,8 @@ import Suggestions from './Suggestions';
 
 const mockProps = {
   suggestions: [
-    { id: 1, title: 'Alice' },
-    { id: 2, title: 'Tekisha' },
+    { pk: 1, title: 'Alice' },
+    { pk: 2, title: 'Tekisha' },
   ],
   onChange: jest.fn(),
   onCreate: jest.fn(),
@@ -22,15 +22,13 @@ describe('Suggestions', () => {
     expect(Suggestions).toBeDefined();
   });
 
-  it('mounts', () => {
-    const suggestions = shallow(
-      <Suggestions {...mockProps} />
-    );
-    expect(suggestions).toMatchSnapshot();
+  it('renders a combobox input', () => {
+    render(<Suggestions {...mockProps} />);
+    expect(screen.getByRole('combobox')).toBeInTheDocument();
   });
 
   it('does not show create new if input value is blank', () => {
-    const suggestions = shallow(
+    render(
       <Suggestions
         {...mockProps}
         input={{ value: ' ' }}
@@ -38,15 +36,11 @@ describe('Suggestions', () => {
       />
     );
 
-    const item = suggestions.findWhere(node => (
-      node.type() === 'li' &&
-      node.text().startsWith('Create new')
-    ));
-    expect(item.exists()).toEqual(false);
+    expect(screen.queryByText(/Create new/)).not.toBeInTheDocument();
   });
 
   it('does show create new if input value is not blank', () => {
-    const suggestions = shallow(
+    render(
       <Suggestions
         {...mockProps}
         input={{ value: 'new item' }}
@@ -54,40 +48,29 @@ describe('Suggestions', () => {
       />
     );
 
-    const item = suggestions.findWhere(node => (
-      node.type() === 'li' &&
-      node.text().startsWith('Create new') &&
-      node.text().includes('new item')
-    ));
-    expect(item.exists()).toEqual(true);
+    expect(screen.getByText(/Create new.*new item/)).toBeInTheDocument();
   });
 
   it('sets the correct aria owns id', () => {
-    const suggestions = shallow(
-      <Suggestions {...mockProps} />
-    );
+    render(<Suggestions {...mockProps} />);
 
-    const ariaOwnsId = suggestions.find('input').prop('aria-owns');
-    const id = suggestions.find('ul').prop('id');
-    expect(id).toBeTruthy();
-    expect(id).toEqual(ariaOwnsId);
+    const input = screen.getByRole('combobox');
+    const list = screen.getByRole('listbox', { hidden: true });
+    expect(list.id).toBeTruthy();
+    expect(input.getAttribute('aria-owns')).toEqual(list.id);
   });
 
-  it('sets the correct aria active descendant id', () => {
-    const suggestions = shallow(
-      <Suggestions {...mockProps} />
-    );
+  it('sets the correct aria active descendant id on focus', () => {
+    render(<Suggestions {...mockProps} />);
 
-    let activeDescendantId = suggestions.find('input').prop('aria-activedescendant');
-    expect(activeDescendantId).toBeFalsy();
+    const input = screen.getByRole('combobox');
+    expect(input.getAttribute('aria-activedescendant')).toBeFalsy();
 
-    suggestions.setState({ visible: true, index: 0 });
-    activeDescendantId = suggestions.find('input').prop('aria-activedescendant');
-    const selectedOptionId = suggestions.find('li').get(0).props.id;
-    const differentOptionId = suggestions.find('li').get(1).props.id;
-    expect(activeDescendantId).toBeTruthy();
-    expect(differentOptionId).toBeTruthy();
-    expect(activeDescendantId).toEqual(selectedOptionId);
-    expect(selectedOptionId === differentOptionId).toEqual(false);
+    fireEvent.focus(input);
+
+    const options = screen.getAllByRole('option', { hidden: true });
+    expect(input.getAttribute('aria-activedescendant')).toBeTruthy();
+    expect(input.getAttribute('aria-activedescendant')).toEqual(options[0].id);
+    expect(options[0].id === options[1].id).toEqual(false);
   });
 });

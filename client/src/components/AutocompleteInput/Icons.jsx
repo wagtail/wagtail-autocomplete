@@ -1,14 +1,5 @@
 /* eslint max-len: 0 */
-import PropTypes from "prop-types";
 import React from "react";
-
-const IconPropTypes = {
-	className: PropTypes.string,
-};
-
-const IconDefaultProps = {
-	className: undefined,
-};
 
 function SearchIcon({ className }) {
   return <svg
@@ -24,9 +15,6 @@ function SearchIcon({ className }) {
 	</svg>
 }
 
-SearchIcon.propTypes = IconPropTypes;
-SearchIcon.defaultProps = IconDefaultProps;
-
 function RightArrowIcon({ className }) {
   return <svg
 		className={className}
@@ -37,9 +25,6 @@ function RightArrowIcon({ className }) {
 	</svg>
 }
 
-RightArrowIcon.propTypes = IconPropTypes;
-RightArrowIcon.defaultProps = IconDefaultProps;
-
 function RemoveIcon({ className }) {
   return <svg
 		className={className}
@@ -49,8 +34,5 @@ function RemoveIcon({ className }) {
 		<path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z" />
 	</svg>
 }
-
-RemoveIcon.propTypes = IconPropTypes;
-RemoveIcon.defaultProps = IconDefaultProps;
 
 export { RemoveIcon, RightArrowIcon, SearchIcon };
