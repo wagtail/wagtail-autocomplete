@@ -9,17 +9,16 @@ We accept both issue reports and code contributions through our `GitHub reposito
 Code Style
 ----------
 
-This repo follows `Wagtail's guidelines <https://docs.wagtail.io/en/stable/contributing/index.html>`_.
-Clone ``wagtail/wagtail`` in a separate folder and run linters with their configuration.
+This repo follows `Wagtail's guidelines <https://docs.wagtail.io/en/stable/contributing/index.html>`_,
+using Wagtail's ESLint and Stylelint configs for front-end code and Ruff for Python.
 
 .. code-block:: sh
 
-    gem install scss_lint
-    npm run lint:css -- --config /path/to/wagtail/.scss-lint.yml
-    npm run lint:js -- --config /path/to/wagtail/.eslintrc
+    npm run lint:css
+    npm run lint:js
 
-    flake8 --config /path/to/wagtail/tox.ini wagtailautocomplete
-    isort --check-only --diff --recursive wagtailautocomplete
+    ruff check .
+    ruff format --check .
 
 Frontend Development
 --------------------

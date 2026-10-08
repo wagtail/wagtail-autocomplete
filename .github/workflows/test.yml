@@ -40,12 +40,14 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.14"
-      - name: Install dependencies
-        run: |
-          pip install -U pip
-          pip install ".[test]"
-      - name: flake8
-        run: tox -e flake8
+      # Run ruff through pre-commit so its version comes from
+      # .pre-commit-config.yaml
+      - name: Install pre-commit
+        run: pip install pre-commit
+      - name: Lint Python
+        run: pre-commit run ruff-check --all-files --show-diff-on-failure
+      - name: Check Python formatting
+        run: pre-commit run ruff-format --all-files --show-diff-on-failure
 
   js-test:
     runs-on: ubuntu-latest
