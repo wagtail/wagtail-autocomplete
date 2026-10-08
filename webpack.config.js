@@ -1,5 +1,4 @@
 var webpack = require("webpack");
-var { merge } = require("webpack-merge");
 var autoprefixer = require("autoprefixer");
 var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 var path = require("path");
@@ -13,7 +12,7 @@ var STATIC_URL = process.env.STATIC_URL || "/static/";
 var sassData = '$static-url: "' + STATIC_URL + '";';
 console.log("Using STATIC_URL", STATIC_URL);
 
-var common = {
+var config = {
 	entry: {
 		dist: __dirname + "/client/src/index.js",
 	},
@@ -68,21 +67,19 @@ var common = {
 };
 
 if (TARGET === "build") {
-	module.exports = merge(common, {
-		plugins: [
-			new webpack.DefinePlugin({
-				"process.env": { NODE_ENV: JSON.stringify("production") },
-			}),
-		],
-	});
+	config.plugins.push(
+		new webpack.DefinePlugin({
+			"process.env": { NODE_ENV: JSON.stringify("production") },
+		}),
+	);
 }
 
 if (TARGET === "start") {
-	module.exports = merge(common, {
-		devtool: "eval-source-map",
-		devServer: {
-			contentBase: target,
-			progress: true,
-		},
-	});
+	config.devtool = "eval-source-map";
+	config.devServer = {
+		contentBase: target,
+		progress: true,
+	};
 }
+
+module.exports = config;
