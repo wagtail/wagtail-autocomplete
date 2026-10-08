@@ -99,11 +99,13 @@ def objects(request):
         # and thus should not be filtered with a call to `live`.
         queryset = queryset.live()
 
-    # Each pk matches at most one object, so ignore repeats.
-    if queryset.count() != len(set(pks)):
-        return HttpResponseNotFound("Some objects are either missing or deleted")
-    results = map(render_page, queryset)
-    return JsonResponse({"items": list(results)})
+    # Return the objects that were found, such as the live pages among some
+    # unpublished ones, so a client can keep its own copy of the rest. Only
+    # fail if none were found.
+    items = [render_page(obj) for obj in queryset]
+    if not items:
+        return HttpResponseNotFound("The objects are missing, deleted or unpublished")
+    return JsonResponse({"items": items})
 
 
 @require_POST

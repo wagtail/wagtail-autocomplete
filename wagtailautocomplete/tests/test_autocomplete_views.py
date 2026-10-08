@@ -8,7 +8,7 @@ from django.test import SimpleTestCase, TestCase
 from django.test.utils import isolate_apps
 from wagtail.models import Site
 
-from wagtailautocomplete.tests.testapp.models import House, Person
+from wagtailautocomplete.tests.testapp.models import House, Person, TestPage
 from wagtailautocomplete.views import clean_pks
 
 User = get_user_model()
@@ -66,6 +66,43 @@ class ObjectsViewTestCase(TestCase):
         don't have any associated object
         """
         response = self.client.get("/autocomplete/objects/", {"pks": "99"})
+        assert response.status_code == 404
+
+    def test_some_objects_missing(self):
+        """The objects view should return the objects that exist when some of
+        the given pks don't.
+
+        """
+        person = Person.objects.create(name="Adam Note")
+        response = self.client.get(
+            "/autocomplete/objects/",
+            {"pks": f"{person.pk},99", "type": "testapp.Person"},
+        )
+        assert response.status_code == 200
+        assert response.json()["items"] == [{"pk": person.pk, "title": "Adam Note"}]
+
+    def test_unpublished_pages_left_out(self):
+        """The objects view should leave out unpublished pages and return the
+        live ones.
+
+        """
+        root_page = Site.objects.get(is_default_site=True).root_page
+        live = root_page.add_child(instance=TestPage(title="Live"))
+        draft = root_page.add_child(instance=TestPage(title="Draft", live=False))
+        response = self.client.get(
+            "/autocomplete/objects/", {"pks": f"{live.pk},{draft.pk}"}
+        )
+        assert response.status_code == 200
+        assert response.json()["items"] == [{"pk": live.pk, "title": "Live"}]
+
+    def test_only_unpublished_pages(self):
+        """The objects view should return a Not Found response if every given
+        page is unpublished.
+
+        """
+        root_page = Site.objects.get(is_default_site=True).root_page
+        draft = root_page.add_child(instance=TestPage(title="Draft", live=False))
+        response = self.client.get("/autocomplete/objects/", {"pks": draft.pk})
         assert response.status_code == 404
 
     def test_duplicate_pks(self):

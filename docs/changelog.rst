@@ -5,6 +5,8 @@ Changelog
 Unreleased
 ----------
 
+* Change in behavior: the objects endpoint returns the objects it finds, instead of a 404, when some of the requested objects are missing or unpublished. It still returns a 404 if none are found.
+
 Wagtail 7.2 Upgrade
 * Add support for Wagtail 7.2 (testing only)
 * Remove Support for Wagtail 6.4 and 7.1 (testing only)
