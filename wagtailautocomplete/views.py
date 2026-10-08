@@ -95,7 +95,8 @@ def objects(request):
         # and thus should not be filtered with a call to `live`.
         queryset = queryset.live()
 
-    if queryset.count() != len(pks):
+    # Each pk matches at most one object, so ignore repeats.
+    if queryset.count() != len(set(pks)):
         return HttpResponseNotFound("Some objects are either missing or deleted")
     results = map(render_page, queryset)
     return JsonResponse({"items": list(results)})

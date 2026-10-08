@@ -62,6 +62,19 @@ class ObjectsViewTestCase(TestCase):
         response = self.client.get("/autocomplete/objects/", {"pks": "99"})
         assert response.status_code == 404
 
+    def test_duplicate_pks(self):
+        """The objects view should return each object once when given the
+        same primary key more than once, in any spelling.
+
+        """
+        person = Person.objects.create(name="Adam Note")
+        for pks in [f"{person.pk},{person.pk}", f"{person.pk},0{person.pk}"]:
+            response = self.client.get(
+                "/autocomplete/objects/", {"pks": pks, "type": "testapp.Person"}
+            )
+            assert response.status_code == 200, pks
+            assert response.json()["items"] == [{"pk": person.pk, "title": "Adam Note"}]
+
 
 class SearchViewTestCase(TestCase):
     def setUp(self):
