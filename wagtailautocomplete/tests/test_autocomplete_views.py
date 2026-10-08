@@ -1,9 +1,15 @@
+from unittest import mock
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
-from django.test import TestCase
+from django.core.exceptions import ValidationError
+from django.db import connection, models
+from django.test import SimpleTestCase, TestCase
+from django.test.utils import isolate_apps
 from wagtail.models import Site
 
 from wagtailautocomplete.tests.testapp.models import House, Person
+from wagtailautocomplete.views import clean_pks
 
 User = get_user_model()
 
@@ -275,3 +281,55 @@ class CreateViewTestCase(TestCase):
             },
         )
         assert response.status_code == 400
+
+
+class HashidField(models.AutoField):
+    """Stand-in for a hashid field: "h5" in Python is 5 in the database."""
+
+    def to_python(self, value):
+        return value
+
+    def get_prep_value(self, value):
+        return int(value[1:])
+
+
+class CustomTypeField(models.IntegerField):
+    def get_internal_type(self):
+        return "CustomTypeField"
+
+
+@isolate_apps("wagtailautocomplete.tests.testapp")
+class CleanPksTestCase(SimpleTestCase):
+    def test_custom_pk_checks_database_value(self):
+        """Primary keys that convert to other types are range-checked by the
+        value sent to the database.
+
+        """
+
+        class Hashed(models.Model):
+            id = HashidField(primary_key=True)
+
+            class Meta:
+                app_label = "testapp"
+
+        self.assertEqual(clean_pks(Hashed, ["h5"]), ["h5"])
+        with self.assertRaises(ValidationError):
+            clean_pks(Hashed, ["h" + "9" * 30])
+
+    def test_unknown_field_type_not_range_checked(self):
+        """Field types the database backend doesn't know are left to the
+        database. SQLite returns its 64-bit range for any type; other
+        backends raise KeyError.
+
+        """
+
+        class CustomType(models.Model):
+            id = CustomTypeField(primary_key=True)
+
+            class Meta:
+                app_label = "testapp"
+
+        with mock.patch.object(
+            connection.ops, "integer_field_range", side_effect=KeyError
+        ):
+            self.assertEqual(clean_pks(CustomType, ["9" * 30]), [int("9" * 30)])

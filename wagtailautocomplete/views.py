@@ -29,14 +29,13 @@ def render_page(page):
 def integer_range(model, internal_type):
     """
     Return the smallest and largest integers the model's database accepts for
-    the given field type.
+    the given field type, or None for a custom type the backend doesn't know.
     """
     connection = connections[router.db_for_read(model)]
     try:
         low, high = connection.ops.integer_field_range(internal_type)
     except KeyError:
-        # A custom field type the backend doesn't know
-        low = high = None
+        return None
     # Django < 5.0 reports no range for SQLite, which still can't handle
     # integers outside 64 bits.
     if low is None:
@@ -63,11 +62,16 @@ def clean_pks(model, values):
         field = field.target_field
 
     pks = [field.to_python(unquote(value)) for value in values]
-    # Custom integer fields may convert to other types, such as hashids.
-    integers = [pk for pk in pks if isinstance(pk, int)]
+    # Check the values the database will receive: custom fields may convert to
+    # other types, such as hashids, and back to integers when querying.
+    integers = [
+        value
+        for value in (field.get_prep_value(pk) for pk in pks)
+        if isinstance(value, int)
+    ]
     if integers:
-        low, high = integer_range(model, field.get_internal_type())
-        if not all(low <= pk <= high for pk in integers):
+        bounds = integer_range(model, field.get_internal_type())
+        if bounds and not all(bounds[0] <= value <= bounds[1] for value in integers):
             raise ValidationError("Primary key out of range.")
     return pks
 
