@@ -180,7 +180,7 @@ class TestAutocompletePanel(TestCase):
         ).bind_to_model(House)
 
         with self.assertRaises(ImproperlyConfigured):
-            autocomplete_panel.target_model
+            autocomplete_panel.target_model  # noqa: B018 - property raises
 
     def test_target_models_nonexistent_type(self):
         autocomplete_panel = AutocompletePanel(
@@ -188,4 +188,4 @@ class TestAutocompletePanel(TestCase):
         ).bind_to_model(House)
 
         with self.assertRaises(ImproperlyConfigured):
-            autocomplete_panel.target_model
+            autocomplete_panel.target_model  # noqa: B018 - property raises

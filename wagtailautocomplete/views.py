@@ -33,14 +33,14 @@ def objects(request):
     target_model = request.GET.get("type", "wagtailcore.Page")
     try:
         model = apps.get_model(target_model)
-    except Exception:
+    except (LookupError, ValueError):
         return HttpResponseBadRequest()
 
     try:
         pks = [unquote(pk) for pk in pks_param.split(",")]
         queryset = model.objects.filter(pk__in=pks)
 
-    except Exception:
+    except (TypeError, ValueError, ValidationError):
         return HttpResponseBadRequest()
 
     if getattr(queryset, "live", None):
@@ -60,7 +60,7 @@ def search(request):
     target_model = request.POST.get("type", "wagtailcore.Page")
     try:
         model = apps.get_model(target_model)
-    except Exception:
+    except (LookupError, ValueError):
         return HttpResponseBadRequest()
 
     try:
@@ -145,7 +145,7 @@ def create(request, *args, **kwargs):
     target_model = request.POST.get("type", "wagtailcore.Page")
     try:
         model = apps.get_model(target_model)
-    except Exception:
+    except (LookupError, ValueError):
         return HttpResponseBadRequest()
 
     content_type = ContentType.objects.get_for_model(model)
