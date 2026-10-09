@@ -2,6 +2,10 @@ import wagtailConfig from '@wagtail/eslint-config-wagtail';
 import globals from 'globals';
 
 export default [
+  {
+    // webpack output
+    ignores: ['wagtailautocomplete/static/wagtailautocomplete/dist.js'],
+  },
   ...wagtailConfig,
   {
     files: ['**/*.js', '**/*.jsx'],

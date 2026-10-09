@@ -23,9 +23,9 @@
   "scripts": {
     "build": "webpack --mode production",
     "start": "webpack watch --devtool eval-source-map --mode development",
-    "lint:js": "eslint ./client",
-    "lint:js:fix": "eslint --fix ./client",
-    "lint:css": "stylelint **/*.scss",
+    "lint:js": "eslint client wagtailautocomplete/static",
+    "lint:js:fix": "eslint --fix client wagtailautocomplete/static",
+    "lint:css": "stylelint \"client/**/*.scss\"",
     "test": "jest client"
   },
   "stylelint": {

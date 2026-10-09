@@ -5,14 +5,18 @@ repos:
     hooks:
       - id: end-of-file-fixer
         name: Enforce end of file format
-        exclude: '\.svg$|blog/static/pdf.js/build/.+\.js'
+        # Exclude webpack output
+        exclude: '^wagtailautocomplete/static/wagtailautocomplete/dist\.'
 
       - id: trailing-whitespace
         name: Enforce removal of trailing whitespace
+        # Exclude webpack output
+        exclude: '^wagtailautocomplete/static/wagtailautocomplete/dist\.'
 
       - id: mixed-line-ending
         args: [--fix=lf]
-        exclude: '\.bat$'
+        # Keep CRLF in Windows batch files; exclude webpack output
+        exclude: '\.bat$|^wagtailautocomplete/static/wagtailautocomplete/dist\.'
 
       - id: fix-byte-order-marker
 

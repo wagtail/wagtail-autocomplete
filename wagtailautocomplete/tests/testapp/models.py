@@ -5,8 +5,8 @@ from modelcluster.models import ClusterableModel
 
 class House(ClusterableModel):
     name = models.CharField(max_length=50)
-    owner = models.ForeignKey('Person', models.PROTECT, help_text="the owner")
-    occupants = ParentalManyToManyField('Person', related_name='houses')
+    owner = models.ForeignKey("Person", models.PROTECT, help_text="the owner")
+    occupants = ParentalManyToManyField("Person", related_name="houses")
 
 
 class Group(ClusterableModel):
@@ -22,9 +22,11 @@ class Group(ClusterableModel):
 
 class Person(models.Model):
     name = models.CharField(max_length=50)
-    group = ParentalKey(Group, on_delete=models.SET_NULL, related_name='members', null=True)
+    group = ParentalKey(
+        Group, on_delete=models.SET_NULL, related_name="members", null=True
+    )
 
-    autocomplete_search_field = 'name'
+    autocomplete_search_field = "name"
 
     def autocomplete_label(self):
         return self.name
