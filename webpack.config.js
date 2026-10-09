@@ -76,10 +76,6 @@ if (TARGET === "build") {
 
 if (TARGET === "start") {
 	config.devtool = "eval-source-map";
-	config.devServer = {
-		contentBase: target,
-		progress: true,
-	};
 }
 
 module.exports = config;
