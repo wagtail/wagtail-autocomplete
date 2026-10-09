@@ -63,3 +63,10 @@ include = ["wagtailautocomplete*"]
 testpaths = ["wagtailautocomplete", "docs"]
 DJANGO_SETTINGS_MODULE = "wagtailautocomplete.tests.settings"
 django_find_project = false
+
+[tool.ruff.lint]
+ignore = [
+    # Django and Wagtail declare options as mutable class attributes
+    # (list_display, panels, migration operations, ...)
+    "RUF012",
+]
