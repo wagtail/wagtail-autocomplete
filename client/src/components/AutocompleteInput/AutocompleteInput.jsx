@@ -1,6 +1,11 @@
 import React, { PureComponent } from "react";
 
-import { createObject, getObjects, getSuggestions } from "../../utils/client";
+import {
+	createObject,
+	getObjects,
+	getSuggestions,
+	joinPks,
+} from "../../utils/client";
 import Multi from "./Multi";
 import Single from "./Single";
 import { nc } from "./nc";
@@ -61,10 +66,10 @@ class AutocompleteInput extends PureComponent {
 		}
 
 		if (isSingle) {
-			return value.pk;
+			return joinPks([value.pk]);
 		}
 
-		return value.map(({ pk }) => pk).join(",");
+		return joinPks(value.map(({ pk }) => pk));
 	}
 
 	checkNewSuggestions(value, checkDifferent = true) {
@@ -96,37 +101,45 @@ class AutocompleteInput extends PureComponent {
 			return;
 		}
 
-		let pks = null;
-		if (isMulti) {
-			pks = value.map(({ pk }) => encodeURI(pk)).join(",");
-		} else {
-			pks = value.pk;
+		const pks = joinPks(isMulti ? value.map(({ pk }) => pk) : [value.pk]);
+		if (!pks) {
+			return;
 		}
 
 		const { apiBase, type } = this.props;
-		getObjects({ apiBase, pks, type }).then((items) => {
-			let newValue = null;
-			if (isMulti) {
-				const { value: currentValue } = this.state;
-				newValue = currentValue.map((val) => {
-					const page = items.find((obj) => obj.pk === val.pk);
-					if (!page) {
-						return val;
-					}
+		getObjects({ apiBase, pks, type }).then(
+			(items) => {
+				// Ignore the response if the value changed while it loaded.
+				if (this.value !== value) {
+					return;
+				}
 
-					return page;
-				});
-			} else {
-				[newValue] = items;
-			}
+				let newValue = null;
+				if (isMulti) {
+					newValue = value.map((val) => {
+						const page = items.find((obj) => obj.pk === val.pk);
+						if (!page) {
+							return val;
+						}
 
-			this.setState({ value: newValue });
+						return page;
+					});
+				} else {
+					[newValue] = items;
+				}
 
-			const { onChange } = this.props;
-			if (typeof onChange === "function") {
-				onChange({ target: { value: newValue } });
-			}
-		});
+				this.setState({ value: newValue });
+
+				const { onChange } = this.props;
+				if (typeof onChange === "function") {
+					onChange({ target: { value: newValue } });
+				}
+			},
+			() => {
+				// Keep the current value if the lookup fails, for example with
+				// a 404 when an object has been deleted or unpublished.
+			},
+		);
 	}
 
 	handleClick(value) {

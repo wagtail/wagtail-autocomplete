@@ -5,6 +5,9 @@ Changelog
 Unreleased
 ----------
 
+* Fix ``fetchInitialValues``, which has sent the wrong parameter to the objects view since 2019 and so never updated values
+* Encode every primary key the widget sends, so string primary keys containing ``,`` or ``%`` work
+
 Wagtail 7.2 Upgrade
 * Add support for Wagtail 7.2 (testing only)
 * Remove Support for Wagtail 6.4 and 7.1 (testing only)
