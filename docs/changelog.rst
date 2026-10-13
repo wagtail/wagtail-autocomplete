@@ -2,8 +2,8 @@
 Changelog
 =========
 
-Unreleased
-----------
+1.0.0 Release
+-------------
 
 * Security: the public ``objects`` and ``search`` endpoints now only serve models
   listed in the new ``WAGTAILAUTOCOMPLETE_ALLOW_PUBLIC_MODELS`` setting, and hide
