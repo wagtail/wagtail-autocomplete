@@ -14,6 +14,7 @@ select related objects via a quick autocompleted searching interface.
     getting_started
     basic_usage
     using_other_models
+    public_api
     customization
     contributing
     changelog

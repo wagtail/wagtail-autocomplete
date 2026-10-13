@@ -5,6 +5,15 @@ Changelog
 Unreleased
 ----------
 
+* Security: the public ``objects`` and ``search`` endpoints now only serve models
+  listed in the new ``WAGTAILAUTOCOMPLETE_ALLOW_PUBLIC_MODELS`` setting, and hide
+  pages and documents behind view restrictions. By default only pages and
+  documents are exposed; projects using the public endpoints for other models
+  must add them to settings. See :doc:`public_api`.
+
+0.12.1 Release
+--------------
+
 Wagtail 7.2 Upgrade
 * Add support for Wagtail 7.2 (testing only)
 * Remove Support for Wagtail 6.4 and 7.1 (testing only)
@@ -17,7 +26,7 @@ Wagtail 7.0 Upgrade
 * Remove support for Wagtail 5.2 to 6.2 (testing only)
 
 0.12 Release
-----------
+------------
 
 * Remove tests for Wagtail 4.2 and 5.0 as they have reached their EOL
 * Added Wagtail 5.x and 6.x compatibility

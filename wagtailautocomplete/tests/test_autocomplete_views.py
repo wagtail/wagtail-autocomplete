@@ -1,11 +1,15 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from wagtail.models import Site
 
 from wagtailautocomplete.tests.testapp.models import House, Person
 
 User = get_user_model()
+
+
+def allow_all(queryset, request):
+    return queryset
 
 
 class ObjectsViewTestCase(TestCase):
@@ -44,6 +48,9 @@ class ObjectsViewTestCase(TestCase):
         assert response.status_code == 404
 
 
+@override_settings(
+    WAGTAILAUTOCOMPLETE_ALLOW_PUBLIC_MODELS={"testapp.Person": [allow_all]}
+)
 class SearchViewTestCase(TestCase):
     def setUp(self):
         self.site = Site.objects.get(is_default_site=True)
