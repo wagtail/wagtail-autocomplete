@@ -26,6 +26,7 @@ INSTALLED_APPS = (
     "taggit",
     "wagtailautocomplete",
     "wagtailautocomplete.tests.testapp",
+    "wagtail.test.routablepage",
     "wagtail.snippets",
 )
 

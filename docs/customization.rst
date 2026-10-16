@@ -91,7 +91,7 @@ By default, the autocomplete widget uses an ``icontains`` lookup to search for m
         def autocomplete_label(self):
             return self.my_special_field
 
-        # This is used on the `search/` admin endpoint
+        # This is used on the `search/` endpoint
         @staticmethod
         def autocomplete_custom_queryset_filter(search_term: str, *, request: HttpRequest) -> QuerySet:
             # You can use the request to filter the queryset
@@ -99,3 +99,9 @@ By default, the autocomplete widget uses an ``icontains`` lookup to search for m
             filter_kwargs = dict()
             filter_kwargs[field_name + '__contains'] = search_term
             return MyModel.objects.filter(**filter_kwargs)
+
+.. note::
+
+    This function only changes how search terms are matched. It is not used
+    for access control. To limit what the public endpoints can return, use
+    ``WAGTAILAUTOCOMPLETE_ALLOW_PUBLIC_MODELS`` (see :doc:`public_api`).
