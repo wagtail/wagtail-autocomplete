@@ -40,8 +40,8 @@ By default, the autocomplete widget will match input against the ``title`` field
 
         autocomplete_search_field = 'my_special_field'
 
-.. warning::
-    You will also need to define an ``autocomplete_label`` function, unless your model has a ``title`` attribute. See the section on Custom Label Display for more information.
+.. note::
+    Unless your model has a ``title`` attribute, the autocomplete widget will label objects with their string representation (``__str__``). To display something else, define an ``autocomplete_label`` method. See the section on Custom Label Display for more information.
 
 .. note::
 
@@ -56,7 +56,7 @@ By default, the autocomplete widget will match input against the ``title`` field
 Custom Label Display
 ====================
 
-By default, the autocomplete widget will display the ``title`` field from a model. You can change this behavior by defining an ``autocomplete_label`` method on your model:
+By default, the autocomplete widget will display the ``title`` field from a model, or the model's string representation (``__str__``) if it doesn't have a ``title``. You can change this behavior by defining an ``autocomplete_label`` method on your model:
 
 .. code-block:: python
 

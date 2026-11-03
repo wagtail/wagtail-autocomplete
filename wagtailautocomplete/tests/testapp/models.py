@@ -8,6 +8,12 @@ class House(ClusterableModel):
     owner = models.ForeignKey("Person", models.PROTECT, help_text="the owner")
     occupants = ParentalManyToManyField("Person", related_name="houses")
 
+    # No title or autocomplete_label, so labels come from __str__
+    autocomplete_search_field = "name"
+
+    def __str__(self):
+        return self.name
+
 
 class Group(ClusterableModel):
     title = models.CharField(max_length=50)

@@ -37,8 +37,12 @@ def render_page(page):
         page = page.specific
     if callable(getattr(page, "autocomplete_label", None)):
         title = page.autocomplete_label()
-    else:
+    elif hasattr(page, "title"):
         title = page.title
+    else:
+        # Fall back to Django's standard string representation for models
+        # that don't have a title, like many snippets.
+        title = str(page)
     return {"pk": page.pk, "title": title}
 
 
