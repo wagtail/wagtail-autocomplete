@@ -3,7 +3,7 @@ from django.contrib.auth.models import Permission
 from django.test import TestCase, override_settings
 from wagtail.models import Site
 
-from wagtailautocomplete.tests.testapp.models import House, Person
+from wagtailautocomplete.tests.testapp.models import Group, House, Person
 
 User = get_user_model()
 
@@ -121,6 +121,63 @@ class SearchViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()["items"]), 1)
         self.assertEqual(response.json()["items"][0]["title"], "Belle Note")
+
+
+@override_settings(
+    WAGTAILAUTOCOMPLETE_ALLOW_PUBLIC_MODELS={
+        "testapp.Group": [allow_all],
+        "testapp.House": [allow_all],
+    }
+)
+class LabelTestCase(TestCase):
+    def setUp(self):
+        owner = Person.objects.create(name="Adam Note")
+        self.house = House.objects.create(name="View Point House", owner=owner)
+        self.group = Group.objects.create(title="Neighbours")
+
+    def test_search_label_falls_back_to_str(self):
+        """The search view should label objects of a model that has neither
+        an autocomplete_label method nor a title with their string
+        representation.
+
+        """
+        response = self.client.post(
+            "/autocomplete/search/", data={"type": "testapp.House", "query": "point"}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json()["items"],
+            [{"pk": self.house.pk, "title": "View Point House"}],
+        )
+
+    def test_objects_label_falls_back_to_str(self):
+        """The objects view should label objects of a model that has neither
+        an autocomplete_label method nor a title with their string
+        representation.
+
+        """
+        response = self.client.get(
+            "/autocomplete/objects/", {"type": "testapp.House", "pks": self.house.pk}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json()["items"],
+            [{"pk": self.house.pk, "title": "View Point House"}],
+        )
+
+    def test_title_preferred_over_str(self):
+        """The search view should label objects of a model that has a title
+        with that title rather than their string representation.
+
+        """
+        response = self.client.post(
+            "/autocomplete/search/", data={"type": "testapp.Group", "query": "neigh"}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json()["items"],
+            [{"pk": self.group.pk, "title": "Neighbours"}],
+        )
 
 
 class CreateViewTestCase(TestCase):

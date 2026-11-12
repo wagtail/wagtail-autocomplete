@@ -57,7 +57,8 @@ usage with
     ]
 
 .. note::
-    Wagtail Autocomplete assumes by default that models have a ``title`` field.
-    To you autocomplete with target models that don't have a ``title`` field,
+    Wagtail Autocomplete searches the ``title`` field by default, and labels
+    objects with their ``title``, falling back to their string representation.
+    To use autocomplete with target models that don't have a ``title`` field,
     see :doc:`Customization <customization>` for instructions on setting a
-    custom label and search field.
+    custom search field and label.

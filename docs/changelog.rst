@@ -2,6 +2,12 @@
 Changelog
 =========
 
+Unreleased
+----------
+
+* Label objects of models without a ``title`` or an ``autocomplete_label`` method
+  with their string representation, instead of raising an error.
+
 1.0.0 Release
 -------------
 
