@@ -61,7 +61,7 @@
     "globals": "^17.13.0",
     "jest": "^30.5.2",
     "jest-environment-jsdom": "^30.5.2",
-    "mini-css-extract-plugin": "^1.6.2",
+    "mini-css-extract-plugin": "^2.10.2",
     "postcss": "^8.5.28",
     "postcss-loader": "^8.2.1",
     "sass": "^1.105.1",
